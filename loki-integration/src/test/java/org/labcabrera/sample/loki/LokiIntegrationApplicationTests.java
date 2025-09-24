@@ -1,0 +1,45 @@
+package org.labcabrera.sample.loki;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class LokiIntegrationApplicationTests {
+
+	@Autowired
+	private WebTestClient webTestClient;
+
+	@Test
+	void contextLoads() {
+	}
+
+	@Test
+	void testHelloWorldEndpoint() {
+		webTestClient.get()
+			.uri("/api/v1/counters/")
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(String.class)
+			.isEqualTo("Hello, World!");
+	}
+
+	@Test
+	void testCounterIncrement() {
+		webTestClient.post()
+			.uri("/api/v1/counters/test-counter")
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(Integer.class)
+			.isEqualTo(1);
+
+		// Test increment again
+		webTestClient.post()
+			.uri("/api/v1/counters/test-counter")
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(Integer.class)
+			.isEqualTo(2);
+	}
+}

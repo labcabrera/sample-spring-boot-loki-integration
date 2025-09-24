@@ -1,0 +1,9 @@
+= Spring Boot WebFlux with Loki Integration
+
+[source,bash]
+----
+curl -X POST http://localhost:8081/api/v1/counters/foo
+
+curl http://localhost:8081/api/v1/counters
+
+----

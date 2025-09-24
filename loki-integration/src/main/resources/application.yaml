@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: loki-integration
+  webflux:
+    # WebFlux specific configurations
+    base-path: /
+    static-path-pattern: /**
+
+server:
+  port: 8081
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
