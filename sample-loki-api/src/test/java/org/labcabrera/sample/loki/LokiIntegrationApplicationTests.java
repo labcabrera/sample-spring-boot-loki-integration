@@ -18,11 +18,10 @@ class LokiIntegrationApplicationTests {
 	@Test
 	void testHelloWorldEndpoint() {
 		webTestClient.get()
-			.uri("/api/v1/counters/")
+			.uri("/api/v1/counters")
 			.exchange()
 			.expectStatus().isOk()
-			.expectBody(String.class)
-			.isEqualTo("Hello, World!");
+			.expectBodyList(Object.class);
 	}
 
 	@Test

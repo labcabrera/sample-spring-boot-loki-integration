@@ -1,5 +1,12 @@
 = Spring Boot WebFlux with Loki Integration
 
+
+
+[source,bash]
+----
+kubectl port-forward service/argocd-server -n platform 8080:443
+----
+
 [source,bash]
 ----
 curl -X POST http://localhost:8081/api/v1/counters/foo
