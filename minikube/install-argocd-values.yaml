@@ -1,0 +1,17 @@
+server:
+  service:
+    type: ClusterIP  # mantenemos el servicio interno
+  ingress:
+    enabled: true
+    ingressClassName: nginx         # o el nombre de tu controlador de ingress (nginx, traefik, etc.)
+    hosts:
+      - argocd.local          # 🔹 reemplaza con tu dominio
+    paths:
+      - /
+    pathType: Prefix
+    #tls:                            # opcional, si tienes TLS configurado
+    #  - hosts:
+    #      - argocd.local
+    #    secretName: argocd-tls
+  extraArgs:
+    - --insecure

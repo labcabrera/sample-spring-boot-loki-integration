@@ -1,0 +1,12 @@
+server:
+  ingress:
+    enabled: true
+    hosts:
+      - argocd.local
+    ingressClassName: nginx
+    pathType: Prefix
+    paths:
+      - /
+configs:
+  secret:
+    argocdServerAdminPassword: $2y$10$vAKJfNlItZH/h500v0DObOd5IFBAUJifgSLTiVpKzqJ2AKGhqozVy

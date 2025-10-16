@@ -2,7 +2,7 @@
 
 set -e
 
-NAMESPACE_MONITORING="monitoring"
+NAMESPACE="sample-observability"
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -12,14 +12,14 @@ echo "--------------------------------------------------------------------------
 echo "Creating namespace..."
 echo "----------------------------------------------------------------------------"
 
-kubectl create namespace "$NAMESPACE_MONITORING" --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 
 echo "----------------------------------------------------------------------------"
 echo "Installing Prometheus..."
 echo "----------------------------------------------------------------------------"
 
 helm install prometheus prometheus-community/kube-prometheus-stack \
-  --namespace "$NAMESPACE_MONITORING" \
+  --namespace "$NAMESPACE" \
   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \
   --set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
   --set prometheus.prometheusSpec.ruleSelectorNilUsesHelmValues=false \
@@ -37,8 +37,20 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
   --timeout=600s
 
 echo "----------------------------------------------------------------------------"
+echo "Installing Loki and Promtail..."
+echo "----------------------------------------------------------------------------"
+
+helm install loki grafana/loki-stack \
+  --namespace "$NAMESPACE" \
+  --set promtail.enabled=true \
+  --set loki.persistence.enabled=true \
+  --set loki.persistence.size=10Gi \
+  --set loki.service.type=NodePort \
+  --timeout=600s
+
+echo "----------------------------------------------------------------------------"
 echo "Configuring Ingress..."
 echo "----------------------------------------------------------------------------"
 
-kubectl apply -f ingress/grafana-ingress.yaml -n "$NAMESPACE_MONITORING"
-kubectl apply -f ingress/prometheus-ingress.yaml -n "$NAMESPACE_MONITORING"
+kubectl apply -f ingress/grafana-ingress.yaml -n "$NAMESPACE"
+kubectl apply -f ingress/prometheus-ingress.yaml -n "$NAMESPACE"
