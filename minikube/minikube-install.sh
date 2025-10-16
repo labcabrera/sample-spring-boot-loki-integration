@@ -7,7 +7,6 @@ MINIKUBE_MEMORY=8192
 MINIKUBE_CPUS=4
 MINIKUBE_DISK=20g
 K8S_VERSION=v1.33.1
-NAMESPACE_APPS="apps-local"
 
 echo "----------------------------------------------------------------------------"
 echo "Starting minikube..."
@@ -24,5 +23,3 @@ minikube start \
 minikube addons enable metrics-server --profile "$MINIKUBE_PROFILE"
 
 minikube addons enable ingress --profile "$MINIKUBE_PROFILE"
-
-kubectl create namespace "$NAMESPACE_APPS"
