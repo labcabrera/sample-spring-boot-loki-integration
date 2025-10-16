@@ -7,10 +7,12 @@ resources:
 
 configMapGenerator:
 - name: sampleConfig
+  behavior: create
   literals:
-  - JAVA_OPTS=-Xms512m -Xmx1024m
-  - LOG_LEVEL=INFO
+  - java_opts=-Xms512m -Xmx1024m
+  - log_level=INFO
 secretGenerator:
 - name: sampleSecret
+  behavior: create
   literals:
-  - FOO=foosecret
+  - foo=foosecret
