@@ -10,27 +10,32 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/counters")
 public class HelloWorldController {
 
     private Map<String, Integer> counterMap = new ConcurrentHashMap<>();
 
     @GetMapping
-    public Mono<Map<String, Integer>> sayHello() {
+    public Mono<Map<String, Integer>> getCounters() {
+        log.debug("Getting all counters");
         return Mono.just(counterMap);
     }
 
     @PostMapping("/{key}")
     public Mono<Integer> incrementCounter(@PathVariable String key) {
+        log.info("Incrementing counter for key {}", key);
         return Mono.fromCallable(() -> 
             counterMap.compute(key, (k, v) -> (v == null) ? 1 : v + 1));
     }
 
     @PutMapping("/{key}/{value}")
     public Mono<Integer> setCounter(@PathVariable("key") String key, @PathVariable("value") Integer value) {
+        log.info("Setting counter for key {} to value {}", key, value);
         return Mono.fromCallable(() -> 
             counterMap.put(key, value)
         );
