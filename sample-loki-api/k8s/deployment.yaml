@@ -5,7 +5,7 @@ metadata:
   labels:
     k8s-app: sample-loki-api
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       k8s-app: sample-loki-api

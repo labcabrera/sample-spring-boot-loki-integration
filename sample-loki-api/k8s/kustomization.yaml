@@ -4,3 +4,13 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+
+configMapGenerator:
+- name: sampleConfig
+  literals:
+  - java_opts=-Xms512m -Xmx1024m
+secretGenerator:
+- name: sampleSecret
+  literals:
+  - foo=foosecret
+  - bar=barsecret
