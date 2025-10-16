@@ -6,6 +6,12 @@ spring:
     base-path: /
     static-path-pattern: /**
 
+logging:
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}'
+  level:
+    root: ${LOG_LEVEL:INFO}
+
 server:
   port: 8081
   

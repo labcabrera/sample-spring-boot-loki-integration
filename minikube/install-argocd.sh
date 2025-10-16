@@ -2,7 +2,7 @@
 
 set -e
 
-NAMESPACE_TOOLS="platform"
+NAMESPACE_TOOLS="cicd"
 
 echo "----------------------------------------------------------------------------"
 echo " Installing ArgoCD and configuring applications..."
