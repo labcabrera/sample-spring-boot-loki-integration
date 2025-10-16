@@ -2,6 +2,8 @@
 
 set -e
 
+NAMESPACE_TOOLS="platform"
+
 echo "----------------------------------------------------------------------------"
 echo " Installing ArgoCD and configuring applications..."
 echo "----------------------------------------------------------------------------"
