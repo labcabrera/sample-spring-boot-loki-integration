@@ -5,6 +5,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.className: nginx-ingress
 spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sample-loki-api.local
+      secretName: sample-loki-api-tls
   rules:
     - host: sample-loki-api.local
       http:
@@ -16,3 +21,4 @@ spec:
                 name: sample-loki-api
                 port:
                   number: 80
+
