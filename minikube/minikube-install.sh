@@ -23,3 +23,5 @@ minikube start \
 minikube addons enable metrics-server --profile "$MINIKUBE_PROFILE"
 
 minikube addons enable ingress --profile "$MINIKUBE_PROFILE"
+
+kubectl create namespace "sample-apps"
