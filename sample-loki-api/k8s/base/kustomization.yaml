@@ -6,13 +6,13 @@ resources:
   - ingress.yaml
 
 configMapGenerator:
-- name: sampleConfig
+- name: sample-config
   behavior: create
   literals:
   - java_opts=-Xms512m -Xmx1024m
   - log_level=INFO
 secretGenerator:
-- name: sampleSecret
+- name: sample-secret
   behavior: create
   literals:
   - foo=foosecret
