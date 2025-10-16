@@ -4,6 +4,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+  - cert.yaml
 
 configMapGenerator:
 - name: sample-config
