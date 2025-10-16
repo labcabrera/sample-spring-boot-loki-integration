@@ -22,6 +22,21 @@ spec:
         env:
         - name: TZ
           value: Europe/Madrid
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+            name: sampleConfig
+            key: LOG_LEVEL
+        - name: JAVA_OPTS
+          valueFrom:
+            configMapKeyRef:
+            name: sampleConfig
+            key: JAVA_OPTS
+        - name: FOO
+          valueFrom:
+            secretKeyRef:
+              name: sampleSecret
+              key: FOO
         imagePullPolicy: Always
         ports:
         - containerPort: 80
