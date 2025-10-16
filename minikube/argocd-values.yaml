@@ -1,12 +1,34 @@
+global:
+  domain: argocd.local
+
+
+
 server:
   ingress:
     enabled: true
-    hosts:
-      - argocd.local
     ingressClassName: nginx
-    pathType: Prefix
-    paths:
-      - /
+    hostname: argocd.local
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: sample-root-ca   # <--- usa tu issuer aquí
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    tls: true
+    extraTls:
+      - hosts:
+          - argocd.local
+        secretName: argocd-tls-secret  # generado por cert-manager
+
+  # Cambiar tipo de servicio si es necesario
+  service:
+    type: ClusterIP
+    ports:
+      http: 80
+      https: 443
+
 configs:
+  params:
+    # Permite redirección HTTPS si el Ingress termina TLS
+    server.insecure: true
+
   secret:
     argocdServerAdminPassword: $2y$10$vAKJfNlItZH/h500v0DObOd5IFBAUJifgSLTiVpKzqJ2AKGhqozVy
