@@ -1,6 +1,8 @@
 spring:
   application:
     name: loki-integration
+  main:
+    banner-mode: off
   webflux:
     # WebFlux specific configurations
     base-path: /
@@ -8,9 +10,10 @@ spring:
 
 logging:
   pattern:
-    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}'
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}\n'
   level:
-    root: ${LOG_LEVEL:INFO}
+    org.labcabrera: ${LOG_LEVEL:DEBUG} 
+    root: INFO
 
 server:
   port: 8081

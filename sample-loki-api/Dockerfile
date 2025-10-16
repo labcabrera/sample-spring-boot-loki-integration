@@ -6,4 +6,4 @@ COPY build/libs/*.jar app.jar
 
 EXPOSE 8081
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -DLOG_LEVEL=$LOG_LEVEL -jar app.jar"]
