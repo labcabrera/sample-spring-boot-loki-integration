@@ -1,5 +1,23 @@
 = Spring Boot WebFlux with Loki Integration
 
+== Ejecutar la demo
+
+En primer lugar iniciamos minikube a través del script `minikube-install.sh` que crea una instancia de Minikube con
+el perfil `sample-loki`:
+
+[source,bash, title="minikube-install.sh"]
+----
+include::./minikube/minikube-install.sh[]
+----
+
+A continuación crearemos el certificado usado por el _cert-manager_ a través del script `create-root-certificate.sh`:
+
+[source,bash, title="create-root-certificate.sh"]
+----
+include::./minikube/create-root-certificate.sh[]
+----
+
+
 [source,bash]
 ----
 kubectl port-forward service/argocd-server -n platform 8080:443
