@@ -11,7 +11,12 @@ echo "--------------------------------------------------------------------------
 helm install argocd argo/argo-cd \
   --namespace "$NAMESPACE" \
   --create-namespace \
-  -f ./argocd-values.yaml
+  --set server.service.type=ClusterIP \
+  --set configs.secret.argocdServerAdminPassword='$2y$10$vAKJfNlItZH/h500v0DObOd5IFBAUJifgSLTiVpKzqJ2AKGhqozVy'
+
+#kubectl apply -f ingress/argocd-ingress.yaml -n "$NAMESPACE"
+
+kubectl apply -f ingress/argocd-ingress.yaml -n "sample-cicd"
 
 find ../argocd -name "*.yaml" -o -name "*.yml" | while read -r file; do
   kubectl apply -f "$file" -n "$NAMESPACE"
