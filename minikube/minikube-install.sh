@@ -9,8 +9,6 @@ MINIKUBE_DISK=20g
 K8S_VERSION=v1.33.1
 
 NAMESPACE_APPS="sample-apps"
-NAMESPACE_OBSERVABILITY="sample-observability"
-NAMESPACE_CERT_MANAGER="cert-manager"
 
 minikube start \
   --profile "$MINIKUBE_PROFILE" \
@@ -25,5 +23,3 @@ minikube addons enable metrics-server --profile "$MINIKUBE_PROFILE"
 minikube addons enable ingress --profile "$MINIKUBE_PROFILE"
 
 kubectl create namespace "$NAMESPACE_APPS"
-kubectl create namespace "$NAMESPACE_OBSERVABILITY"
-kubectl create namespace "$NAMESPACE_CERT_MANAGER"
