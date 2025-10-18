@@ -2,6 +2,8 @@
 
 set -e
 
+NAMESPACE="sample-observability"
+
 helm install loki grafana/loki-stack \
   --namespace "$NAMESPACE" \
   --set promtail.enabled=true \
