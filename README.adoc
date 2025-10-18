@@ -60,6 +60,19 @@ kubectl create secret tls sample-root-ca \
 kubectl apply -f "$ISSUER_CERT"
 ----
 
+A continuación instalamos ArgoCD a través del script `install-argocd.sh`:
+
+[source,bash, title="install-argocd.sh"]
+----
+helm install argocd argo/argo-cd \
+  --namespace "$NAMESPACE" \
+  -f config/argocd-values.yaml
+  
+find ../argocd -name "*.yaml" -o -name "*.yml" | while read -r file; do
+  kubectl apply -f "$file" -n "$NAMESPACE"
+done
+----
+
 
 [source,bash]
 ----

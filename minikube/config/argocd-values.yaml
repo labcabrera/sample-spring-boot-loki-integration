@@ -26,5 +26,4 @@ configs:
   params:
     server.insecure: true
   secret:
-    # changeit
     argocdServerAdminPassword: $2y$10$vAKJfNlItZH/h500v0DObOd5IFBAUJifgSLTiVpKzqJ2AKGhqozVy
