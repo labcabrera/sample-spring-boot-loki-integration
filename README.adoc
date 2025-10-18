@@ -7,14 +7,57 @@ el perfil `sample-loki`:
 
 [source,bash, title="minikube-install.sh"]
 ----
-include::./minikube/minikube-install.sh[]
+minikube start \
+  --profile "$MINIKUBE_PROFILE" \
+  --driver=docker \
+  --memory=$MINIKUBE_MEMORY \
+  --cpus=$MINIKUBE_CPUS \
+  --disk-size=$MINIKUBE_DISK \
+  --kubernetes-version=$K8S_VERSION
+
+minikube addons enable metrics-server --profile "$MINIKUBE_PROFILE"
+
+minikube addons enable ingress --profile "$MINIKUBE_PROFILE"
+
+kubectl create namespace "$NAMESPACE_APPS"
+kubectl create namespace "$NAMESPACE_OBSERVABILITY"
+kubectl create namespace "$NAMESPACE_CERT_MANAGER"
 ----
 
 A continuación crearemos el certificado usado por el _cert-manager_ a través del script `create-root-certificate.sh`:
 
 [source,bash, title="create-root-certificate.sh"]
 ----
-include::./minikube/create-root-certificate.sh[]
+openssl genrsa -out "$CA_KEY" 2048
+
+openssl req -x509 -new -nodes \
+  -sha256 \
+  -days 3650 \
+  -key "$CA_KEY" \
+  -out "$CA_CERT" \
+  -subj "/CN=*.local"
+----
+
+Una vez creado el certificado, instalamos el _cert-manager_ a través del script `install-cert-manager.sh`:
+
+[source,bash, title="install-cert-manager.sh"]
+----
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.crds.yaml
+
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace "$NAMESPACE_CERT_MANAGER" \
+  --version "$CERT_MANAGER_VERSION"
+
+kubectl create secret tls sample-root-ca \
+  --cert="$ROOT_CA_CERT" \
+  --key="$ROOT_CA_KEY" \
+  -n "$NAMESPACE_CERT_MANAGER"
+
+kubectl apply -f "$ISSUER_CERT"
 ----
 
 
