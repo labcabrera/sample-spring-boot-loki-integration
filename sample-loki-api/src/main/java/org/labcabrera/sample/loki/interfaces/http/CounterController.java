@@ -2,7 +2,6 @@ package org.labcabrera.sample.loki.interfaces.http;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +24,8 @@ public class CounterController {
     private Map<String, Integer> counterMap = new ConcurrentHashMap<>();
 
     private final Counter counterOperations;
-
     private final Counter counterFoo;
+    private final Counter counterError;
 
     public CounterController(MeterRegistry meterRegistry) {
         this.counterOperations = Counter.builder("counter.operations.total")
@@ -35,6 +34,9 @@ public class CounterController {
         this.counterFoo = Counter.builder("counter.foo.total")
             .description("Total number of foo operations")
             .tag("type", "example")
+            .register(meterRegistry);
+        this.counterError = Counter.builder("counter.errors.total")
+            .description("Total number of error operations")
             .register(meterRegistry);
         Gauge.builder("foo.count", counterMap, e -> e.getOrDefault("foo", 0))
             .description("Current foo count")
@@ -50,7 +52,8 @@ public class CounterController {
     @PostMapping("/{key}")
     public Mono<Integer> incrementCounter(@PathVariable String key) {
         log.info("Incrementing counter for key {}", key);
-        if("err".equals(key)) {
+        if ("err".equals(key)) {
+            counterError.increment();
             throw new RuntimeException("Simulated error for key 'err'");
         }
         return Mono.fromCallable(() -> {
@@ -66,9 +69,7 @@ public class CounterController {
     @PutMapping("/{key}/{value}")
     public Mono<Integer> setCounter(@PathVariable("key") String key, @PathVariable("value") Integer value) {
         log.info("Setting counter for key {} to value {}", key, value);
-        return Mono.fromCallable(() -> 
-            counterMap.put(key, value)
-        );
+        return Mono.fromCallable(() -> counterMap.put(key, value));
     }
 
 }
