@@ -1,14 +1,12 @@
 package org.labcabrera.sample.loki.application;
 
 import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.config.ProcessingGroup;
 import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@ProcessingGroup("player-events")
 @RequiredArgsConstructor
 @Slf4j
 public class PlayerEventHandler {

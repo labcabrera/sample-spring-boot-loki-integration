@@ -10,18 +10,8 @@ spring:
 
 # Axon Framework Configuration
 axon:
-  eventhandling:
-    processors:
-      # Async event processing
-      default:
-        mode: pooled_streaming
-        batch-size: 100
-        max-threads: 4
-      # Specific processor for player events
-      player-events:
-        mode: pooled_streaming
-        batch-size: 50
-        max-threads: 2
+  axonserver:
+    enabled: false
   serializer:
     events: jackson
     messages: jackson
