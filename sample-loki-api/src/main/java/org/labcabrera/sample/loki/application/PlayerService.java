@@ -1,0 +1,20 @@
+package org.labcabrera.sample.loki.application;
+
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.labcabrera.sample.loki.domain.player.command.CreatePlayerCommand;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class PlayerService {
+
+    private final CommandGateway commandGateway;
+
+    public String createPlayer(String name) {
+        String id = UUID.randomUUID().toString();
+        commandGateway.sendAndWait(new CreatePlayerCommand(id, name));
+        return id;
+    }
+}
