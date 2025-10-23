@@ -31,7 +31,7 @@ public class PlayerEventHandler {
     private void handlePlayerCreatedProjection(PlayerCreatedEvent event) {
         log.debug("Updating player projection for playerId: {}", event.getPlayerId());
         // Actualizar la vista de lectura
-        playerQueryHandler.updatePlayerView(event.getPlayerId(), event.getName());
+        playerQueryHandler.updatePlayerView(event.getPlayerId(), event.getName(), event.getEmail(), event.getElo());
     }
     
     private void handlePlayerCreatedNotification(PlayerCreatedEvent event) {

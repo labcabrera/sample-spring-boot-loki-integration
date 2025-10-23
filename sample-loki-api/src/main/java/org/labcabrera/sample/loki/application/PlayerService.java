@@ -12,9 +12,9 @@ public class PlayerService {
 
     private final CommandGateway commandGateway;
 
-    public String createPlayer(String name) {
+    public String createPlayer(String name, String email, Integer elo) {
         String id = UUID.randomUUID().toString();
-        commandGateway.sendAndWait(new CreatePlayerCommand(id, name));
+        commandGateway.sendAndWait(new CreatePlayerCommand(id, name, email, elo));
         return id;
     }
 }

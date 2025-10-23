@@ -19,15 +19,19 @@ public class PlayerAggregate {
     @AggregateIdentifier
     private String playerId;
     private String name;
+    private String email;
+    private Integer elo;
 
     @CommandHandler
     public PlayerAggregate(CreatePlayerCommand cmd) {
-        AggregateLifecycle.apply(new PlayerCreatedEvent(cmd.getPlayerId(), cmd.getName()));
+        AggregateLifecycle.apply(new PlayerCreatedEvent(cmd.getPlayerId(), cmd.getName(), cmd.getEmail(), cmd.getElo()));
     }
 
     @EventSourcingHandler
     public void on(PlayerCreatedEvent evt) {
         this.playerId = evt.getPlayerId();
         this.name = evt.getName();
+        this.email = evt.getEmail();
+        this.elo = evt.getElo();
     }
 }

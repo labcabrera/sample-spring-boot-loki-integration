@@ -31,8 +31,8 @@ public class PlayerQueryHandler {
     }
     
     // Método para actualizar la vista desde el event handler
-    public void updatePlayerView(String playerId, String name) {
-        PlayerView playerView = new PlayerView(playerId, name, "ACTIVE");
+    public void updatePlayerView(String playerId, String name, String email, Integer elo) {
+        PlayerView playerView = new PlayerView(playerId, name, email, elo, "ACTIVE");
         playerViews.put(playerId, playerView);
         log.debug("Player view updated: {}", playerView);
     }

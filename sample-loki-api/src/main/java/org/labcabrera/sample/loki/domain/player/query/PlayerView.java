@@ -6,5 +6,7 @@ import lombok.Data;
 public class PlayerView {
     private final String playerId;
     private final String name;
+    private final String email;
+    private final Integer elo;
     private final String status;
 }

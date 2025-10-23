@@ -23,7 +23,7 @@ public class PlayerController {
 
     @PostMapping
     public Mono<ResponseEntity<PlayerCreatedResponse>> create(@RequestBody CreatePlayerRequest request) {
-        String id = playerService.createPlayer(request.name());
+        String id = playerService.createPlayer(request.name(), request.email(), request.elo());
         return Mono.just(ResponseEntity.ok(new PlayerCreatedResponse(id, "Player created successfully")));
     }
     
@@ -43,6 +43,6 @@ public class PlayerController {
         return Mono.just(ResponseEntity.ok(players));
     }
 
-    public static record CreatePlayerRequest(String name) {}
+    public static record CreatePlayerRequest(String name, String email, Integer elo) {}
     public static record PlayerCreatedResponse(String id, String message) {}
 }
