@@ -51,6 +51,19 @@ logging:
 
 server:
   port: 8081
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  info:
+    title: "Loki Integration API"
+    description: "API REST para gestión de jugadores con arquitectura CQRS/Event Sourcing usando Axon Framework"
+    version: "1.0.0"
   
 management:
   endpoints:
