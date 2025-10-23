@@ -7,10 +7,13 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.labcabrera.sample.loki.domain.player.command.CreatePlayerCommand;
 import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Aggregate
 @NoArgsConstructor
+@Getter
 public class PlayerAggregate {
 
     @AggregateIdentifier

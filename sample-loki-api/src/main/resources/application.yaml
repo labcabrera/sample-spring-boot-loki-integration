@@ -8,11 +8,30 @@ spring:
     base-path: /
     static-path-pattern: /**
 
+# Axon Framework Configuration
+axon:
+  eventhandling:
+    processors:
+      # Async event processing
+      default:
+        mode: pooled_streaming
+        batch-size: 100
+        max-threads: 4
+      # Specific processor for player events
+      player-events:
+        mode: pooled_streaming
+        batch-size: 50
+        max-threads: 2
+  serializer:
+    events: jackson
+    messages: jackson
+
 logging:
   pattern:
     console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}\n'
   level:
     org.labcabrera: ${LOG_LEVEL:DEBUG} 
+    org.axonframework: ${AXON_LOG_LEVEL:INFO}
     root: INFO
 
 server:
@@ -22,7 +41,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics
+        include: health,info,prometheus,metrics,axon
   endpoint:
     health:
       show-details: always
