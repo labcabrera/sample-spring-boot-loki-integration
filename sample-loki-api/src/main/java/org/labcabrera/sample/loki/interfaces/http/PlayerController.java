@@ -4,12 +4,15 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.labcabrera.sample.loki.application.PlayerService;
 import org.labcabrera.sample.loki.application.PlayerQueryHandler;
 import org.labcabrera.sample.loki.domain.player.query.GetPlayerQuery;
+import org.labcabrera.sample.loki.domain.player.query.GetPlayersByStatusQuery;
+import org.labcabrera.sample.loki.domain.player.query.GetPlayersByEloRangeQuery;
 import org.labcabrera.sample.loki.domain.player.query.PlayerView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import reactor.core.publisher.Mono;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,6 +44,29 @@ public class PlayerController {
     public Mono<ResponseEntity<Map<String, PlayerView>>> getAllPlayers() {
         Map<String, PlayerView> players = playerQueryHandler.getAllPlayers();
         return Mono.just(ResponseEntity.ok(players));
+    }
+    
+    @GetMapping("/status/{status}")
+    public Mono<ResponseEntity<List<PlayerView>>> getPlayersByStatus(@PathVariable String status) {
+        try {
+            List<PlayerView> players = queryGateway.query(new GetPlayersByStatusQuery(status), List.class).join();
+            return Mono.just(ResponseEntity.ok(players));
+        } catch (Exception e) {
+            return Mono.just(ResponseEntity.badRequest().build());
+        }
+    }
+    
+    @GetMapping("/elo")
+    public Mono<ResponseEntity<List<PlayerView>>> getPlayersByEloRange(
+            @RequestParam Integer minElo,
+            @RequestParam Integer maxElo) {
+        try {
+            List<PlayerView> players = queryGateway.query(
+                new GetPlayersByEloRangeQuery(minElo, maxElo), List.class).join();
+            return Mono.just(ResponseEntity.ok(players));
+        } catch (Exception e) {
+            return Mono.just(ResponseEntity.badRequest().build());
+        }
     }
 
     public static record CreatePlayerRequest(String name, String email, Integer elo) {}

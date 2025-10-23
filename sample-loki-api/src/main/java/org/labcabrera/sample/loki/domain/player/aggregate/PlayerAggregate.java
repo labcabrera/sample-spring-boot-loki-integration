@@ -10,10 +10,12 @@ import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Aggregate
 @NoArgsConstructor
 @Getter
+@Slf4j
 public class PlayerAggregate {
 
     @AggregateIdentifier
@@ -29,6 +31,7 @@ public class PlayerAggregate {
 
     @EventSourcingHandler
     public void on(PlayerCreatedEvent evt) {
+        log.debug("Applying PlayerCreatedEvent for playerId: {}", evt.getPlayerId());
         this.playerId = evt.getPlayerId();
         this.name = evt.getName();
         this.email = evt.getEmail();
