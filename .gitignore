@@ -1,5 +1,6 @@
 **/.vscode
 /sample-loki-api/.gradle
 /sample-loki-api/build
+/sample-loki-api/bin
 minikube/*.crt
 minikube/*.key

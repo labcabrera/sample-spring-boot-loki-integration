@@ -8,6 +8,12 @@ group = 'org.labcabrera.sample'
 version = '0.0.1-SNAPSHOT'
 description = 'Spring Boot WebFlux with Loki Integration'
 
+ext {
+	logstashLogbackVersion = '7.4'
+	springdocVersion = '2.1.0'
+	axonVersion = '4.7.5'
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -21,29 +27,24 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-	
-	// Axon Framework for CQRS/ES
-	implementation 'org.axonframework:axon-spring-boot-starter:4.7.5'
-	
-	// JPA and Database dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'org.postgresql:postgresql'
-	
-	// Jackson for JSON serialization
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}"
+	implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
+	implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
 	
-	// SpringDoc OpenAPI 3 for Swagger documentation
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
-	
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+
+	compileOnly 'org.projectlombok:lombok'
+  	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	compileOnly 'org.projectlombok:lombok'
-  	annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
