@@ -73,13 +73,11 @@ find ../argocd -name "*.yaml" -o -name "*.yml" | while read -r file; do
 done
 ----
 
+== Probando la aplicación
 
-[source,bash]
-----
-kubectl port-forward service/argocd-server -n platform 8080:443
+En primer lugar accederemos a la interfaz de nuestra API en local:
 
-kubectl port-forward service/sample-loki-api -n apps-local 8081:80
-----
+http://localhost:8081/webjars/swagger-ui/index.html
 
 [source,bash]
 ----
@@ -88,3 +86,8 @@ curl -X POST http://localhost:8081/api/v1/counters/foo
 curl http://localhost:8081/api/v1/counters
 
 ----
+
+== Grafana Dashboards
+
+- 1860: Node Exporter Full
+- 4701: JVM (Micrometer)

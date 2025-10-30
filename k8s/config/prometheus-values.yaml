@@ -14,9 +14,9 @@ prometheus:
   prometheusSpec:
     # No sobreescribir arbitrariamente con --set; defínelo como objeto en el values.yaml
     # serviceMonitorNamespaceSelector: {}            # <- habilita si necesitas
-    # serviceMonitorSelector:
-    #   matchLabels:
-    #     app: sample-loki-api
+    serviceMonitorSelector:
+      matchLabels:
+        app: sample-loki-api
     retention: 30d
     storageSpec:
       volumeClaimTemplate:

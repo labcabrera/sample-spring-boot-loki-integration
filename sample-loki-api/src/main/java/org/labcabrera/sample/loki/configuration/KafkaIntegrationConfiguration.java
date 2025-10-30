@@ -4,13 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Configuración para integración con Kafka.
- * Esta configuración se activa cuando el perfil 'kafka' está habilitado.
- * 
- * Para habilitar Kafka, ejecutar con: --spring.profiles.active=kafka
- * También es necesario tener Kafka corriendo en localhost:9092
- */
 @Configuration
 @Profile("kafka")
 @Slf4j

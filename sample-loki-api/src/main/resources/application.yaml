@@ -4,11 +4,9 @@ spring:
   main:
     banner-mode: off
   webflux:
-    # WebFlux specific configurations
     base-path: /
     static-path-pattern: /**
   
-  # Database Configuration
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -33,7 +31,6 @@ spring:
     init:
       mode: never
 
-# Axon Framework Configuration
 axon:
   axonserver:
     enabled: false
@@ -52,7 +49,6 @@ logging:
 server:
   port: 8081
 
-# SpringDoc OpenAPI Configuration
 springdoc:
   api-docs:
     path: /v3/api-docs

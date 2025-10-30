@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Tag(name = "Counters", description = "Micrometer Sample Management API")
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/counters")
