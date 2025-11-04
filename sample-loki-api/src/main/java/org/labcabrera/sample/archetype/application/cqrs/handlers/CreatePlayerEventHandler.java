@@ -1,6 +1,7 @@
-package org.labcabrera.sample.archetype.application;
+package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.axonframework.eventhandling.EventHandler;
+import org.labcabrera.sample.archetype.application.PlayerService;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public interface PlayerControllerDefinition {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = PlayerController.CreatePlayerRequest.class))) @RequestBody PlayerController.CreatePlayerRequest request);
 
     @GetMapping("/{playerId}")
-    @Operation(summary = "Get player by ID", description = "Retrieve a specific player by its unique identifier")
+    @Operation(summary = "Get player by id", description = "Retrieve a specific player by its unique identifier")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Player found"),
         @ApiResponse(responseCode = "404", description = "Player not found")
@@ -43,11 +44,14 @@ public interface PlayerControllerDefinition {
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @GetMapping
-    @Operation(summary = "Get all players", description = "Returns a complete list of all registered players")
+    @Operation(summary = "Get players by RSQL", description = "Filter players using an RSQL expression with optional pagination")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Players list retrieved successfully")
     })
-    ResponseEntity<Map<String, org.labcabrera.sample.archetype.domain.player.query.PlayerView>> getAllPlayers();
+    ResponseEntity<Map<String, PlayerView>> getPlayersByRsql(
+        @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,
+        @Parameter(description = "Page number (0-based)", example = "0") @RequestParam(required = false, defaultValue = "0") Integer page,
+        @Parameter(description = "Page size", example = "10") @RequestParam(required = false, defaultValue = "10") Integer size);
 
     @GetMapping("/elo")
     @Operation(summary = "Get players by ELO range", description = "Filter players within a specific ELO score range")

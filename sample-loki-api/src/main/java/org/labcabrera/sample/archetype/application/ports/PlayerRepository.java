@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.infrastructure.persistence.repository;
+package org.labcabrera.sample.archetype.application.ports;
 
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

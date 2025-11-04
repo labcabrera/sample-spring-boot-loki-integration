@@ -1,6 +1,6 @@
 package org.labcabrera.sample.archetype.application;
 
-import org.labcabrera.sample.archetype.infrastructure.persistence.repository.PlayerRepository;
+import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,12 +1,12 @@
-package org.labcabrera.sample.archetype.application;
+package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.axonframework.queryhandling.QueryHandler;
+import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
 import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.labcabrera.sample.archetype.infrastructure.persistence.mapper.PlayerMapper;
-import org.labcabrera.sample.archetype.infrastructure.persistence.repository.PlayerRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,6 @@ public class PlayerQueryHandler {
         return getPlayersByEloRange(query.getMinElo(), query.getMaxElo());
     }
 
-    // Método para actualizar la vista desde el event handler
     public void updatePlayerView(String playerId, String name, String email, Integer elo) {
         PlayerEntity entity = playerRepository.findById(playerId)
             .orElse(playerMapper.toPlayerEntity(playerId, name, email, elo));
