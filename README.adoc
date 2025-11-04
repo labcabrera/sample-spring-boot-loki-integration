@@ -1,4 +1,32 @@
-= Spring Boot WebFlux with Loki Integration
+= Spring Boot WebFlux DDD Archetype
+
+== Estructura
+
+El proyecto utiliza clean architecture y DDD para estructurar el código en capas y módulos bien definidos:
+
+----
+src/
+ ├── sample-loki-api
+ │   ├── src/main/java/org/labcabrera/sample/loki
+ │   │   ├── application
+ │   │   │   ├── service
+ │   │   │   └── dto
+ │   │   ├── domain
+ │   │   │   ├── model
+ │   │   │   └── repository
+ │   │   └── interfaces
+ │   │       ├── http
+ │   │       └── config
+ │   └── src/test/java/org/labcabrera/sample/loki
+ │       └── ...
+ └── sample-loki-infra
+     ├── src/main/java/org/labcabrera/sample/loki/infra
+     │   ├── logging
+     │   └── monitoring
+     └── src/test/java/org/labcabrera/sample/loki/infra
+         └── ...
+----
+
 
 == Ejecutar la demo
 

@@ -35,6 +35,9 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
 	implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
 
+	// Spring Kafka for event publishing (optional, enabled when Kafka profile/properties are present)
+	implementation 'org.springframework.kafka:spring-kafka'
+
 	// Swagger / OpenAPI annotations
 	implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationsVersion}"
 	
