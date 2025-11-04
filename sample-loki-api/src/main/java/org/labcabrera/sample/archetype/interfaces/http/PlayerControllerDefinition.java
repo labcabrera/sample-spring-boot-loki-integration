@@ -68,4 +68,14 @@ public interface PlayerControllerDefinition {
         @Parameter(description = "Minimum ELO", required = true) @RequestParam Integer minElo,
         @Parameter(description = "Maximum ELO", required = true) @RequestParam Integer maxElo);
 
+    @Schema(description = "Data to create a new player")
+    public static record CreatePlayerRequest(@Schema(description = "Player name", example = "Magnus Carlsen", required = true) String name,
+        @Schema(description = "Player unique email", example = "magnus@chess.com", required = true) String email,
+        @Schema(description = "Player ELO score", example = "2800") Integer elo) {
+    }
+
+    @Schema(description = "Response after creating a player")
+    public static record PlayerCreatedResponse(@Schema(description = "Unique ID of the created player") String id,
+        @Schema(description = "Confirmation message") String message) {
+    }
 }
