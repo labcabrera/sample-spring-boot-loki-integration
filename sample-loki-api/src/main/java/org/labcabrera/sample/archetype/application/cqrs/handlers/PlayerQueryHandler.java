@@ -1,10 +1,10 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.axonframework.queryhandling.QueryHandler;
+import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
+import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByEloRangeQuery;
+import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
-import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.labcabrera.sample.archetype.infrastructure.persistence.mapper.PlayerMapper;
 import org.springframework.stereotype.Component;

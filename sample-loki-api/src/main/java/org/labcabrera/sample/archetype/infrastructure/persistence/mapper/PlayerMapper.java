@@ -1,6 +1,6 @@
 package org.labcabrera.sample.archetype.infrastructure.persistence.mapper;
 
-import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
+import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.springframework.stereotype.Component;
 

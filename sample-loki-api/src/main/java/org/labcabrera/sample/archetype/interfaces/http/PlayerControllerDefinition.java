@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
+import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Player found"),
         @ApiResponse(responseCode = "404", description = "Player not found")
     })
-    ResponseEntity<org.labcabrera.sample.archetype.domain.player.query.PlayerView> getPlayer(
+    ResponseEntity<PlayerView> getPlayer(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @GetMapping
@@ -59,7 +59,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Players list in the specified ELO range"),
         @ApiResponse(responseCode = "400", description = "Invalid range parameters")
     })
-    ResponseEntity<List<org.labcabrera.sample.archetype.domain.player.query.PlayerView>> getPlayersByEloRange(
+    ResponseEntity<List<PlayerView>> getPlayersByEloRange(
         @Parameter(description = "Minimum ELO", required = true) @RequestParam Integer minElo,
         @Parameter(description = "Maximum ELO", required = true) @RequestParam Integer maxElo);
 

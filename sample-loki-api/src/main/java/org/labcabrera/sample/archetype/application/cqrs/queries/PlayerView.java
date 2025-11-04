@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.domain.player.query;
+package org.labcabrera.sample.archetype.application.cqrs.queries;
 
 import lombok.Data;
 

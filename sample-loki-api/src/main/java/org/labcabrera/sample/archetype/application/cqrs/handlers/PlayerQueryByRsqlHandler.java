@@ -2,9 +2,9 @@ package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.axonframework.queryhandling.QueryHandler;
+import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByRsqlQuery;
+import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByRsqlQuery;
-import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.infrastructure.persistence.mapper.PlayerMapper;
 import org.springframework.stereotype.Component;
 

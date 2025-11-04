@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.axonframework.queryhandling.QueryGateway;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.PlayerQueryHandler;
+import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
+import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByEloRangeQuery;
+import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.application.services.PlayerService;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
-import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
