@@ -19,7 +19,7 @@ public class CreatePlayerEventHandler {
 
     private final PlayerQueryHandler playerQueryHandler;
 
-    @Autowired
+    @Autowired(required = false)
     private StreamBridge streamBridge;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -33,6 +33,11 @@ public class CreatePlayerEventHandler {
     }
 
     private void publishPlayerCreatedToKafka(PlayerCreatedEvent event) {
+        if (streamBridge == null) {
+            log.debug("StreamBridge not available; skipping publish of PlayerCreatedEvent for playerId={}", event.getPlayerId());
+            return;
+        }
+
         try {
             String payload = objectMapper.writeValueAsString(event);
             boolean sent = streamBridge.send("player-created", payload);

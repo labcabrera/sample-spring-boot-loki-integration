@@ -31,19 +31,12 @@ spring:
     init:
       mode: never
 
-  autoconfigure:
-    exclude:
-      - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration
-
-  # cloud:
-  #   function:
-  #     scan: false
 
   cloud:
-    function:
-      # Disable plain function component scanning to avoid PlainFunctionScanConfiguration
-      # causing conditional evaluation during REGISTER_BEAN phase
-      scan: false
+    # function:
+    #   # Disable plain function component scanning to avoid PlainFunctionScanConfiguration
+    #   # causing conditional evaluation during REGISTER_BEAN phase
+    #   scan: false
     stream:
       function:
         definition: createPlayer
@@ -52,9 +45,9 @@ spring:
           destination: sample.create-player.v1
           group: players-svc
           contentType: application/json
-        # playerCreated-out-0:
-        #   destination: player-created
-        #   contentType: application/json
+        playerCreated-out-0:
+          destination: player-created
+          contentType: application/json
       kafka:
         bindings:
           createPlayer-in-0:
@@ -63,10 +56,10 @@ spring:
           brokers: localhost:9092
       defaultBinder: kafka
 
-    # Exclude the problematic auto-configuration class to avoid conditional evaluation errors at startup
-    autoconfigure:
-      # (moved to top-level spring.autoconfigure.exclude)
-
+  # Exclude the problematic auto-configuration class to avoid conditional evaluation errors at startup
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration
 
 axon:
   axonserver:
