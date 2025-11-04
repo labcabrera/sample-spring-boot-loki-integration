@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.extern.slf4j.Slf4j;
 
-// @Configuration
+@Configuration
 @Slf4j
 public class KafkaCreatePlayerController {
 
-    // @Bean
-    // public Consumer<PlayerCreatedEvent> createPlayer() {
-    //     return event -> {
-    //         log.info("Player created event published: {}", event);
-    //         // Stream will publish the event to player-created
-    //     };
-    // }
+    @Bean
+    public Consumer<PlayerCreatedEvent> createPlayer() {
+        return event -> {
+            log.info("Player created event published: {}", event);
+            // Stream will publish the event to player-created
+        };
+    }
 }
