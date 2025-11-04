@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application;
+package org.labcabrera.sample.archetype.application.services;
 
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.springframework.stereotype.Service;

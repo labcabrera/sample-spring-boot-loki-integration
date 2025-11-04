@@ -1,12 +1,13 @@
-package org.labcabrera.sample.archetype.application;
+package org.labcabrera.sample.archetype.application.services;
+
+import java.util.UUID;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
-import org.labcabrera.sample.archetype.application.services.PlayerValidationService;
 import org.labcabrera.sample.archetype.domain.player.command.UpdatePlayerCommand;
 import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

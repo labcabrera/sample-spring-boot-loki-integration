@@ -4,7 +4,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.labcabrera.sample.archetype.domain.player.command.CreatePlayerCommand;
+import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerUpdatedEvent;
 import org.axonframework.modelling.command.AggregateLifecycle;

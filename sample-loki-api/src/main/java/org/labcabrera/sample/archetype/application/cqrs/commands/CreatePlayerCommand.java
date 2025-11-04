@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.domain.player.command;
+package org.labcabrera.sample.archetype.application.cqrs.commands;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import lombok.Value;

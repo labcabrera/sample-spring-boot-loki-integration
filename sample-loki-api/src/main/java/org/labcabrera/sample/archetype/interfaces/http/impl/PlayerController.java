@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.axonframework.queryhandling.QueryGateway;
-import org.labcabrera.sample.archetype.application.PlayerService;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.PlayerQueryHandler;
+import org.labcabrera.sample.archetype.application.services.PlayerService;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
 import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
