@@ -45,12 +45,13 @@ spring:
           destination: player-created
           contentType: application/json
       kafka:
+        binder:
+          brokers: localhost:9092
+          autoCreateTopics: true
+          minPartitionCount: 1
         bindings:
           createPlayer-in-0:
             startOffset: earliest
-        binder:
-          brokers: localhost:9092
-      defaultBinder: kafka
 
 axon:
   axonserver:
