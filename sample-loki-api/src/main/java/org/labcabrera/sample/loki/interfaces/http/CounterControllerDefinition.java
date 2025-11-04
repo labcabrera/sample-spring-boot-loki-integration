@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import reactor.core.publisher.Mono;
+// Converted to servlet (non-reactive) controller signatures
 
 public interface CounterControllerDefinition {
 
@@ -16,7 +16,7 @@ public interface CounterControllerDefinition {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK")
     })
-    Mono<Map<String, Integer>> getCounters();
+    Map<String, Integer> getCounters();
 
     @PostMapping("/{key}")
     @Operation(summary = "Increment counter", description = "Increment the counter identified by the given key")
@@ -24,7 +24,7 @@ public interface CounterControllerDefinition {
         @ApiResponse(responseCode = "200", description = "New counter value"),
         @ApiResponse(responseCode = "500", description = "Server error")
     })
-    Mono<Integer> incrementCounter(String key);
+    Integer incrementCounter(String key);
 
     @PutMapping("/{key}/{value}")
     @Operation(summary = "Set counter value", description = "Set the counter value for a specific key")
@@ -32,6 +32,6 @@ public interface CounterControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Previous counter value returned"),
         @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    Mono<Integer> setCounter(String key, Integer value);
+    Integer setCounter(String key, Integer value);
 
 }

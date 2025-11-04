@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/players")
@@ -31,50 +30,50 @@ public class PlayerController implements PlayerControllerDefinition {
     private final PlayerQueryHandler playerQueryHandler;
 
     @Override
-    public Mono<ResponseEntity<PlayerCreatedResponse>> create(@RequestBody CreatePlayerRequest request) {
+    public ResponseEntity<PlayerCreatedResponse> create(@RequestBody CreatePlayerRequest request) {
         String id = playerService.createPlayer(request.name(), request.email(), request.elo());
-        return Mono.just(ResponseEntity.ok(new PlayerCreatedResponse(id, "Player created successfully")));
+        return ResponseEntity.ok(new PlayerCreatedResponse(id, "Player created successfully"));
     }
 
     @Override
-    public Mono<ResponseEntity<PlayerView>> getPlayer(@PathVariable String playerId) {
+    public ResponseEntity<PlayerView> getPlayer(@PathVariable String playerId) {
         try {
             PlayerView player = queryGateway.query(new GetPlayerQuery(playerId), PlayerView.class).join();
-            return Mono.just(ResponseEntity.ok(player));
+            return ResponseEntity.ok(player);
         }
         catch (Exception e) {
-            return Mono.just(ResponseEntity.notFound().build());
+            return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public Mono<ResponseEntity<Map<String, PlayerView>>> getAllPlayers() {
+    public ResponseEntity<Map<String, PlayerView>> getAllPlayers() {
         Map<String, PlayerView> players = playerQueryHandler.getAllPlayers();
-        return Mono.just(ResponseEntity.ok(players));
+        return ResponseEntity.ok(players);
     }
 
     @Override
-    public Mono<ResponseEntity<List<PlayerView>>> getPlayersByStatus(@PathVariable String status) {
+    public ResponseEntity<List<PlayerView>> getPlayersByStatus(@PathVariable String status) {
         try {
             @SuppressWarnings("unchecked")
             List<PlayerView> players = queryGateway.query(new GetPlayersByStatusQuery(status), List.class).join();
-            return Mono.just(ResponseEntity.ok(players));
+            return ResponseEntity.ok(players);
         }
         catch (Exception e) {
-            return Mono.just(ResponseEntity.badRequest().build());
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @Override
-    public Mono<ResponseEntity<List<PlayerView>>> getPlayersByEloRange(@RequestParam Integer minElo, @RequestParam Integer maxElo) {
+    public ResponseEntity<List<PlayerView>> getPlayersByEloRange(@RequestParam Integer minElo, @RequestParam Integer maxElo) {
         try {
             @SuppressWarnings("unchecked")
             List<PlayerView> players = queryGateway.query(
                 new GetPlayersByEloRangeQuery(minElo, maxElo), List.class).join();
-            return Mono.just(ResponseEntity.ok(players));
+            return ResponseEntity.ok(players);
         }
         catch (Exception e) {
-            return Mono.just(ResponseEntity.badRequest().build());
+            return ResponseEntity.badRequest().build();
         }
     }
 

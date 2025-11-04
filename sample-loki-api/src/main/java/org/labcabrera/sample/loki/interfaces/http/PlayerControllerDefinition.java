@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import reactor.core.publisher.Mono;
+// Converted to servlet (non-reactive) controller signatures
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Player created successfully"),
         @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    Mono<ResponseEntity<PlayerController.PlayerCreatedResponse>> create(
+    ResponseEntity<PlayerController.PlayerCreatedResponse> create(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = PlayerController.CreatePlayerRequest.class))) @RequestBody PlayerController.CreatePlayerRequest request);
 
     @GetMapping("/{playerId}")
@@ -36,7 +36,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Player found"),
         @ApiResponse(responseCode = "404", description = "Player not found")
     })
-    Mono<ResponseEntity<org.labcabrera.sample.loki.domain.player.query.PlayerView>> getPlayer(
+    ResponseEntity<org.labcabrera.sample.loki.domain.player.query.PlayerView> getPlayer(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @GetMapping
@@ -44,7 +44,7 @@ public interface PlayerControllerDefinition {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Players list retrieved successfully")
     })
-    Mono<ResponseEntity<Map<String, org.labcabrera.sample.loki.domain.player.query.PlayerView>>> getAllPlayers();
+    ResponseEntity<Map<String, org.labcabrera.sample.loki.domain.player.query.PlayerView>> getAllPlayers();
 
     @GetMapping("/status/{status}")
     @Operation(summary = "Get players by status", description = "Filter players by their status (ACTIVE, INACTIVE)")
@@ -52,7 +52,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Players list filtered by status"),
         @ApiResponse(responseCode = "400", description = "Invalid status")
     })
-    Mono<ResponseEntity<List<org.labcabrera.sample.loki.domain.player.query.PlayerView>>> getPlayersByStatus(
+    ResponseEntity<List<org.labcabrera.sample.loki.domain.player.query.PlayerView>> getPlayersByStatus(
         @Parameter(description = "Player status (ACTIVE, INACTIVE)", required = true) @PathVariable String status);
 
     @GetMapping("/elo")
@@ -61,7 +61,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Players list in the specified ELO range"),
         @ApiResponse(responseCode = "400", description = "Invalid range parameters")
     })
-    Mono<ResponseEntity<List<org.labcabrera.sample.loki.domain.player.query.PlayerView>>> getPlayersByEloRange(
+    ResponseEntity<List<org.labcabrera.sample.loki.domain.player.query.PlayerView>> getPlayersByEloRange(
         @Parameter(description = "Minimum ELO", required = true) @RequestParam Integer minElo,
         @Parameter(description = "Maximum ELO", required = true) @RequestParam Integer maxElo);
 

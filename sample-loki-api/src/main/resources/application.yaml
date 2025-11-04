@@ -31,6 +31,10 @@ spring:
     init:
       mode: never
 
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration
+
   # cloud:
   #   function:
   #     scan: false
@@ -61,8 +65,7 @@ spring:
 
     # Exclude the problematic auto-configuration class to avoid conditional evaluation errors at startup
     autoconfigure:
-      exclude:
-        - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration
+      # (moved to top-level spring.autoconfigure.exclude)
 
 
 axon:

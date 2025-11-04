@@ -2,6 +2,8 @@ package org.labcabrera.sample.loki.application;
 
 import org.axonframework.eventhandling.EventHandler;
 import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,8 +19,8 @@ public class CreatePlayerEventHandler {
 
     private final PlayerQueryHandler playerQueryHandler;
 
-    // @Autowired
-    // private StreamBridge streamBridge;
+    @Autowired
+    private StreamBridge streamBridge;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -33,14 +35,14 @@ public class CreatePlayerEventHandler {
     private void publishPlayerCreatedToKafka(PlayerCreatedEvent event) {
         try {
             String payload = objectMapper.writeValueAsString(event);
-            // boolean sent = streamBridge.send("player-created", payload);
-            // if (sent) {
-            //     log.info("Published PlayerCreatedEvent via StreamBridge to destination 'player-created' for playerId={}",
-            //         event.getPlayerId());
-            // }
-            // else {
-            //     log.warn("StreamBridge returned false when sending PlayerCreatedEvent for playerId={}", event.getPlayerId());
-            // }
+            boolean sent = streamBridge.send("player-created", payload);
+            if (sent) {
+                log.info("Published PlayerCreatedEvent via StreamBridge to destination 'player-created' for playerId={}",
+                    event.getPlayerId());
+            }
+            else {
+                log.warn("StreamBridge returned false when sending PlayerCreatedEvent for playerId={}", event.getPlayerId());
+            }
         }
         catch (JsonProcessingException e) {
             log.error("Failed to serialize PlayerCreatedEvent for publish, playerId={}", event.getPlayerId(), e);

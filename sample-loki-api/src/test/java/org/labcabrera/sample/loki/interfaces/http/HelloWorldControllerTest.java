@@ -2,67 +2,48 @@ package org.labcabrera.sample.loki.interfaces.http;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebFluxTest(CounterController.class)
+import org.springframework.beans.factory.annotation.Autowired;
+
+@WebMvcTest(CounterController.class)
 class HelloWorldControllerTest {
 
     @Autowired
-    private WebTestClient webTestClient;
+    private MockMvc mockMvc;
 
     @Test
-    void shouldReturnHelloWorld() {
-        webTestClient.get()
-            .uri("/api/v1/counters")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBodyList(Object.class);
+    void shouldReturnHelloWorld() throws Exception {
+        mockMvc.perform(get("/api/v1/counters"))
+            .andExpect(status().isOk());
     }
 
     @Test
-    void shouldIncrementCounterReactively() {
-        // First increment
-        webTestClient.post()
-            .uri("/api/v1/counters/reactive-test")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(Integer.class)
-            .isEqualTo(1);
+    void shouldIncrementCounter() throws Exception {
+        mockMvc.perform(post("/api/v1/counters/reactive-test"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("1"));
 
-        // Second increment
-        webTestClient.post()
-            .uri("/api/v1/counters/reactive-test")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(Integer.class)
-            .isEqualTo(2);
+        mockMvc.perform(post("/api/v1/counters/reactive-test"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("2"));
     }
 
     @Test
-    void shouldHandleMultipleDifferentCounters() {
-        // Test counter A
-        webTestClient.post()
-            .uri("/api/v1/counters/counter-a")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(Integer.class)
-            .isEqualTo(1);
+    void shouldHandleMultipleDifferentCounters() throws Exception {
+        mockMvc.perform(post("/api/v1/counters/counter-a"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("1"));
 
-        // Test counter B
-        webTestClient.post()
-            .uri("/api/v1/counters/counter-b")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(Integer.class)
-            .isEqualTo(1);
+        mockMvc.perform(post("/api/v1/counters/counter-b"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("1"));
 
-        // Increment counter A again
-        webTestClient.post()
-            .uri("/api/v1/counters/counter-a")
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(Integer.class)
-            .isEqualTo(2);
+        mockMvc.perform(post("/api/v1/counters/counter-a"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("2"));
     }
 }
