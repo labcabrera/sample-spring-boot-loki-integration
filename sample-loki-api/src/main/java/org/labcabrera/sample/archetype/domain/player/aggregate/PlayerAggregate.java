@@ -6,6 +6,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.labcabrera.sample.archetype.domain.player.command.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
+import org.labcabrera.sample.archetype.domain.player.event.PlayerUpdatedEvent;
 import org.axonframework.modelling.command.AggregateLifecycle;
 
 import lombok.Getter;
@@ -36,5 +37,12 @@ public class PlayerAggregate {
         this.name = evt.getName();
         this.email = evt.getEmail();
         this.elo = evt.getElo();
+    }
+
+    @EventSourcingHandler
+    public void on(PlayerUpdatedEvent evt) {
+        log.debug("Applying PlayerUpdatedEvent for playerId: {}", evt.getPlayerId());
+        this.name = evt.getName();
+        this.email = evt.getEmail();
     }
 }

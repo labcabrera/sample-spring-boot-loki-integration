@@ -1,0 +1,5 @@
+- Definicion ejemplo saga con kafka
+- Manejadores de errores http
+- Ejemplo binders de escritura
+- Ejemplos del modelo de EventGateway / QueryGateway / CommandGateway
+- Ejemplos de mapper

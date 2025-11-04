@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PlayerController implements PlayerControllerDefinition {
 
     private final PlayerService playerService;
@@ -40,7 +42,8 @@ public class PlayerController implements PlayerControllerDefinition {
             PlayerView player = queryGateway.query(new GetPlayerQuery(playerId), PlayerView.class).join();
             return ResponseEntity.ok(player);
         }
-        catch (Exception e) {
+        catch (Exception ex) {
+            log.error("Error retrieving player with ID {}: {}", playerId, ex);
             return ResponseEntity.notFound().build();
         }
     }
@@ -58,20 +61,22 @@ public class PlayerController implements PlayerControllerDefinition {
             List<PlayerView> players = queryGateway.query(new GetPlayersByStatusQuery(status), List.class).join();
             return ResponseEntity.ok(players);
         }
-        catch (Exception e) {
+        catch (Exception ex) {
+            log.error("Error retrieving players by status {}: {}", status, ex);
             return ResponseEntity.badRequest().build();
         }
     }
 
     @Override
-    public ResponseEntity<List<PlayerView>> getPlayersByEloRange(@RequestParam Integer minElo, @RequestParam Integer maxElo) {
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<List<PlayerView>> getPlayersByEloRange(Integer minElo, Integer maxElo) {
         try {
-            @SuppressWarnings("unchecked")
-            List<PlayerView> players = queryGateway.query(
-                new GetPlayersByEloRangeQuery(minElo, maxElo), List.class).join();
+            var query = new GetPlayersByEloRangeQuery(minElo, maxElo);
+            List<PlayerView> players = queryGateway.query(query, List.class).join();
             return ResponseEntity.ok(players);
         }
-        catch (Exception e) {
+        catch (Exception ex) {
+            log.error("Error retrieving players by ELO range: {} - {}", minElo, maxElo, ex);
             return ResponseEntity.badRequest().build();
         }
     }
