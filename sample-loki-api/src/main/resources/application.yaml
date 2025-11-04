@@ -32,16 +32,31 @@ spring:
       mode: never
 
   cloud:
-    stream:
-      bindings:
-        playerCreated-out-0:
-          destination: player-created
-        createPlayer-in-0:
-          destination: create-player
-          contentType: application/json
-      kafka:
-        binder:
-          brokers: localhost:9092
+    function:
+      # Disable plain function component scanning to avoid PlainFunctionScanConfiguration
+      # causing conditional evaluation during REGISTER_BEAN phase
+      scan: false
+
+  # cloud:
+  #   stream:
+  #     function:
+  #       definition: createPlayer
+  #     bindings:
+  #       createPlayer-in-0:
+  #         destination: sample.create-player.v1
+  #         group: players-svc
+  #         contentType: application/json
+  #       playerCreated-out-0:
+  #         destination: player-created
+  #         contentType: application/json
+  #     kafka:
+  #       bindings:
+  #         createPlayer-in-0:
+  #           startOffset: earliest
+  #       binder:
+  #         brokers: localhost:9092
+  #     defaultBinder: kafka
+
 
 axon:
   axonserver:
