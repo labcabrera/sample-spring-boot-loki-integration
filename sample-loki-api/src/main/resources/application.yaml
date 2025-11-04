@@ -36,6 +36,9 @@ spring:
       bindings:
         playerCreated-out-0:
           destination: player-created
+        createPlayer-in-0:
+          destination: create-player
+          contentType: application/json
       kafka:
         binder:
           brokers: localhost:9092

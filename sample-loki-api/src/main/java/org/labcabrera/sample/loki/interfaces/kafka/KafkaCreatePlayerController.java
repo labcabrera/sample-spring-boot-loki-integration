@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaCreatePlayerController {
 
     @Bean
-    public Consumer<PlayerCreatedEvent> playerCreatedOut() {
+    public Consumer<PlayerCreatedEvent> createPlayer() {
         return event -> {
             log.info("Player created event published: {}", event);
             // Stream will publish the event to player-created

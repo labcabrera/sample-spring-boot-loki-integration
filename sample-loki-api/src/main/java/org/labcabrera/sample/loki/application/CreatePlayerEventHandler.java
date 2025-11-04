@@ -1,12 +1,9 @@
 package org.labcabrera.sample.loki.application;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.axonframework.eventhandling.EventHandler;
 import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,8 +19,9 @@ public class CreatePlayerEventHandler {
 
     private final PlayerQueryHandler playerQueryHandler;
 
-    @Autowired(required = false)
-    private KafkaTemplate<String, String> kafkaTemplate;
+    // StreamBridge will be used to publish messages to output bindings
+    @Autowired
+    private StreamBridge streamBridge;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,29 +34,21 @@ public class CreatePlayerEventHandler {
     }
 
     private void publishPlayerCreatedToKafka(PlayerCreatedEvent event) {
-        if (kafkaTemplate == null) {
-            log.debug("KafkaTemplate not configured; skipping Kafka publish for playerId={}", event.getPlayerId());
-            return;
-        }
         try {
             String payload = objectMapper.writeValueAsString(event);
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("player-created", event.getPlayerId(), payload);
-            future.whenComplete((result, ex) -> {
-                if (ex != null) {
-                    log.error("Failed to publish PlayerCreatedEvent to Kafka for playerId={}", event.getPlayerId(), ex);
-                    return;
-                }
-                if (result != null && result.getRecordMetadata() != null) {
-                    log.info("Published PlayerCreatedEvent to Kafka topic 'player-created' partition={} offset={}",
-                        result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
-                }
-                else {
-                    log.info("Published PlayerCreatedEvent to Kafka topic 'player-created' (no metadata)");
-                }
-            });
+            // Use StreamBridge to send to the binding named 'player-created'
+            // The exact binding name should match the destination configured in application properties
+            boolean sent = streamBridge.send("player-created", payload);
+            if (sent) {
+                log.info("Published PlayerCreatedEvent via StreamBridge to destination 'player-created' for playerId={}",
+                    event.getPlayerId());
+            }
+            else {
+                log.warn("StreamBridge returned false when sending PlayerCreatedEvent for playerId={}", event.getPlayerId());
+            }
         }
         catch (JsonProcessingException e) {
-            log.error("Failed to serialize PlayerCreatedEvent for Kafka publish, playerId={}", event.getPlayerId(), e);
+            log.error("Failed to serialize PlayerCreatedEvent for publish, playerId={}", event.getPlayerId(), e);
         }
     }
 

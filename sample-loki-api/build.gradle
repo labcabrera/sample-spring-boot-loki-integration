@@ -13,7 +13,6 @@ ext {
 	springdocVersion = '2.1.0'
 	axonVersion = '4.7.5'
 	swaggerAnnotationsVersion = '2.2.13'
-	// Spring Cloud Stream BOM version (adjust if needed)
 	springCloudStreamVersion = '4.1.0'
 }
 
@@ -29,7 +28,6 @@ repositories {
 
 dependencyManagement {
 	imports {
-		// Import Spring Cloud Stream BOM to manage compatible versions for stream and binders
 		mavenBom "org.springframework.cloud:spring-cloud-stream-dependencies:${springCloudStreamVersion}"
 	}
 }
@@ -45,7 +43,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}"
 	implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
-	implementation "org.axonframework:axon-spring-boot-star	ter:${axonVersion}"
+	implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
 	implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationsVersion}"
 	
 	runtimeOnly 'com.h2database:h2'
