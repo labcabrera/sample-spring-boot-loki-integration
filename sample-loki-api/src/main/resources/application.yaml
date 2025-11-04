@@ -36,6 +36,10 @@ spring:
   #     scan: false
 
   cloud:
+    function:
+      # Disable plain function component scanning to avoid PlainFunctionScanConfiguration
+      # causing conditional evaluation during REGISTER_BEAN phase
+      scan: false
     stream:
       function:
         definition: createPlayer
@@ -54,6 +58,11 @@ spring:
         binder:
           brokers: localhost:9092
       defaultBinder: kafka
+
+    # Exclude the problematic auto-configuration class to avoid conditional evaluation errors at startup
+    autoconfigure:
+      exclude:
+        - org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration
 
 
 axon:
