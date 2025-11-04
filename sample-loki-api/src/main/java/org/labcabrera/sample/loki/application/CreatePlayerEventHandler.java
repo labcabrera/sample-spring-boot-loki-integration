@@ -15,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PlayerEventHandler {
+public class CreatePlayerEventHandler {
 
     private final PlayerQueryHandler playerQueryHandler;
 
-    // Optional Kafka template: injected only when spring-kafka is on the classpath and
-    // kafka producer properties are configured (or when beans are created in KafkaIntegrationConfiguration).
     @Autowired(required = false)
     private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -30,17 +28,8 @@ public class PlayerEventHandler {
     public void on(PlayerCreatedEvent event) {
         log.info("Player created event received: playerId={}, name={}",
             event.getPlayerId(), event.getName());
-
-    // You can add logic here for:
-    // - Updating projections / read views
-    // - Sending notifications
-    // - Integrating with other systems
-    // - Publishing to Kafka (if available)
-
         handlePlayerCreatedProjection(event);
         handlePlayerCreatedNotification(event);
-
-        // Publish event to Kafka (non-blocking). If Kafka is not configured, this is a noop.
         publishPlayerCreatedToKafka(event);
     }
 
@@ -49,7 +38,6 @@ public class PlayerEventHandler {
             log.debug("KafkaTemplate not configured; skipping Kafka publish for playerId={}", event.getPlayerId());
             return;
         }
-
         try {
             String payload = objectMapper.writeValueAsString(event);
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("player-created", event.getPlayerId(), payload);
@@ -61,11 +49,13 @@ public class PlayerEventHandler {
                 if (result != null && result.getRecordMetadata() != null) {
                     log.info("Published PlayerCreatedEvent to Kafka topic 'player-created' partition={} offset={}",
                         result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
-                } else {
+                }
+                else {
                     log.info("Published PlayerCreatedEvent to Kafka topic 'player-created' (no metadata)");
                 }
             });
-        } catch (JsonProcessingException e) {
+        }
+        catch (JsonProcessingException e) {
             log.error("Failed to serialize PlayerCreatedEvent for Kafka publish, playerId={}", event.getPlayerId(), e);
         }
     }

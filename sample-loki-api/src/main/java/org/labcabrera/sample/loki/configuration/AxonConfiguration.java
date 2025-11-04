@@ -25,14 +25,14 @@ public class AxonConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return JacksonSerializer.builder()
-                .objectMapper(objectMapper)
-                .build();
+            .objectMapper(objectMapper)
+            .build();
     }
 
     @Bean
     public EventStore eventStore() {
         return EmbeddedEventStore.builder()
-                .storageEngine(new InMemoryEventStorageEngine())
-                .build();
+            .storageEngine(new InMemoryEventStorageEngine())
+            .build();
     }
 }
