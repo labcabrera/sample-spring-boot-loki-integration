@@ -14,9 +14,7 @@ public class PlayerService {
     private final PlayerValidationService validationService;
 
     public String createPlayer(String name, String email, Integer elo) {
-        // Validar antes de crear
         validationService.validatePlayerCreation(email);
-
         String id = UUID.randomUUID().toString();
         commandGateway.sendAndWait(new CreatePlayerCommand(id, name, email, elo));
         return id;

@@ -2,12 +2,8 @@ package org.labcabrera.sample.archetype.application;
 
 import org.axonframework.eventhandling.EventHandler;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,51 +13,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CreatePlayerEventHandler {
 
-    private final PlayerQueryHandler playerQueryHandler;
-
-    @Autowired(required = false)
-    private StreamBridge streamBridge;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final StreamBridge streamBridge;
+    private final PlayerService playerService;
 
     @EventHandler
     public void on(PlayerCreatedEvent event) {
         log.info("Player created event received: playerId={}, name={}", event.getPlayerId(), event.getName());
-        handlePlayerCreatedProjection(event);
-        handlePlayerCreatedNotification(event);
-        publishPlayerCreatedToKafka(event);
+        createPlayer(event);
+        sendNotification(event);
     }
 
-    private void publishPlayerCreatedToKafka(PlayerCreatedEvent event) {
-        if (streamBridge == null) {
-            log.debug("StreamBridge not available; skipping publish of PlayerCreatedEvent for playerId={}", event.getPlayerId());
-            return;
-        }
+    private void createPlayer(PlayerCreatedEvent event) {
+        log.debug("Creating player: {}", event.getName());
+        playerService.createPlayer(event.getName(), event.getEmail(), event.getElo());
+    }
 
+    private void sendNotification(PlayerCreatedEvent event) {
         try {
-            String payload = objectMapper.writeValueAsString(event);
-            boolean sent = streamBridge.send("player-created", payload);
-            if (sent) {
-                log.info("Published PlayerCreatedEvent via StreamBridge to destination 'player-created' for playerId={}",
-                    event.getPlayerId());
-            }
-            else {
-                log.warn("StreamBridge returned false when sending PlayerCreatedEvent for playerId={}", event.getPlayerId());
-            }
+            streamBridge.send("player-created", event);
         }
-        catch (JsonProcessingException e) {
-            log.error("Failed to serialize PlayerCreatedEvent for publish, playerId={}", event.getPlayerId(), e);
+        catch (Exception e) {
+            log.error("Failed to publish PlayerCreatedEvent, playerId={}", event.getPlayerId(), e);
         }
     }
 
-    private void handlePlayerCreatedProjection(PlayerCreatedEvent event) {
-        log.debug("Updating player projection for playerId: {}", event.getPlayerId());
-        // Actualizar la vista de lectura
-        playerQueryHandler.updatePlayerView(event.getPlayerId(), event.getName(), event.getEmail(), event.getElo());
-    }
-
-    private void handlePlayerCreatedNotification(PlayerCreatedEvent event) {
-        log.debug("Sending notification for new player: {}", event.getName());
-        // Aquí enviarías notificaciones, emails, etc.
-    }
 }

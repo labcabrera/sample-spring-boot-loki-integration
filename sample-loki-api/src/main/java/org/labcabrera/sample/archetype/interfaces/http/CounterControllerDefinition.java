@@ -4,11 +4,15 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-// Converted to servlet (non-reactive) controller signatures
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Counters", description = "Micrometer Sample Management API")
+@RequestMapping("/api/v1/counters")
 public interface CounterControllerDefinition {
 
     @GetMapping

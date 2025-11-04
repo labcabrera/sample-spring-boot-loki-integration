@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.interfaces.http;
+package org.labcabrera.sample.archetype.interfaces.http.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -10,10 +10,10 @@ import org.labcabrera.sample.archetype.domain.player.query.GetPlayerQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByStatusQuery;
 import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
+import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/players")
 @RequiredArgsConstructor
 public class PlayerController implements PlayerControllerDefinition {
 

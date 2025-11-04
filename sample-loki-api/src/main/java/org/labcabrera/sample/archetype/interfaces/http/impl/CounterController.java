@@ -1,21 +1,18 @@
-package org.labcabrera.sample.archetype.interfaces.http;
+package org.labcabrera.sample.archetype.interfaces.http.impl;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.labcabrera.sample.archetype.interfaces.http.CounterControllerDefinition;
 import org.springframework.web.bind.annotation.RestController;
+
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Counters", description = "Micrometer Sample Management API")
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/counters")
 public class CounterController implements CounterControllerDefinition {
 
     private Map<String, Integer> counterMap = new ConcurrentHashMap<>();
@@ -47,7 +44,7 @@ public class CounterController implements CounterControllerDefinition {
     }
 
     @Override
-    public Integer incrementCounter(@Parameter(description = "Counter key to increment", required = true) @PathVariable String key) {
+    public Integer incrementCounter(String key) {
         log.info("Incrementing counter for key {}", key);
         if ("err".equals(key)) {
             counterError.increment();
@@ -62,8 +59,7 @@ public class CounterController implements CounterControllerDefinition {
     }
 
     @Override
-    public Integer setCounter(@Parameter(description = "Counter key", required = true) @PathVariable("key") String key,
-        @Parameter(description = "Value to set", required = true) @PathVariable("value") Integer value) {
+    public Integer setCounter(String key, Integer value) {
         log.info("Setting counter for key {} to value {}", key, value);
         return counterMap.put(key, value);
     }
