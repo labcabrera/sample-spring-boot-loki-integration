@@ -25,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/players")
 @RequiredArgsConstructor
-@Tag(name = "Players", description = "API para gestión de jugadores con arquitectura CQRS")
+@Tag(name = "Players", description = "API for player management using a CQRS architecture")
 public class PlayerController {
 
     private final PlayerService playerService;
@@ -34,16 +34,16 @@ public class PlayerController {
 
     @PostMapping
     @Operation(
-        summary = "Crear nuevo jugador",
-        description = "Crea un nuevo jugador usando el patrón CQRS. Envía un comando que genera un evento."
+        summary = "Create new player",
+        description = "Creates a new player using the CQRS pattern. Sends a command that emits an event."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Jugador creado exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+        @ApiResponse(responseCode = "200", description = "Player created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public Mono<ResponseEntity<PlayerCreatedResponse>> create(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Datos del jugador a crear",
+                description = "Player data to create",
                 required = true,
                 content = @Content(schema = @Schema(implementation = CreatePlayerRequest.class))
             )
@@ -54,15 +54,15 @@ public class PlayerController {
     
     @GetMapping("/{playerId}")
     @Operation(
-        summary = "Obtener jugador por ID",
-        description = "Consulta un jugador específico por su identificador único"
+        summary = "Get player by ID",
+        description = "Retrieve a specific player by its unique identifier"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Jugador encontrado"),
-        @ApiResponse(responseCode = "404", description = "Jugador no encontrado")
+        @ApiResponse(responseCode = "200", description = "Player found"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
     })
     public Mono<ResponseEntity<PlayerView>> getPlayer(
-            @Parameter(description = "ID único del jugador", required = true)
+            @Parameter(description = "Unique player ID", required = true)
             @PathVariable String playerId) {
         try {
             PlayerView player = queryGateway.query(new GetPlayerQuery(playerId), PlayerView.class).join();
@@ -74,8 +74,8 @@ public class PlayerController {
     
     @GetMapping
     @Operation(
-        summary = "Obtener todos los jugadores",
-        description = "Retorna una lista completa de todos los jugadores registrados"
+        summary = "Get all players",
+        description = "Returns a complete list of all registered players"
     )
     @ApiResponse(responseCode = "200", description = "Lista de jugadores obtenida exitosamente")
     public Mono<ResponseEntity<Map<String, PlayerView>>> getAllPlayers() {
@@ -85,15 +85,15 @@ public class PlayerController {
     
     @GetMapping("/status/{status}")
     @Operation(
-        summary = "Obtener jugadores por estado",
-        description = "Filtra jugadores por su estado (ACTIVE, INACTIVE)"
+        summary = "Get players by status",
+        description = "Filter players by their status (ACTIVE, INACTIVE)"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de jugadores filtrada por estado"),
-        @ApiResponse(responseCode = "400", description = "Estado inválido")
+        @ApiResponse(responseCode = "200", description = "Players list filtered by status"),
+        @ApiResponse(responseCode = "400", description = "Invalid status")
     })
     public Mono<ResponseEntity<List<PlayerView>>> getPlayersByStatus(
-            @Parameter(description = "Estado del jugador (ACTIVE, INACTIVE)", required = true)
+            @Parameter(description = "Player status (ACTIVE, INACTIVE)", required = true)
             @PathVariable String status) {
         try {
             @SuppressWarnings("unchecked")
@@ -106,17 +106,17 @@ public class PlayerController {
     
     @GetMapping("/elo")
     @Operation(
-        summary = "Obtener jugadores por rango de ELO",
-        description = "Filtra jugadores dentro de un rango específico de puntuación ELO"
+        summary = "Get players by ELO range",
+        description = "Filter players within a specific ELO score range"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de jugadores en el rango de ELO especificado"),
-        @ApiResponse(responseCode = "400", description = "Parámetros de rango inválidos")
+        @ApiResponse(responseCode = "200", description = "Players list in the specified ELO range"),
+        @ApiResponse(responseCode = "400", description = "Invalid range parameters")
     })
     public Mono<ResponseEntity<List<PlayerView>>> getPlayersByEloRange(
-            @Parameter(description = "ELO mínimo", required = true)
+            @Parameter(description = "Minimum ELO", required = true)
             @RequestParam Integer minElo,
-            @Parameter(description = "ELO máximo", required = true)
+            @Parameter(description = "Maximum ELO", required = true)
             @RequestParam Integer maxElo) {
         try {
             @SuppressWarnings("unchecked")
@@ -128,21 +128,21 @@ public class PlayerController {
         }
     }
 
-    @Schema(description = "Datos para crear un nuevo jugador")
+    @Schema(description = "Data to create a new player")
     public static record CreatePlayerRequest(
-            @Schema(description = "Nombre del jugador", example = "Magnus Carlsen", required = true)
+        @Schema(description = "Player name", example = "Magnus Carlsen", required = true)
             String name,
-            @Schema(description = "Email único del jugador", example = "magnus@chess.com", required = true)
+        @Schema(description = "Player unique email", example = "magnus@chess.com", required = true)
             String email,
-            @Schema(description = "Puntuación ELO del jugador", example = "2800")
+        @Schema(description = "Player ELO score", example = "2800")
             Integer elo
     ) {}
     
-    @Schema(description = "Respuesta tras crear un jugador")
+    @Schema(description = "Response after creating a player")
     public static record PlayerCreatedResponse(
-            @Schema(description = "ID único del jugador creado")
+        @Schema(description = "Unique ID of the created player")
             String id,
-            @Schema(description = "Mensaje de confirmación")
+        @Schema(description = "Confirmation message")
             String message
     ) {}
 }

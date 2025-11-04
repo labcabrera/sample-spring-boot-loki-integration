@@ -58,8 +58,11 @@ springdoc:
     tagsSorter: alpha
   info:
     title: "Loki Integration API"
-    description: "API REST para gestión de jugadores con arquitectura CQRS/Event Sourcing usando Axon Framework"
+    description: "REST API for player management using CQRS/Event Sourcing with Axon Framework"
     version: "1.0.0"
+    contact:
+      name: "Lab Cabrera"
+      email: "lab@example.com"
   
 management:
   endpoints:

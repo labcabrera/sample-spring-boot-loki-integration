@@ -89,5 +89,10 @@ curl http://localhost:8081/api/v1/counters
 
 == Grafana Dashboards
 
+Datasources:
+
+- http://monitoring-kube-prometheus-prometheus.sample-observability:9090/
+- http://loki:3100
+
 - 1860: Node Exporter Full
 - 4701: JVM (Micrometer)

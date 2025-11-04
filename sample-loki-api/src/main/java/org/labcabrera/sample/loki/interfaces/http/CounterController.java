@@ -14,6 +14,10 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +25,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/counters")
-public class CounterController {
+public class CounterController implements CounterControllerDefinition {
 
     private Map<String, Integer> counterMap = new ConcurrentHashMap<>();
 
@@ -46,13 +50,22 @@ public class CounterController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all counters", description = "Returns all counters with current values")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK")
+    })
     public Mono<Map<String, Integer>> getCounters() {
         log.debug("Getting all counters");
         return Mono.just(counterMap);
     }
 
     @PostMapping("/{key}")
-    public Mono<Integer> incrementCounter(@PathVariable String key) {
+    @Operation(summary = "Increment counter", description = "Increment the counter identified by the given key")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "New counter value"),
+        @ApiResponse(responseCode = "500", description = "Server error")
+    })
+    public Mono<Integer> incrementCounter(@Parameter(description = "Counter key to increment", required = true) @PathVariable String key) {
         log.info("Incrementing counter for key {}", key);
         if ("err".equals(key)) {
             counterError.increment();
@@ -69,7 +82,13 @@ public class CounterController {
     }
 
     @PutMapping("/{key}/{value}")
-    public Mono<Integer> setCounter(@PathVariable("key") String key, @PathVariable("value") Integer value) {
+    @Operation(summary = "Set counter value", description = "Set the counter value for a specific key")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Previous counter value returned"),
+        @ApiResponse(responseCode = "400", description = "Bad request")
+    })
+    public Mono<Integer> setCounter(@Parameter(description = "Counter key", required = true) @PathVariable("key") String key,
+                                    @Parameter(description = "Value to set", required = true) @PathVariable("value") Integer value) {
         log.info("Setting counter for key {} to value {}", key, value);
         return Mono.fromCallable(() -> counterMap.put(key, value));
     }
