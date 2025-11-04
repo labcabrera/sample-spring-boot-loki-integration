@@ -49,15 +49,6 @@ public interface PlayerControllerDefinition {
     })
     ResponseEntity<Map<String, org.labcabrera.sample.archetype.domain.player.query.PlayerView>> getAllPlayers();
 
-    @GetMapping("/status/{status}")
-    @Operation(summary = "Get players by status", description = "Filter players by their status (ACTIVE, INACTIVE)")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Players list filtered by status"),
-        @ApiResponse(responseCode = "400", description = "Invalid status")
-    })
-    ResponseEntity<List<org.labcabrera.sample.archetype.domain.player.query.PlayerView>> getPlayersByStatus(
-        @Parameter(description = "Player status (ACTIVE, INACTIVE)", required = true) @PathVariable String status);
-
     @GetMapping("/elo")
     @Operation(summary = "Get players by ELO range", description = "Filter players within a specific ELO score range")
     @ApiResponses(value = {

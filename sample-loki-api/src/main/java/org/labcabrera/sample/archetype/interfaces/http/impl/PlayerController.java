@@ -6,9 +6,8 @@ import java.util.Map;
 import org.axonframework.queryhandling.QueryGateway;
 import org.labcabrera.sample.archetype.application.PlayerQueryHandler;
 import org.labcabrera.sample.archetype.application.PlayerService;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayerQuery;
+import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByStatusQuery;
 import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class PlayerController implements PlayerControllerDefinition {
 
     @Override
     public ResponseEntity<PlayerView> getPlayer(@PathVariable String playerId) {
-        var query = new GetPlayerQuery(playerId);
+        var query = new GetPlayerByIdQuery(playerId);
         PlayerView player = queryGateway.query(query, PlayerView.class).join();
         return ResponseEntity.ok(player);
     }
@@ -44,13 +43,6 @@ public class PlayerController implements PlayerControllerDefinition {
     @Override
     public ResponseEntity<Map<String, PlayerView>> getAllPlayers() {
         Map<String, PlayerView> players = playerQueryHandler.getAllPlayers();
-        return ResponseEntity.ok(players);
-    }
-
-    @Override
-    public ResponseEntity<List<PlayerView>> getPlayersByStatus(@PathVariable String status) {
-        var query = new GetPlayersByStatusQuery(status);
-        List<PlayerView> players = queryGateway.query(query, List.class).join();
         return ResponseEntity.ok(players);
     }
 

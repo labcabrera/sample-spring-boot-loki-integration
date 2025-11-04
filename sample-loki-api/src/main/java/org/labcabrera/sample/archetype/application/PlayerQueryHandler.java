@@ -1,9 +1,8 @@
 package org.labcabrera.sample.archetype.application;
 
 import org.axonframework.queryhandling.QueryHandler;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayerQuery;
+import org.labcabrera.sample.archetype.domain.player.query.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByEloRangeQuery;
-import org.labcabrera.sample.archetype.domain.player.query.GetPlayersByStatusQuery;
 import org.labcabrera.sample.archetype.domain.player.query.PlayerView;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.labcabrera.sample.archetype.infrastructure.persistence.mapper.PlayerMapper;
@@ -25,7 +24,7 @@ public class PlayerQueryHandler {
     private final PlayerMapper playerMapper;
 
     @QueryHandler
-    public PlayerView handle(GetPlayerQuery query) {
+    public PlayerView handle(GetPlayerByIdQuery query) {
         log.debug("Handling query for player: {}", query.getPlayerId());
         PlayerEntity entity = playerRepository.findById(query.getPlayerId())
             .orElseThrow(() -> {
@@ -33,13 +32,6 @@ public class PlayerQueryHandler {
                 return new RuntimeException("Player not found: " + query.getPlayerId());
             });
         return playerMapper.toPlayerView(entity);
-    }
-
-    @QueryHandler
-    public List<PlayerView> handle(GetPlayersByStatusQuery query) {
-        log.debug("Handling query for players by status: {}", query.getStatus());
-        PlayerEntity.PlayerStatus status = PlayerEntity.PlayerStatus.valueOf(query.getStatus().toUpperCase());
-        return getPlayersByStatus(status);
     }
 
     @QueryHandler
