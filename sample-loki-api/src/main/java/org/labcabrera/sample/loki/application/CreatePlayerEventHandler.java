@@ -1,14 +1,17 @@
 package org.labcabrera.sample.loki.application;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.axonframework.eventhandling.EventHandler;
+import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.concurrent.CompletableFuture;
 import org.springframework.kafka.support.SendResult;
-import org.labcabrera.sample.loki.domain.player.event.PlayerCreatedEvent;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,8 +29,7 @@ public class CreatePlayerEventHandler {
 
     @EventHandler
     public void on(PlayerCreatedEvent event) {
-        log.info("Player created event received: playerId={}, name={}",
-            event.getPlayerId(), event.getName());
+        log.info("Player created event received: playerId={}, name={}", event.getPlayerId(), event.getName());
         handlePlayerCreatedProjection(event);
         handlePlayerCreatedNotification(event);
         publishPlayerCreatedToKafka(event);
