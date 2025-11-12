@@ -1,6 +1,8 @@
 **/.vscode
+
 **/.gradle
 **/build
 **/bin
+
 minikube/*.crt
 minikube/*.key

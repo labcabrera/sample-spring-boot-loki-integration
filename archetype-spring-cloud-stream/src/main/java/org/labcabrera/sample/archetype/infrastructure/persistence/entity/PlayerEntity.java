@@ -18,7 +18,7 @@ public class PlayerEntity {
 
     @Id
     @Column(name = "player_id", length = 36)
-    private String playerId;
+    private String id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
