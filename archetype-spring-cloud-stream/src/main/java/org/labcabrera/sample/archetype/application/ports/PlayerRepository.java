@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PlayerRepository {
@@ -17,11 +16,8 @@ public interface PlayerRepository {
 
     Page<Player> findByRsql(String rsql, Pageable pageable);
 
-    List<Player> findByEloRange(Integer minElo, Integer maxElo);
-
     Player save(@NotNull Player entity);
 
     Player update(@NotNull Player entity);
 
-    List<Player> findAll();
 }

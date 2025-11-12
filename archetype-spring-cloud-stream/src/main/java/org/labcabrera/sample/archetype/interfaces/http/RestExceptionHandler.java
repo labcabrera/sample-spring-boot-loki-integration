@@ -1,7 +1,9 @@
 package org.labcabrera.sample.archetype.interfaces.http;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.labcabrera.sample.archetype.domain.player.exceptions.DomainException;
@@ -25,14 +27,8 @@ public class RestExceptionHandler {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ApiError> handleDomainException(DomainException ex) {
         log.error("Domain exception: code={}, message={}", ex.getCode(), ex.getMessage(), ex);
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(ex.getMessage())
-            .code(ex.getCode())
-            .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        var apiError = fromDomainException(ex);
+        return ResponseEntity.status(HttpStatus.valueOf(ex.getStatus())).body(apiError);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -44,26 +40,22 @@ public class RestExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message("Validation failed")
-            .validationErrors(errors)
-            .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        var apiError = new ApiError(
+            "VALIDATION_FAILED",
+            "Validation failed",
+            LocalDateTime.now(),
+            errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("Illegal argument exception", ex);
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(ex.getMessage())
-            .build();
+        ApiError error = new ApiError(
+            "BAD_REQUEST",
+            ex.getMessage(),
+            LocalDateTime.now(),
+            Collections.emptyMap());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -75,50 +67,56 @@ public class RestExceptionHandler {
         String message = String.format("Parameter '%s' should be of type %s",
             ex.getName(),
             typeName);
-
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(message)
-            .build();
+        ApiError error = new ApiError(
+            "BAD_REQUEST",
+            message,
+            LocalDateTime.now(),
+            Collections.emptyMap());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         log.error("HTTP message not readable exception", ex);
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message("Malformed JSON request or invalid data format")
-            .build();
+        ApiError error = new ApiError(
+            "BAD_REQUEST",
+            "Malformed JSON request or invalid data format",
+            LocalDateTime.now(),
+            Collections.emptyMap());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiError> handleNoHandlerFoundException(NoHandlerFoundException ex) {
         log.error("No handler found exception", ex);
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.NOT_FOUND.value())
-            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-            .message("Resource not found")
-            .build();
+        ApiError error = new ApiError(
+            "NOT_FOUND",
+            "Resource not found",
+            LocalDateTime.now(),
+            Collections.emptyMap());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex) {
         log.error("Unexpected exception", ex);
-        ApiError error = ApiError.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("An unexpected error occurred")
-            .build();
+        ApiError error = new ApiError(
+            "INTERNAL_SERVER_ERROR",
+            "An unexpected error occurred",
+            LocalDateTime.now(),
+            Collections.emptyMap());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    private ApiError fromDomainException(DomainException ex) {
+        var map = new LinkedHashMap<String, String>();
+        //TODO
+        map.put("exception", ex.getStackTrace().toString());
+        return new ApiError(
+            ex.getCode(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            Collections.emptyMap());
     }
 
 }

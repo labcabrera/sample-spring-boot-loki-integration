@@ -1,6 +1,5 @@
 package org.labcabrera.sample.archetype.infrastructure.persistence.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,12 +44,6 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public List<Player> findByEloRange(Integer minElo, Integer maxElo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByEloRange'");
-    }
-
-    @Override
     public Player save(Player player) {
         var entity = objectMapper.convertValue(player, PlayerEntity.class);
         var savedEntity = jpaRepository.save(entity);
@@ -62,12 +55,6 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         var entity = objectMapper.convertValue(player, PlayerEntity.class);
         var savedEntity = jpaRepository.save(entity);
         return objectMapper.convertValue(savedEntity, Player.class);
-    }
-
-    @Override
-    public List<Player> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
 }

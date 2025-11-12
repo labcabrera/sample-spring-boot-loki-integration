@@ -1,7 +1,5 @@
 package org.labcabrera.sample.archetype.interfaces.http.impl;
 
-import java.util.List;
-
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.CreatePlayerCommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayerByIdQueryHandler;
@@ -9,6 +7,7 @@ import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayersByRsq
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByRsqlQuery;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
+import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.springframework.data.domain.Pageable;
@@ -55,14 +54,6 @@ public class PlayerController implements PlayerControllerDefinition {
         var pageDto = page.map(player -> objectMapper.convertValue(player, PlayerDto.class));
         var response = PageResponse.from(pageDto);
         return ResponseEntity.ok(response);
-    }
-
-    @Override
-    public ResponseEntity<List<PlayerDto>> getPlayersByEloRange(Integer minElo, Integer maxElo) {
-        throw new UnsupportedOperationException("Not implemented yet");
-        // var query = new GetPlayersByEloRangeQuery(minElo, maxElo);
-        // List<PlayerView> players = (List<PlayerView>) queryGateway.query(query, List.class);
-        // return ResponseEntity.ok(players);
     }
 
 }

@@ -3,25 +3,12 @@ package org.labcabrera.sample.archetype.interfaces.http.dto;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiError {
-
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
-    private String message;
-    private String code;
-    private Map<String, String> validationErrors;
-
+@Schema(description = "API error details")
+public record ApiError(
+    @Schema(description = "Error code") String code,
+    @Schema(description = "Detailed error message") String message,
+    @Schema(description = "Timestamp of the error") LocalDateTime timestamp,
+    @Schema(description = "Validation errors, if any") Map<String, String> details) {
 }
