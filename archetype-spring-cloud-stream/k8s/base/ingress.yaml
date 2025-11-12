@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-loki-api
+  annotations:
+    kubernetes.io/ingress.className: nginx-ingress
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sample-loki-api.local
+      secretName: sample-loki-api-tls
+  rules:
+    - host: sample-loki-api.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: sample-loki-api
+                port:
+                  number: 80
+

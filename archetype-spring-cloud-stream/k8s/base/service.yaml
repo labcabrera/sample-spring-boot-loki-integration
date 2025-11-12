@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-loki-api
+  labels:
+    k8s-app: sample-loki-api
+spec:
+  selector:
+    k8s-app: sample-loki-api
+  type: ClusterIP
+  ports:
+  - name: web
+    port: 80
+    targetPort: 8081
+    protocol: TCP
