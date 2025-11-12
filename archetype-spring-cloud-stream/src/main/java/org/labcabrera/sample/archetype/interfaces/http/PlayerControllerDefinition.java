@@ -8,8 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/api/v1/players")
 @Tag(name = "Players", description = "API for player management using a CQRS architecture")
@@ -46,12 +48,11 @@ public interface PlayerControllerDefinition {
     @GetMapping
     @Operation(summary = "Get players by RSQL", description = "Filter players using an RSQL expression with optional pagination")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Players list retrieved successfully")
+        @ApiResponse(responseCode = "200", description = "Players list retrieved successfully", content = @Content(schema = @Schema(implementation = PageResponse.class))),
     })
-    ResponseEntity<Map<String, PlayerDto>> getPlayersByRsql(
+    ResponseEntity<PageResponse<PlayerDto>> getPlayersByRsql(
         @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,
-        @Parameter(description = "Page number (0-based)", example = "0") @RequestParam(required = false, defaultValue = "0") Integer page,
-        @Parameter(description = "Page size", example = "10") @RequestParam(required = false, defaultValue = "10") Integer size);
+        @ParameterObject Pageable pageable);
 
     @GetMapping("/elo")
     @Operation(summary = "Get players by ELO range", description = "Filter players within a specific ELO score range")

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import lombok.Value;
 
 @Value
-public class GetPlayerByRsqlQuery {
+public class GetPlayersByRsqlQuery {
 
     private final String rsql;
     private Pageable pageable;

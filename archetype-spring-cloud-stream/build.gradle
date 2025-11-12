@@ -10,7 +10,7 @@ description = 'Archetype for Spring Boot using Spring Cloud Stream'
 
 ext {
 	logstashLogbackVersion = '7.4'
-	springdocVersion = '2.1.0'
+	springdocVersion = '2.7.0'
 	swaggerAnnotationsVersion = '2.2.13'
 	springCloudVersion = '2025.0.0'
 }

@@ -3,6 +3,7 @@ package org.labcabrera.sample.archetype.infrastructure.persistence.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
@@ -35,6 +36,10 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     public Page<Player> findByRsql(String rsql, Pageable pageable) {
+        if (StringUtils.isBlank(rsql)) {
+            var page = jpaRepository.findAll(pageable);
+            return page.map(entity -> objectMapper.convertValue(entity, Player.class));
+        }
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findByRsql'");
     }

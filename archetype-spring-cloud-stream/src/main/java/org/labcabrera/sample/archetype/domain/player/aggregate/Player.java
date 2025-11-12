@@ -1,6 +1,5 @@
 package org.labcabrera.sample.archetype.domain.player.aggregate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity.PlayerStatus;
