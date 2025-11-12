@@ -8,8 +8,6 @@ import org.labcabrera.sample.archetype.application.cqrs.handlers.CreatePlayerCom
 import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayerByIdQueryHandler;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByEloRangeQuery;
-import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
-import org.labcabrera.sample.archetype.application.cqrs.queries.QueryGateway;
 import org.labcabrera.sample.archetype.application.services.PlayerService;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
@@ -42,7 +40,7 @@ public class PlayerController implements PlayerControllerDefinition {
     }
 
     @Override
-    public ResponseEntity<PlayerView> getPlayer(@PathVariable String playerId) {
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable String playerId) {
         var query = new GetPlayerByIdQuery(playerId);
         //PlayerView player = queryGateway.query(query, PlayerView.class);
         //return ResponseEntity.ok(player);
@@ -50,12 +48,12 @@ public class PlayerController implements PlayerControllerDefinition {
     }
 
     @Override
-    public ResponseEntity<Map<String, PlayerView>> getPlayersByRsql(String rsql, Integer page, Integer size) {
+    public ResponseEntity<Map<String, PlayerDto>> getPlayersByRsql(String rsql, Integer page, Integer size) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
-    public ResponseEntity<List<PlayerView>> getPlayersByEloRange(Integer minElo, Integer maxElo) {
+    public ResponseEntity<List<PlayerDto>> getPlayersByEloRange(Integer minElo, Integer maxElo) {
         throw new UnsupportedOperationException("Not implemented yet");
         // var query = new GetPlayersByEloRangeQuery(minElo, maxElo);
         // List<PlayerView> players = (List<PlayerView>) queryGateway.query(query, List.class);

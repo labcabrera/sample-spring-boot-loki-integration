@@ -1,8 +1,10 @@
 package org.labcabrera.sample.archetype.application.cqrs.queries;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class GetPlayerByIdQuery {
+
     private final String playerId;
+
 }

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +40,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Player found"),
         @ApiResponse(responseCode = "404", description = "Player not found")
     })
-    ResponseEntity<PlayerView> getPlayer(
+    ResponseEntity<PlayerDto> getPlayer(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @GetMapping
@@ -49,7 +48,7 @@ public interface PlayerControllerDefinition {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Players list retrieved successfully")
     })
-    ResponseEntity<Map<String, PlayerView>> getPlayersByRsql(
+    ResponseEntity<Map<String, PlayerDto>> getPlayersByRsql(
         @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,
         @Parameter(description = "Page number (0-based)", example = "0") @RequestParam(required = false, defaultValue = "0") Integer page,
         @Parameter(description = "Page size", example = "10") @RequestParam(required = false, defaultValue = "10") Integer size);
@@ -60,7 +59,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Players list in the specified ELO range"),
         @ApiResponse(responseCode = "400", description = "Invalid range parameters")
     })
-    ResponseEntity<List<PlayerView>> getPlayersByEloRange(
+    ResponseEntity<List<PlayerDto>> getPlayersByEloRange(
         @Parameter(description = "Minimum ELO", required = true) @RequestParam Integer minElo,
         @Parameter(description = "Maximum ELO", required = true) @RequestParam Integer maxElo);
 

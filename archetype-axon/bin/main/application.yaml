@@ -31,14 +31,27 @@ spring:
     init:
       mode: never
 
+
   cloud:
     stream:
+      function:
+        definition: createPlayer
       bindings:
+        createPlayer-in-0:
+          destination: sample.players.create-player.v1
+          group: players-svc
+          contentType: application/json
         playerCreated-out-0:
-          destination: player-created
+          destination: sample.players.created-player.v1
+          contentType: application/json
       kafka:
         binder:
           brokers: localhost:9092
+          autoCreateTopics: true
+          minPartitionCount: 1
+        bindings:
+          createPlayer-in-0:
+            startOffset: earliest
 
 axon:
   axonserver:
@@ -57,6 +70,15 @@ logging:
 
 server:
   port: 8081
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,axon
+  endpoint:
+    health:
+      show-details: always
 
 springdoc:
   api-docs:
@@ -72,12 +94,3 @@ springdoc:
     contact:
       name: "Lab Cabrera"
       email: "lab@example.com"
-  
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,prometheus,metrics,axon
-  endpoint:
-    health:
-      show-details: always

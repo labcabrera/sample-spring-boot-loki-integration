@@ -1,10 +1,12 @@
 package org.labcabrera.sample.archetype.application.cqrs.queries;
 
-import lombok.Data;
+import org.springframework.data.domain.Pageable;
 
-@Data
+import lombok.Value;
+
+@Value
 public class GetPlayerByRsqlQuery {
+
     private final String rsql;
-    private final Integer page;
-    private final Integer size;
+    private Pageable pageable;
 }

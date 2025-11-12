@@ -4,6 +4,8 @@ import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +19,9 @@ public interface PlayerRepository {
 
     List<Player> findByEloRange(Integer minElo, Integer maxElo);
 
-    Player save(Player entity);
+    Player save(@NotNull Player entity);
 
-    Player update(Player entity);
+    Player update(@NotNull Player entity);
 
     List<Player> findAll();
 }

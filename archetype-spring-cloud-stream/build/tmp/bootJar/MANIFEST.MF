@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Main-Class: org.springframework.boot.loader.launch.JarLauncher
-Start-Class: org.labcabrera.sample.archetype.SampleArchetype
+Start-Class: org.labcabrera.sample.archetype.SampleArchetypeCloudStream
 Spring-Boot-Version: 3.5.7
 Spring-Boot-Classes: BOOT-INF/classes/
 Spring-Boot-Lib: BOOT-INF/lib/
