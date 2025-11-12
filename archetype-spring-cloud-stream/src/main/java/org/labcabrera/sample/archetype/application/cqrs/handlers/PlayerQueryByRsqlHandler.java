@@ -1,7 +1,6 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.axonframework.queryhandling.QueryHandler;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByRsqlQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
@@ -19,7 +18,6 @@ public class PlayerQueryByRsqlHandler {
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
 
-    @QueryHandler
     public PlayerView handle(GetPlayerByRsqlQuery query) {
         log.debug("Handling RSQL query for player: {}", query.getRsql());
         throw new NotImplementedException("RSQL query handling is not implemented yet");

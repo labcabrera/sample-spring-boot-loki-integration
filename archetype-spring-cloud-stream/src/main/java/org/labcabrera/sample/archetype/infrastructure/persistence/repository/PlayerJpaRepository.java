@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlayerJpaRepository extends PlayerRepository, JpaRepository<PlayerEntity, String> {
+public interface PlayerJpaRepository extends JpaRepository<PlayerEntity, String> {
 
     Optional<PlayerEntity> findByEmail(String email);
 

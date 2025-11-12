@@ -1,30 +1,25 @@
 package org.labcabrera.sample.archetype.application.ports;
 
-import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
-import org.springframework.data.repository.query.Param;
+import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PlayerRepository {
 
-    Optional<PlayerEntity> findById(String playerId);
+    Optional<Player> findById(String playerId);
 
-    Optional<PlayerEntity> findByEmail(String email);
+    Optional<Player> findByEmail(String email);
 
-    List<PlayerEntity> findByStatus(PlayerEntity.PlayerStatus status);
+    Page<Player> findByRsql(String rsql, Pageable pageable);
 
-    List<PlayerEntity> findByEloRange(@Param("minElo") Integer minElo, @Param("maxElo") Integer maxElo);
+    List<Player> findByEloRange(Integer minElo, Integer maxElo);
 
-    List<PlayerEntity> findByNameContainingIgnoreCase(@Param("name") String name);
+    Player save(Player entity);
 
-    Long countByStatus(@Param("status") PlayerEntity.PlayerStatus status);
+    Player update(Player entity);
 
-    //Page<PlayerEntity> findByRsql(String rsql, Pageable pageable);
-
-    boolean existsByEmail(String email);
-
-    PlayerEntity save(PlayerEntity entity);
-
-    List<PlayerEntity> findAll();
+    List<Player> findAll();
 }

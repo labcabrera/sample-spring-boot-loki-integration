@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
+import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Player created successfully"),
         @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    ResponseEntity<PlayerController.PlayerCreatedResponse> create(
+    ResponseEntity<PlayerDto> create(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = PlayerController.CreatePlayerRequest.class))) @RequestBody PlayerController.CreatePlayerRequest request);
 
     @GetMapping("/{playerId}")
@@ -64,13 +65,15 @@ public interface PlayerControllerDefinition {
         @Parameter(description = "Maximum ELO", required = true) @RequestParam Integer maxElo);
 
     @Schema(description = "Data to create a new player")
-    public static record CreatePlayerRequest(@Schema(description = "Player name", example = "Magnus Carlsen", required = true) String name,
+    public static record CreatePlayerRequest(
+        @Schema(description = "Player name", example = "Magnus Carlsen", required = true) String name,
         @Schema(description = "Player unique email", example = "magnus@chess.com", required = true) String email,
         @Schema(description = "Player ELO score", example = "2800") Integer elo) {
     }
 
     @Schema(description = "Response after creating a player")
-    public static record PlayerCreatedResponse(@Schema(description = "Unique ID of the created player") String id,
+    public static record PlayerCreatedResponse(
+        @Schema(description = "Unique ID of the created player") String id,
         @Schema(description = "Confirmation message") String message) {
     }
 }

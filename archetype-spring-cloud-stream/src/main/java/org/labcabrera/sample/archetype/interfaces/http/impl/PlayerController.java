@@ -3,17 +3,22 @@ package org.labcabrera.sample.archetype.interfaces.http.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.axonframework.queryhandling.QueryGateway;
-import org.labcabrera.sample.archetype.application.cqrs.handlers.PlayerQueryHandler;
+import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
+import org.labcabrera.sample.archetype.application.cqrs.handlers.CreatePlayerCommandHandler;
+import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayerByIdQueryHandler;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByEloRangeQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.PlayerView;
+import org.labcabrera.sample.archetype.application.cqrs.queries.QueryGateway;
 import org.labcabrera.sample.archetype.application.services.PlayerService;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
+import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,55 +29,37 @@ import lombok.extern.slf4j.Slf4j;
 public class PlayerController implements PlayerControllerDefinition {
 
     private final PlayerService playerService;
-    private final QueryGateway queryGateway;
-    private final PlayerQueryHandler playerQueryHandler;
+    private final GetPlayerByIdQueryHandler playerQueryHandler;
+    private final CreatePlayerCommandHandler createPlayerCommandHandler;
+    private final ObjectMapper objectMapper;
 
     @Override
-    public ResponseEntity<PlayerCreatedResponse> create(@RequestBody CreatePlayerRequest request) {
-        String id = playerService.createPlayer(request.name(), request.email(), request.elo());
-        return ResponseEntity.ok(new PlayerCreatedResponse(id, "Player created successfully"));
+    public ResponseEntity<PlayerDto> create(@RequestBody CreatePlayerRequest request) {
+        var command = new CreatePlayerCommand(request.name(), request.email(), request.elo());
+        var player = createPlayerCommandHandler.handle(command);
+        var playerDto = objectMapper.convertValue(player, PlayerDto.class);
+        return ResponseEntity.ok(playerDto);
     }
 
     @Override
     public ResponseEntity<PlayerView> getPlayer(@PathVariable String playerId) {
         var query = new GetPlayerByIdQuery(playerId);
-        PlayerView player = queryGateway.query(query, PlayerView.class).join();
-        return ResponseEntity.ok(player);
+        //PlayerView player = queryGateway.query(query, PlayerView.class);
+        //return ResponseEntity.ok(player);
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public ResponseEntity<Map<String, PlayerView>> getPlayersByRsql(String rsql, Integer page, Integer size) {
-        // Basic implementation: if rsql is provided we currently do not evaluate it, so log and return full result.
-        if (rsql != null && !rsql.trim().isEmpty()) {
-            log.warn("RSQL filtering is not implemented yet. Received expression: {}", rsql);
-        }
-        Map<String, PlayerView> allPlayers = playerQueryHandler.getAllPlayers();
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null || size <= 0) {
-            size = 10;
-        }
-        var entries = allPlayers.entrySet().stream().toList();
-        int fromIndex = page * size;
-        if (fromIndex >= entries.size()) {
-            return ResponseEntity.ok(Map.of());
-        }
-        int toIndex = Math.min(fromIndex + size, entries.size());
-        var pageEntries = entries.subList(fromIndex, toIndex);
-
-        var result = pageEntries.stream().collect(java.util.stream.Collectors.toMap(
-            java.util.Map.Entry::getKey,
-            java.util.Map.Entry::getValue));
-
-        return ResponseEntity.ok(result);
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public ResponseEntity<List<PlayerView>> getPlayersByEloRange(Integer minElo, Integer maxElo) {
-        var query = new GetPlayersByEloRangeQuery(minElo, maxElo);
-        List<PlayerView> players = queryGateway.query(query, List.class).join();
-        return ResponseEntity.ok(players);
+        throw new UnsupportedOperationException("Not implemented yet");
+        // var query = new GetPlayersByEloRangeQuery(minElo, maxElo);
+        // List<PlayerView> players = (List<PlayerView>) queryGateway.query(query, List.class);
+        // return ResponseEntity.ok(players);
     }
 
 }
