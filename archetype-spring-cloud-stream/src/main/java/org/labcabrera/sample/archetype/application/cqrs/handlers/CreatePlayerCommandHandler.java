@@ -18,15 +18,15 @@ public class CreatePlayerCommandHandler {
     private final PlayerService playerService;
 
     public Player handle(CreatePlayerCommand command) {
-        log.info("Create player << {}", command.getEmail());
+        log.info("Create player << {}", command.email());
         var player = createPlayer(command);
         sendNotification(command);
         return player;
     }
 
     private Player createPlayer(CreatePlayerCommand command) {
-        log.debug("Creating player: {}", command.getName());
-        return playerService.createPlayer(command.getName(), command.getEmail(), command.getElo());
+        log.debug("Creating player: {}", command.name());
+        return playerService.createPlayer(command.name(), command.email(), command.elo());
     }
 
     private void sendNotification(CreatePlayerCommand command) {
@@ -34,7 +34,7 @@ public class CreatePlayerCommandHandler {
             streamBridge.send("player-created", command);
         }
         catch (Exception ex) {
-            log.error("Failed to publish PlayerCreatedEvent for {}", command.getEmail(), ex);
+            log.error("Failed to publish PlayerCreatedEvent for {}", command.email(), ex);
         }
     }
 

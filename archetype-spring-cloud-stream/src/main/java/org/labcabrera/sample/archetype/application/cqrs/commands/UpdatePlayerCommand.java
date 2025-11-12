@@ -1,11 +1,6 @@
 package org.labcabrera.sample.archetype.application.cqrs.commands;
 
-import lombok.Value;
-
-@Value
-public class UpdatePlayerCommand {
-
-    private final String playerId;
-    private final String name;
-
+public record UpdatePlayerCommand(
+    String playerId,
+    String name) {
 }

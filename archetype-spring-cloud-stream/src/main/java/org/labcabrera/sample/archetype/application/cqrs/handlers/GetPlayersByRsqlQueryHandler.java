@@ -17,7 +17,7 @@ public class GetPlayersByRsqlQueryHandler {
     private final PlayerRepository playerRepository;
 
     public Page<Player> handle(GetPlayersByRsqlQuery query) {
-        log.debug("Handling RSQL query for player <<< {}", query.getRsql());
-        return playerRepository.findByRsql(query.getRsql(), query.getPageable());
+        log.debug("Handling RSQL query for player <<< {}", query.rsql());
+        return playerRepository.findByRsql(query.rsql(), query.pageable());
     }
 }

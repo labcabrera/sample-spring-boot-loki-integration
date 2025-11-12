@@ -52,7 +52,7 @@ public class PlayerController implements PlayerControllerDefinition {
         var query = new GetPlayersByRsqlQuery(rsql, pageable);
         var page = getPlayersByRsqlQueryHandler.handle(query);
         var pageDto = page.map(player -> objectMapper.convertValue(player, PlayerDto.class));
-        var response = PageResponse.from(pageDto);
+        var response = new PageResponse<>(pageDto);
         return ResponseEntity.ok(response);
     }
 

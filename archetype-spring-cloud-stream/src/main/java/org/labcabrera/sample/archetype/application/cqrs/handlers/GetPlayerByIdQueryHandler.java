@@ -16,10 +16,10 @@ public class GetPlayerByIdQueryHandler {
     private final PlayerRepository playerRepository;
 
     public Player handle(GetPlayerByIdQuery query) {
-        log.debug("Getting player by id << {}", query.getPlayerId());
+        log.debug("Getting player by id << {}", query.playerId());
         return playerRepository
-            .findById(query.getPlayerId())
-            .orElseThrow(() -> new NotFoundException(query.getPlayerId(), Player.class));
+            .findById(query.playerId())
+            .orElseThrow(() -> new NotFoundException(query.playerId(), Player.class));
     }
 
 }
