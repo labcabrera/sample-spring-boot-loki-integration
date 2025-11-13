@@ -1,67 +1,22 @@
 spring:
+  config:
+    import:
+      - classpath:application-db.yaml
+      - classpath:application-cloud-stream.yaml
+      - classpath:application-springdoc.yaml
   application:
     name: archetype-spring-cloud-stream
   main:
     banner-mode: off
-  webflux:
-    base-path: /
-    static-path-pattern: /**
-  
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
-  
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: ${JPA_SHOW_SQL:true}
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-  
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  
-  sql:
-    init:
-      mode: never
-
-
-  cloud:
-    stream:
-      function:
-        definition: createPlayer
-      bindings:
-        createPlayer-in-0:
-          destination: sample.players.create-player.v1
-          group: players-svc
-          contentType: application/json
-        playerCreated-out-0:
-          destination: sample.players.created-player.v1
-          contentType: application/json
-      kafka:
-        binder:
-          brokers: localhost:9092
-          autoCreateTopics: true
-          minPartitionCount: 1
-        bindings:
-          createPlayer-in-0:
-            startOffset: earliest
 
 logging:
   pattern:
     console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}\n'
   level:
     org.labcabrera: ${LOG_LEVEL:DEBUG} 
-    org.axonframework: ${AXON_LOG_LEVEL:INFO}
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
+    org.apache.kafka: ${KAFKA_LOG_LEVEL:INFO}
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
     root: INFO
 
 server:
@@ -75,18 +30,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operationsSorter: method
-    tagsSorter: alpha
-  info:
-    title: "Loki Integration API"
-    description: "REST API for player management using CQRS/Event Sourcing with Axon Framework"
-    version: "1.0.0"
-    contact:
-      name: "Lab Cabrera"
-      email: "lab@example.com"

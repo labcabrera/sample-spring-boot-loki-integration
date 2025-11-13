@@ -19,7 +19,7 @@ public class KafkaPlayerEventBusAdapter implements PlayerEventBusPort {
     @Override
     public void publish(PlayerCreatedEvent event) {
         try {
-            streamBridge.send("player-created", event);
+            streamBridge.send("playerCreated-out-0", event);
         }
         catch (Exception ex) {
             log.error("Failed to publish PlayerCreatedEvent for {}", event.playerId(), ex);

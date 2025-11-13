@@ -21,14 +21,9 @@ public class CreatePlayerCommandHandler implements CommandHandler<CreatePlayerCo
 
     public Player handle(CreatePlayerCommand command) {
         log.info("Create player << {}", command.email());
-        var player = createPlayer(command);
+        var player = createPlayerService.createPlayer(command.name(), command.email(), command.elo());
         sendNotification(player);
         return player;
-    }
-
-    private Player createPlayer(CreatePlayerCommand command) {
-        log.debug("Creating player: {}", command.name());
-        return createPlayerService.createPlayer(command.name(), command.email(), command.elo());
     }
 
     private void sendNotification(Player player) {

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class QueryBusConfiguration {
+public class PlayerQueryBusConfiguration {
 
     private final SimpleQueryBus queryBus;
     private final GetPlayerByIdQueryHandler getPlayerByIdQueryHandler;

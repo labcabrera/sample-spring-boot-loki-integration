@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    stream:
+      # function:
+        # definition: createPlayer
+      bindings:
+        createPlayer-in-0:
+          destination: sample.players.creation.v1
+          group: players-svc
+          contentType: application/json
+        playerCreated-out-0:
+          destination: sample.players.created.v1
+          contentType: application/json
+      kafka:
+        binder:
+          brokers: localhost:9092
+          autoCreateTopics: true
+          minPartitionCount: 1
+        bindings:
+          createPlayer-in-0:
+            startOffset: earliest

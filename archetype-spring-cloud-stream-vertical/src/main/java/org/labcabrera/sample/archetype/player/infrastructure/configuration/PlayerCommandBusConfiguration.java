@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class CommandBusConfiguration {
+public class PlayerCommandBusConfiguration {
 
     private final SimpleCommandBus commandBus;
     private final CreatePlayerCommandHandler createPlayerCommandHandler;

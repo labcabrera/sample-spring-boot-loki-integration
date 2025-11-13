@@ -22,13 +22,10 @@ public class SimpleCommandBus implements CommandBus {
     @SuppressWarnings("unchecked")
     public <R> R dispatch(Object command) {
         log.debug("Dispatching command: {}", command.getClass().getSimpleName());
-
         CommandHandler<Object, R> handler = (CommandHandler<Object, R>) handlers.get(command.getClass());
-
         if (handler == null) {
             throw new IllegalStateException("No handler registered for command: " + command.getClass().getName());
         }
-
         return handler.handle(command);
     }
 

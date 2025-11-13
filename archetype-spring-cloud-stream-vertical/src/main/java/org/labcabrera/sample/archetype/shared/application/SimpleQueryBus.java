@@ -22,13 +22,10 @@ public class SimpleQueryBus implements QueryBus {
     @SuppressWarnings("unchecked")
     public <R> R dispatch(Object query) {
         log.debug("Dispatching query: {}", query.getClass().getSimpleName());
-
         QueryHandler<Object, R> handler = (QueryHandler<Object, R>) handlers.get(query.getClass());
-
         if (handler == null) {
             throw new IllegalStateException("No handler registered for query: " + query.getClass().getName());
         }
-
         return handler.handle(query);
     }
 
