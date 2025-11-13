@@ -17,10 +17,11 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
-    show-sql: ${JPA_SHOW_SQL:false}
+    show-sql: ${JPA_SHOW_SQL:true}
     properties:
       hibernate:
         format_sql: true
+        use_sql_comments: true
   
   h2:
     console:
@@ -59,6 +60,8 @@ logging:
   level:
     org.labcabrera: ${LOG_LEVEL:DEBUG} 
     org.axonframework: ${AXON_LOG_LEVEL:INFO}
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
     root: INFO
 
 server:

@@ -62,7 +62,9 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
         case NOT_IN:
             return builder.not(root.get(property).in(args));
         case LIKE:
-            return builder.like(root.<String>get(property), argument.toString().replace('*', '%'));
+            var str = argument.toString();
+            var value = str.indexOf('%') < 0 ? String.format("%%%s%%", str) : str;
+            return builder.like(root.<String>get(property), value);
         }
 
         return null;

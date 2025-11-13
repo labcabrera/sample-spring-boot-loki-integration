@@ -31,7 +31,7 @@ public enum RsqlSearchOperation {
 
     public static RsqlSearchOperation getSimpleOperator(ComparisonOperator operator) {
         for (RsqlSearchOperation operation : values()) {
-            if (operation.operator == operator) {
+            if (operation.operator.equals(operator)) {
                 return operation;
             }
         }
