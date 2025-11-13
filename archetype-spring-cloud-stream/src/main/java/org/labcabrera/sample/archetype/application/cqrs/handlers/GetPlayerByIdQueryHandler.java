@@ -1,5 +1,6 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
+import org.labcabrera.sample.archetype.application.cqrs.QueryHandler;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.domain.player.Player;
@@ -11,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetPlayerByIdQueryHandler {
+public class GetPlayerByIdQueryHandler implements QueryHandler<GetPlayerByIdQuery, Player> {
 
     private final PlayerRepository playerRepository;
 
