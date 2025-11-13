@@ -13,15 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaCreatePlayerController {
+public class KafkaPlayerController {
 
     private final CommandBus commandBus;
 
     @Bean
-    public Consumer<CreatePlayerCommand> createPlayer() {
-        return event -> {
-            log.info("Received PlayerCreatedEvent from Kafka: {}", event);
-            commandBus.dispatch(event);
+    public Consumer<CreatePlayerCommand> processPlayerCreation() {
+        return command -> {
+            log.info("Received PlayerCreatedEvent from Kafka: {}", command);
+            commandBus.dispatch(command);
         };
     }
 }

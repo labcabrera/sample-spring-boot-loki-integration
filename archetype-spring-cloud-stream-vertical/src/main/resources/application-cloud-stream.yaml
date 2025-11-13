@@ -1,13 +1,17 @@
 spring:
   cloud:
     stream:
-      # function:
-        # definition: createPlayer
+      function:
+        definition: processPlayerCreation
       bindings:
-        createPlayer-in-0:
+        processPlayerCreation-in-0:
           destination: sample.players.creation.v1
           group: players-svc
           contentType: application/json
+        # processConfirmationOnPlayerCreation-in-0:
+        #   destination: sample.players.creation.v1
+        #   group: player-confirmations-svc
+        #   contentType: application/json
         playerCreated-out-0:
           destination: sample.players.created.v1
           contentType: application/json
@@ -17,5 +21,5 @@ spring:
           autoCreateTopics: true
           minPartitionCount: 1
         bindings:
-          createPlayer-in-0:
+          processPlayerCreation-in-0:
             startOffset: earliest
