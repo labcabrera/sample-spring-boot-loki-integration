@@ -1,7 +1,7 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
-import org.labcabrera.sample.archetype.application.services.PlayerService;
+import org.labcabrera.sample.archetype.application.services.CreatePlayerService;
 import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CreatePlayerCommandHandler {
 
     private final StreamBridge streamBridge;
-    private final PlayerService playerService;
+    private final CreatePlayerService playerService;
 
     public Player handle(CreatePlayerCommand command) {
         log.info("Create player << {}", command.email());

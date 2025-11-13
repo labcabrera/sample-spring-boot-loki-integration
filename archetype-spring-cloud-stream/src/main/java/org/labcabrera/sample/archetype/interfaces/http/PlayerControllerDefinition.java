@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.apache.kafka.common.requests.ApiError;
 import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
-import org.labcabrera.sample.archetype.interfaces.http.impl.PlayerController;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +29,8 @@ public interface PlayerControllerDefinition {
     @PostMapping
     @Operation(summary = "Create new player", description = "Creates a new player using the CQRS pattern. Sends a command that emits an event.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Player created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data")
+        @ApiResponse(responseCode = "200", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<PlayerDto> create(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = CreatePlayerRequest.class))) @RequestBody CreatePlayerRequest request);
@@ -38,8 +38,8 @@ public interface PlayerControllerDefinition {
     @GetMapping("/{playerId}")
     @Operation(summary = "Get player by id", description = "Retrieve a specific player by its unique identifier")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Player found"),
-        @ApiResponse(responseCode = "404", description = "Player not found")
+        @ApiResponse(responseCode = "200", description = "Player found", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<PlayerDto> getPlayer(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
@@ -48,6 +48,7 @@ public interface PlayerControllerDefinition {
     @Operation(summary = "Get players by RSQL", description = "Filter players using an RSQL expression with optional pagination")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Players list retrieved successfully", content = @Content(schema = @Schema(implementation = PageResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid RSQL expression", content = @Content(schema = @Schema(implementation = ApiError.class))),
     })
     ResponseEntity<PageResponse<PlayerDto>> getPlayersByRsql(
         @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,

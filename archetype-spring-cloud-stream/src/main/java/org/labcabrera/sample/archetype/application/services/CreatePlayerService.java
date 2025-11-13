@@ -15,12 +15,16 @@ import lombok.val;
 
 @Service
 @RequiredArgsConstructor
-public class PlayerService {
+public class CreatePlayerService {
 
     private final PlayerRepository playerRepository;
     private final Validator validator;
 
     public Player createPlayer(String name, String email, Integer elo) {
+        var current = this.playerRepository.findByEmail(email);
+        if (current.isPresent()) {
+            throw new BadRequestException("Email address already in use: " + email);
+        }
         var player = Player.builder()
             .id(UUID.randomUUID().toString())
             .name(name)
@@ -36,8 +40,4 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public void updatePlayer(String playerId, String name, String email) {
-        // Optionally validate update (e.g., email uniqueness) here
-        // commandGateway.sendAndWait(new UpdatePlayerCommand(playerId, name, email));
-    }
 }
