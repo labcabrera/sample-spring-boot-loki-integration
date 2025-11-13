@@ -8,6 +8,8 @@ import org.labcabrera.sample.archetype.player.domain.Player;
 import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConflictException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Validator;
@@ -23,7 +25,7 @@ public class CreatePlayerService {
 
     public Player createPlayer(String name, String email, Integer elo) {
         playerRepository.findByEmail(email).ifPresent(e -> {
-            throw new ConflictException("Already existing player with email " + e.getEmail());
+            throw new ConflictException("player.msg.err.email-exists", e.getEmail());
         });
         var player = Player.builder()
             .id(UUID.randomUUID().toString())
@@ -35,7 +37,7 @@ public class CreatePlayerService {
             .build();
         val violations = validator.validate(player);
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Player entity validation failed", violations);
+            throw new ConstraintViolationException("player.msg.err.validation-error", violations);
         }
         return playerRepository.save(player);
     }

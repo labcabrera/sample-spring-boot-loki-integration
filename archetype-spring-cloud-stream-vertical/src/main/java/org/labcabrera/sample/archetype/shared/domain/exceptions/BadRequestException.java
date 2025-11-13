@@ -6,18 +6,16 @@ import jakarta.validation.ConstraintViolation;
 
 public class BadRequestException extends DomainException {
 
-    private static final String CODE = "BAD_REQUEST";
-
-    public BadRequestException(String message) {
-        super(CODE, 400, message);
+    public BadRequestException(String code) {
+        super(code, 400);
     }
 
-    public BadRequestException(String message, Throwable cause) {
-        super(CODE, 400, message, cause);
+    public BadRequestException(String code, Throwable cause) {
+        super(code, 400, cause);
     }
 
-    public BadRequestException(String message, Set<ConstraintViolation<?>> violations) {
-        super(CODE, 400, message);
+    public BadRequestException(String code, Set<ConstraintViolation<?>> violations) {
+        super(code, 400);
     }
 
 }

@@ -4,8 +4,8 @@ public class NotFoundException extends DomainException {
 
     private static final String CODE = "NOT_FOUND";
 
-    public NotFoundException(String id, Class<?> clazz) {
-        super(CODE, 404, "Not found " + clazz.getSimpleName() + " with id " + id);
+    public NotFoundException(String code, Class<?> clazz) {
+        super(code, 404, clazz.getSimpleName());
     }
 
     public NotFoundException(String message) {
