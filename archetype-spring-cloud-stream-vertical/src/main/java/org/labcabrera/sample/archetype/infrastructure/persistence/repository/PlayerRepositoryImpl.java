@@ -3,9 +3,9 @@ package org.labcabrera.sample.archetype.infrastructure.persistence.repository;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
+import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
 import org.springframework.data.domain.Page;

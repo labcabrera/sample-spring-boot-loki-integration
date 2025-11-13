@@ -1,15 +1,15 @@
 package org.labcabrera.sample.archetype.interfaces.http.impl;
 
-import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
-import org.labcabrera.sample.archetype.application.cqrs.commands.UpdatePlayerCommand;
-import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
-import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByRsqlQuery;
 import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.labcabrera.sample.archetype.interfaces.http.dto.UpdatePlayerRequest;
+import org.labcabrera.sample.archetype.player.application.cqrs.commands.CreatePlayerCommand;
+import org.labcabrera.sample.archetype.player.application.cqrs.commands.UpdatePlayerCommand;
+import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayerByIdQuery;
+import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayersByRsqlQuery;
 import org.labcabrera.sample.archetype.shared.application.CommandBus;
 import org.labcabrera.sample.archetype.shared.application.QueryBus;
 import org.springframework.data.domain.Page;

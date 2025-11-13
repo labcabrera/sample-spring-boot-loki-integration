@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application.cqrs.commands;
+package org.labcabrera.sample.archetype.player.application.cqrs.commands;
 
 public record EmailConfirmationCommand(
     String playerId,

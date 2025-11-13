@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application.cqrs.queries;
+package org.labcabrera.sample.archetype.player.application.cqrs.queries;
 
 import org.springframework.data.domain.Pageable;
 

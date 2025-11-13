@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application.cqrs.commands;
+package org.labcabrera.sample.archetype.player.application.cqrs.commands;
 
 import org.labcabrera.sample.archetype.domain.player.PlayerStatus;
 

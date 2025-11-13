@@ -1,9 +1,9 @@
 package org.labcabrera.sample.archetype.configuration;
 
-import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayerByIdQueryHandler;
-import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayersByRsqlQueryHandler;
-import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
-import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByRsqlQuery;
+import org.labcabrera.sample.archetype.player.application.cqrs.handlers.GetPlayerByIdQueryHandler;
+import org.labcabrera.sample.archetype.player.application.cqrs.handlers.GetPlayersByRsqlQueryHandler;
+import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayerByIdQuery;
+import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayersByRsqlQuery;
 import org.labcabrera.sample.archetype.shared.application.SimpleQueryBus;
 import org.springframework.context.annotation.Configuration;
 

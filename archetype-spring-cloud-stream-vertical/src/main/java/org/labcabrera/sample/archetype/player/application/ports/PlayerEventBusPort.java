@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application.ports;
+package org.labcabrera.sample.archetype.player.application.ports;
 
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerUpdatedEvent;

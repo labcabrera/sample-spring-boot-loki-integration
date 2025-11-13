@@ -1,8 +1,8 @@
 package org.labcabrera.sample.archetype.infrastructure.messaging.kafka;
 
-import org.labcabrera.sample.archetype.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerUpdatedEvent;
+import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
