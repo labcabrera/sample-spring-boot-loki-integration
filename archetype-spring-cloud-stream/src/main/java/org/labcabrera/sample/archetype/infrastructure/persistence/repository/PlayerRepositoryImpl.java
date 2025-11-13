@@ -5,17 +5,24 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
+import org.labcabrera.sample.archetype.domain.player.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
+import org.labcabrera.sample.archetype.infrastructure.persistence.repository.rsql.CustomRsqlVisitor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerJpaRepository jpaRepository;
@@ -39,8 +46,16 @@ public class PlayerRepositoryImpl implements PlayerRepository {
             var page = jpaRepository.findAll(pageable);
             return page.map(entity -> objectMapper.convertValue(entity, Player.class));
         }
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByRsql'");
+        try {
+            Node rootNode = new RSQLParser().parse(rsql);
+            Specification<PlayerEntity> spec = rootNode.accept(new CustomRsqlVisitor<PlayerEntity>());
+            var page = jpaRepository.findAll(spec, pageable);
+            return page.map(entity -> objectMapper.convertValue(entity, Player.class));
+        }
+        catch (Exception ex) {
+            log.error("Error parsing RSQL query: {}", rsql, ex);
+            throw new BadRequestException("Error parsing RSQL query " + rsql, ex);
+        }
     }
 
     @Override

@@ -8,4 +8,8 @@ public class BadRequestException extends DomainException {
         super(CODE, 400, message);
     }
 
+    public BadRequestException(String message, Throwable cause) {
+        super(CODE, 400, message, cause);
+    }
+
 }

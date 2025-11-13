@@ -42,7 +42,8 @@ dependencies {
 	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}"
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 	implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationsVersion}"
-	
+	implementation "cz.jirutka.rsql:rsql-parser:2.1.0"
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
