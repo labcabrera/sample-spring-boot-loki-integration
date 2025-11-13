@@ -1,6 +1,6 @@
 package org.labcabrera.sample.archetype.interfaces.http.dto;
 
-import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity.PlayerStatus;
+import org.labcabrera.sample.archetype.domain.player.PlayerStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

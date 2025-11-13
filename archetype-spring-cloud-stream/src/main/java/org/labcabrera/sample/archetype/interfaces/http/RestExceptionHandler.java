@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.labcabrera.sample.archetype.domain.player.exceptions.DomainException;
+import org.labcabrera.sample.archetype.domain.player.exceptions.ConstraintViolationException;
 import org.labcabrera.sample.archetype.interfaces.http.dto.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,14 +111,18 @@ public class RestExceptionHandler {
     }
 
     private ApiError fromDomainException(DomainException ex) {
-        var map = new LinkedHashMap<String, String>();
-        //TODO
-        map.put("exception", ex.getStackTrace().toString());
+        var details = new LinkedHashMap<String, String>();
+        if (ex instanceof ConstraintViolationException) {
+            var ve = (ConstraintViolationException) ex;
+            ve.getMessages().forEach((key, value) -> details.put(key, value));
+        }
+        details.put("message", ex.getMessage());
+        details.put("stack_trace", ExceptionUtils.getStackTrace(ex));
         return new ApiError(
             ex.getCode(),
             ex.getMessage(),
             LocalDateTime.now(),
-            Collections.emptyMap());
+            details);
     }
 
 }

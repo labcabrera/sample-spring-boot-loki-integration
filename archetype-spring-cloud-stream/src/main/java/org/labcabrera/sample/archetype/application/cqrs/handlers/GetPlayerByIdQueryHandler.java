@@ -2,7 +2,7 @@ package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
-import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
+import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.domain.player.exceptions.NotFoundException;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;

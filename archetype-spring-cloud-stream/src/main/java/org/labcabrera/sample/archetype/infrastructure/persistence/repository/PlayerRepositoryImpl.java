@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
-import org.labcabrera.sample.archetype.domain.player.aggregate.Player;
+import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.domain.player.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.infrastructure.persistence.entity.PlayerEntity;
 import org.labcabrera.sample.archetype.infrastructure.persistence.repository.rsql.CustomRsqlVisitor;

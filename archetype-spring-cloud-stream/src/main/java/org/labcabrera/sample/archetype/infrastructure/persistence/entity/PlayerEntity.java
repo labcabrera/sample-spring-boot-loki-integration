@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.labcabrera.sample.archetype.domain.player.PlayerStatus;
 
 import java.time.LocalDateTime;
 
@@ -17,13 +18,13 @@ import java.time.LocalDateTime;
 public class PlayerEntity {
 
     @Id
-    @Column(name = "player_id", length = 36)
+    @Column(name = "id", length = 36)
     private String id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true, length = 150)
+    @Column(name = "email", nullable = false, unique = true, updatable = false, length = 150)
     private String email;
 
     @Column(name = "elo")
@@ -45,7 +46,4 @@ public class PlayerEntity {
     @Column(name = "version")
     private Long version;
 
-    public enum PlayerStatus {
-        ACTIVE, INACTIVE, SUSPENDED
-    }
 }

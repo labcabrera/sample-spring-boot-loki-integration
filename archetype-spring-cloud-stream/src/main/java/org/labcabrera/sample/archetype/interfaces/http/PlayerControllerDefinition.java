@@ -12,10 +12,12 @@ import org.apache.kafka.common.requests.ApiError;
 import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
+import org.labcabrera.sample.archetype.interfaces.http.dto.UpdatePlayerRequest;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,22 +28,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Players", description = "API for player management using a CQRS architecture")
 public interface PlayerControllerDefinition {
 
-    @PostMapping
-    @Operation(summary = "Create new player", description = "Creates a new player using the CQRS pattern. Sends a command that emits an event.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
-    })
-    ResponseEntity<PlayerDto> create(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = CreatePlayerRequest.class))) @RequestBody CreatePlayerRequest request);
-
     @GetMapping("/{playerId}")
     @Operation(summary = "Get player by id", description = "Retrieve a specific player by its unique identifier")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Player found", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
         @ApiResponse(responseCode = "404", description = "Player not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    ResponseEntity<PlayerDto> getPlayer(
+    ResponseEntity<PlayerDto> getPlayerById(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @GetMapping
@@ -54,4 +47,23 @@ public interface PlayerControllerDefinition {
         @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,
         @ParameterObject Pageable pageable);
 
+    @PostMapping
+    @Operation(summary = "Create new player", description = "Creates a new player using the CQRS pattern. Sends a command that emits an event.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    ResponseEntity<PlayerDto> create(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to create", required = true, content = @Content(schema = @Schema(implementation = CreatePlayerRequest.class))) @RequestBody CreatePlayerRequest request);
+
+    @PatchMapping("/{playerId}")
+    @Operation(summary = "Update player", description = "Updates an existing player using the CQRS pattern. Sends a command that emits an event.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player updated successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found", content = @Content(schema = @Schema(implementation = ApiError.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    ResponseEntity<PlayerDto> update(
+        @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId,
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to update", required = true) @RequestBody UpdatePlayerRequest request);
 }
