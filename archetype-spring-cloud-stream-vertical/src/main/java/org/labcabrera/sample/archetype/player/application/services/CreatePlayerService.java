@@ -3,9 +3,9 @@ package org.labcabrera.sample.archetype.player.application.services;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.labcabrera.sample.archetype.domain.player.Player;
-import org.labcabrera.sample.archetype.domain.player.PlayerStatus;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
+import org.labcabrera.sample.archetype.player.domain.Player;
+import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.springframework.stereotype.Service;

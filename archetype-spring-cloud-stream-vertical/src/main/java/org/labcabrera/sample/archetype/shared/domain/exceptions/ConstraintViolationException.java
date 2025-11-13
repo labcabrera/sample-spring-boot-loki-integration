@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.labcabrera.sample.archetype.domain.player.Player;
+import org.labcabrera.sample.archetype.player.domain.Player;
 
 import jakarta.validation.ConstraintViolation;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package org.labcabrera.sample.archetype.player.application.cqrs.handlers;
 
-import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
+import org.labcabrera.sample.archetype.player.domain.Player;
 import org.labcabrera.sample.archetype.shared.application.QueryHandler;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Component;

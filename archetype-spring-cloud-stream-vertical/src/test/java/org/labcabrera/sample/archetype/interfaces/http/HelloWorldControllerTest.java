@@ -1,7 +1,7 @@
 package org.labcabrera.sample.archetype.interfaces.http;
 
 import org.junit.jupiter.api.Test;
-import org.labcabrera.sample.archetype.interfaces.http.impl.CounterController;
+import org.labcabrera.sample.archetype.player.interfaces.http.CounterController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;

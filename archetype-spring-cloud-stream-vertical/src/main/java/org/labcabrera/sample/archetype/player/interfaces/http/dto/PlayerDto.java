@@ -1,0 +1,21 @@
+package org.labcabrera.sample.archetype.player.interfaces.http.dto;
+
+import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Player information")
+public record PlayerDto(
+
+    @Schema(description = "Unique identifier of the player", example = "550e8400-e29b-41d4-a716-446655440000") String id,
+
+    @Schema(description = "Player name", example = "Magnus Carlsen", required = true) String name,
+
+    @Schema(description = "Player email address", example = "magnus@chess.com", required = true) String email,
+
+    @Schema(description = "Player ELO rating", example = "2800", minimum = "0", maximum = "3000") Integer elo,
+
+    @Schema(description = "Current status of the player", example = "ACTIVE") PlayerStatus status
+
+) {
+}

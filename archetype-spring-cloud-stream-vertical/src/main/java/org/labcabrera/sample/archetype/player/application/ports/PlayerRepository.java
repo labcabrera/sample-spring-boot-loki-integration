@@ -1,6 +1,6 @@
 package org.labcabrera.sample.archetype.player.application.ports;
 
-import org.labcabrera.sample.archetype.domain.player.Player;
+import org.labcabrera.sample.archetype.player.domain.Player;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

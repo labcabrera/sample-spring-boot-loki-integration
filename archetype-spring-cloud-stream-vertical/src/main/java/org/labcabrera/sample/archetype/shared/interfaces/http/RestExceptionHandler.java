@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.labcabrera.sample.archetype.interfaces.http.dto.ApiError;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.DomainException;
 import org.springframework.http.HttpStatus;

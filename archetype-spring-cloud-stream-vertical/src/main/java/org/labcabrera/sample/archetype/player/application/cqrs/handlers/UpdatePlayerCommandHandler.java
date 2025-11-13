@@ -1,10 +1,10 @@
 package org.labcabrera.sample.archetype.player.application.cqrs.handlers;
 
-import org.labcabrera.sample.archetype.domain.player.Player;
-import org.labcabrera.sample.archetype.domain.player.event.PlayerUpdatedEvent;
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.player.application.services.UpdatePlayerService;
+import org.labcabrera.sample.archetype.player.domain.Player;
+import org.labcabrera.sample.archetype.player.domain.event.PlayerUpdatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.springframework.stereotype.Component;
 

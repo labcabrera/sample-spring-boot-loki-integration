@@ -1,9 +1,10 @@
-package org.labcabrera.sample.archetype.player.application.cqrs.commands;
+package org.labcabrera.sample.archetype.player.domain.event;
 
 import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
 
-public record UpdatePlayerCommand(
+public record PlayerUpdatedEvent(
     String playerId,
     String name,
+    String email,
     PlayerStatus status) {
 }
