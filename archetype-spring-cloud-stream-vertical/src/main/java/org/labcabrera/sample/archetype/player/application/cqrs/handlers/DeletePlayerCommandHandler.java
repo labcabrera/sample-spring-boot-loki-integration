@@ -4,7 +4,6 @@ import org.labcabrera.sample.archetype.player.application.cqrs.commands.DeletePl
 import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.player.domain.Player;
-import org.labcabrera.sample.archetype.player.domain.events.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.player.domain.events.PlayerDeletedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotFoundException;

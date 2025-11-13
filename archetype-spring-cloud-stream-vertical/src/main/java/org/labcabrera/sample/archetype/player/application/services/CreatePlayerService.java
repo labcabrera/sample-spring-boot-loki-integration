@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.player.domain.Player;
 import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
-import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.ConflictException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class CreatePlayerService {
 
     public Player createPlayer(String name, String email, Integer elo) {
         playerRepository.findByEmail(email).ifPresent(e -> {
-            throw new BadRequestException("Already existing player with email " + e.getEmail());
+            throw new ConflictException("Already existing player with email " + e.getEmail());
         });
         var player = Player.builder()
             .id(UUID.randomUUID().toString())

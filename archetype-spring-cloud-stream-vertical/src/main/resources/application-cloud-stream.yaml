@@ -17,6 +17,12 @@ spring:
         playerCreated-out-0:
           destination: sample.players.created.v1
           contentType: application/json
+        playerUpdated-out-0:
+          destination: sample.players.updated.v1
+          contentType: application/json
+        playerDeleted-out-0:
+          destination: sample.players.deleted.v1
+          contentType: application/json
       kafka:
         binder:
           brokers: localhost:9092
