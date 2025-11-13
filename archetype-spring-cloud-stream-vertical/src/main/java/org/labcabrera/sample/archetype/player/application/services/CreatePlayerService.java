@@ -29,7 +29,7 @@ public class CreatePlayerService {
             .id(UUID.randomUUID().toString())
             .name(name)
             .email(email)
-            .elo(elo)
+            .elo(elo != null ? elo : 1200)
             .status(PlayerStatus.UNCONFIRMED_EMAIL)
             .createdAt(LocalDateTime.now())
             .build();

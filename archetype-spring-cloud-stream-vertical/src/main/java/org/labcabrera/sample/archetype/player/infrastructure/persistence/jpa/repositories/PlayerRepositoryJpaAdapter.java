@@ -7,6 +7,7 @@ import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository
 import org.labcabrera.sample.archetype.player.domain.Player;
 import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entities.PlayerEntity;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,7 +78,7 @@ public class PlayerRepositoryJpaAdapter implements PlayerRepository {
             modified = true;
         }
         if (!modified) {
-            throw new BadRequestException("No changes detected for player with id: " + player.getId());
+            throw new NotModifiedException("No changes detected for player with id: " + player.getId());
         }
         var savedEntity = jpaRepository.save(current);
         return objectMapper.convertValue(savedEntity, Player.class);
