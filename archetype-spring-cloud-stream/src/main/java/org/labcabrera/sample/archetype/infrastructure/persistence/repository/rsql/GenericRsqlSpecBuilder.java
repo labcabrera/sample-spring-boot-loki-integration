@@ -33,12 +33,12 @@ public class GenericRsqlSpecBuilder<T> {
         Specification<T> result = specs.get(0);
         if (logicalNode.getOperator() == LogicalOperator.AND) {
             for (int i = 1; i < specs.size(); i++) {
-                result = Specification.where(result).and(specs.get(i));
+                result = result.and(specs.get(i));
             }
         }
         else if (logicalNode.getOperator() == LogicalOperator.OR) {
             for (int i = 1; i < specs.size(); i++) {
-                result = Specification.where(result).or(specs.get(i));
+                result = result.or(specs.get(i));
             }
         }
 
@@ -46,11 +46,9 @@ public class GenericRsqlSpecBuilder<T> {
     }
 
     public Specification<T> createSpecification(ComparisonNode comparisonNode) {
-        Specification<T> result = Specification.where(
-            new GenericRsqlSpecification<T>(
-                comparisonNode.getSelector(),
-                comparisonNode.getOperator(),
-                comparisonNode.getArguments()));
-        return result;
+        return new GenericRsqlSpecification<T>(
+            comparisonNode.getSelector(),
+            comparisonNode.getOperator(),
+            comparisonNode.getArguments());
     }
 }

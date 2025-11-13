@@ -24,6 +24,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
     private List<String> arguments;
 
     @Override
+    @SuppressWarnings("null")
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         List<Object> args = castArguments(root);
         Object argument = args.get(0);

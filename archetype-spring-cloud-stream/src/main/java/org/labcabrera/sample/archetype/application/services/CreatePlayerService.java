@@ -30,7 +30,7 @@ public class CreatePlayerService {
             .name(name)
             .email(email)
             .elo(elo)
-            .status(PlayerStatus.ACTIVE)
+            .status(PlayerStatus.UNCONFIRMED_EMAIL)
             .createdAt(LocalDateTime.now())
             .build();
         val violations = validator.validate(player);

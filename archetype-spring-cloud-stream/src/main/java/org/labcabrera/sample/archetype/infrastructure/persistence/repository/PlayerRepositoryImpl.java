@@ -1,7 +1,6 @@
 package org.labcabrera.sample.archetype.infrastructure.persistence.repository;
 
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.application.ports.PlayerRepository;
@@ -17,15 +16,14 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import cz.jirutka.rsql.parser.ast.Node;
-import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("null")
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerJpaRepository jpaRepository;

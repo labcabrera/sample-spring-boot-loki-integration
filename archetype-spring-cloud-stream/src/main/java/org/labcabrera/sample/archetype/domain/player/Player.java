@@ -2,6 +2,7 @@ package org.labcabrera.sample.archetype.domain.player;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Player {
     private String email;
 
     @NotNull
+    @Min(1)
     private Integer elo;
 
     @NotNull
