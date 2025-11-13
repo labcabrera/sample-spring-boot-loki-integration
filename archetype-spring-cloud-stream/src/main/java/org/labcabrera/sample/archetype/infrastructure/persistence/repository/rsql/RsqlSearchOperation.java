@@ -19,7 +19,9 @@ public enum RsqlSearchOperation {
 
     IN(RSQLOperators.IN),
 
-    NOT_IN(RSQLOperators.NOT_IN);
+    NOT_IN(RSQLOperators.NOT_IN),
+
+    LIKE(new ComparisonOperator("=re=", false));
 
     private ComparisonOperator operator;
 

@@ -31,24 +31,18 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 
         case EQUAL: {
             if (argument instanceof String) {
-                return builder.like(root.get(property), argument.toString().replace('*', '%'));
+                return builder.equal(root.get(property), argument);
             }
             else if (argument == null) {
                 return builder.isNull(root.get(property));
             }
-            else {
-                return builder.equal(root.get(property), argument);
-            }
         }
         case NOT_EQUAL: {
             if (argument instanceof String) {
-                return builder.notLike(root.<String>get(property), argument.toString().replace('*', '%'));
+                return builder.notEqual(root.get(property), argument);
             }
             else if (argument == null) {
                 return builder.isNotNull(root.get(property));
-            }
-            else {
-                return builder.notEqual(root.get(property), argument);
             }
         }
         case GREATER_THAN: {
@@ -67,6 +61,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
             return root.get(property).in(args);
         case NOT_IN:
             return builder.not(root.get(property).in(args));
+        case LIKE:
+            return builder.like(root.<String>get(property), argument.toString().replace('*', '%'));
         }
 
         return null;
