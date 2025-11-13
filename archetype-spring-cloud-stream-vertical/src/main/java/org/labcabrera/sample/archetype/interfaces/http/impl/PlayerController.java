@@ -1,7 +1,5 @@
 package org.labcabrera.sample.archetype.interfaces.http.impl;
 
-import org.labcabrera.sample.archetype.application.cqrs.CommandBus;
-import org.labcabrera.sample.archetype.application.cqrs.QueryBus;
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
@@ -12,6 +10,8 @@ import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PlayerDto;
 import org.labcabrera.sample.archetype.interfaces.http.dto.UpdatePlayerRequest;
+import org.labcabrera.sample.archetype.shared.application.CommandBus;
+import org.labcabrera.sample.archetype.shared.application.QueryBus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.domain.player.exceptions;
+package org.labcabrera.sample.archetype.shared.domain.exceptions;
 
 import java.util.Map;
 import java.util.Set;

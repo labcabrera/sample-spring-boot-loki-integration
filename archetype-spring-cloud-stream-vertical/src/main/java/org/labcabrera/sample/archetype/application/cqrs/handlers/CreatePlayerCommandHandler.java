@@ -1,11 +1,11 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
-import org.labcabrera.sample.archetype.application.cqrs.CommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.application.services.CreatePlayerService;
 import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.domain.player.event.PlayerCreatedEvent;
+import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

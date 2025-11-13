@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.infrastructure.persistence.repository.rsql;
+package org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql;
 
 import org.springframework.data.jpa.domain.Specification;
 

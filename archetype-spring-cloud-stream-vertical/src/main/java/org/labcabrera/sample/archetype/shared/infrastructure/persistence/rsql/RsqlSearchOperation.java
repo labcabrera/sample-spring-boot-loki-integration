@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.infrastructure.persistence.repository.rsql;
+package org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import cz.jirutka.rsql.parser.ast.RSQLOperators;

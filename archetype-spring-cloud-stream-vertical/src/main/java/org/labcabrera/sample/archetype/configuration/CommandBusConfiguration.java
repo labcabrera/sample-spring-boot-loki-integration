@@ -1,10 +1,10 @@
 package org.labcabrera.sample.archetype.configuration;
 
-import org.labcabrera.sample.archetype.application.cqrs.SimpleCommandBus;
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.CreatePlayerCommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.UpdatePlayerCommandHandler;
+import org.labcabrera.sample.archetype.shared.application.SimpleCommandBus;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;

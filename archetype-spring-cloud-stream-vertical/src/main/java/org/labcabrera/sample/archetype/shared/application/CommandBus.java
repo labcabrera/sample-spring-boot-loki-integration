@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.application.cqrs;
+package org.labcabrera.sample.archetype.shared.application;
 
 public interface CommandBus {
 

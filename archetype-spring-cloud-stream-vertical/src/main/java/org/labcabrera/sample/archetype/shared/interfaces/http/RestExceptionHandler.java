@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.interfaces.http;
+package org.labcabrera.sample.archetype.shared.interfaces.http;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.labcabrera.sample.archetype.domain.player.exceptions.DomainException;
-import org.labcabrera.sample.archetype.domain.player.exceptions.ConstraintViolationException;
 import org.labcabrera.sample.archetype.interfaces.http.dto.ApiError;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
