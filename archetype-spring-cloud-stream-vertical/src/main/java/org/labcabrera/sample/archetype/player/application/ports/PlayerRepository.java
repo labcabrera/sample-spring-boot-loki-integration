@@ -18,4 +18,6 @@ public interface PlayerRepository {
 
     Player update(Player entity);
 
+    void deleteById(String playerId);
+
 }

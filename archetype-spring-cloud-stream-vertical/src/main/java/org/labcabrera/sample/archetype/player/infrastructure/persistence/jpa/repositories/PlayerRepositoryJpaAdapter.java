@@ -69,9 +69,23 @@ public class PlayerRepositoryJpaAdapter implements PlayerRepository {
 
     @Override
     public Player update(Player player) {
-        var entity = objectMapper.convertValue(player, PlayerEntity.class);
-        var savedEntity = jpaRepository.save(entity);
+        var current = jpaRepository.findById(player.getId())
+            .orElseThrow(() -> new BadRequestException("Player not found with id: " + player.getId()));
+        boolean modified = false;
+        if (!current.getName().equals(player.getName())) {
+            current.setName(player.getName());
+            modified = true;
+        }
+        if (!modified) {
+            throw new BadRequestException("No changes detected for player with id: " + player.getId());
+        }
+        var savedEntity = jpaRepository.save(current);
         return objectMapper.convertValue(savedEntity, Player.class);
+    }
+
+    @Override
+    public void deleteById(String playerId) {
+        jpaRepository.deleteById(playerId);
     }
 
 }

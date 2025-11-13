@@ -2,6 +2,7 @@ package org.labcabrera.sample.archetype.player.infrastructure.messaging.kafka;
 
 import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.player.domain.events.PlayerCreatedEvent;
+import org.labcabrera.sample.archetype.player.domain.events.PlayerDeletedEvent;
 import org.labcabrera.sample.archetype.player.domain.events.PlayerUpdatedEvent;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
@@ -18,21 +19,25 @@ public class KafkaPlayerEventBusAdapter implements PlayerEventBusPort {
 
     @Override
     public void publish(PlayerCreatedEvent event) {
-        try {
-            streamBridge.send("playerCreated-out-0", event);
-        }
-        catch (Exception ex) {
-            log.error("Failed to publish PlayerCreatedEvent for {}", event.playerId(), ex);
-        }
+        sendNotification("playerCreated-out-0", event);
     }
 
     @Override
     public void publish(PlayerUpdatedEvent event) {
+        sendNotification("playerUpdated-out-0", event);
+    }
+
+    @Override
+    public void publish(PlayerDeletedEvent event) {
+        sendNotification("playerDeleted-out-0", event);
+    }
+
+    private void sendNotification(String binding, Object event) {
         try {
-            streamBridge.send("player-updated", event);
+            streamBridge.send(binding, event);
         }
         catch (Exception ex) {
-            log.error("Failed to publish PlayerUpdatedEvent for {}", event.playerId(), ex);
+            log.error("Failed to publish {}", event.getClass().getSimpleName(), ex);
         }
     }
 

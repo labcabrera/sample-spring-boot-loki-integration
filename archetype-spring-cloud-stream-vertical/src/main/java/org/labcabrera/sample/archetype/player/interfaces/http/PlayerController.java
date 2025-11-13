@@ -1,6 +1,7 @@
 package org.labcabrera.sample.archetype.player.interfaces.http;
 
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.CreatePlayerCommand;
+import org.labcabrera.sample.archetype.player.application.cqrs.commands.DeletePlayerCommand;
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.ResendConfirmationCommand;
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayerByIdQuery;
@@ -72,6 +73,13 @@ public class PlayerController implements PlayerControllerDefinition {
     @Override
     public ResponseEntity<Void> resendConfirmation(String playerId) {
         var command = new ResendConfirmationCommand(playerId);
+        commandBus.dispatch(command);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(String playerId) {
+        var command = new DeletePlayerCommand(playerId);
         commandBus.dispatch(command);
         return ResponseEntity.noContent().build();
     }

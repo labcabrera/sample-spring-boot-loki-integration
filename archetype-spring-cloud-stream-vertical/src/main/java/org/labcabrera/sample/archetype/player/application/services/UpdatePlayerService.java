@@ -30,7 +30,7 @@ public class UpdatePlayerService {
         if (!violations.isEmpty()) {
             throw new BadRequestException("Player entity validation failed: " + violations);
         }
-        return playerRepository.save(player);
+        return playerRepository.update(player);
     }
 
 }

@@ -16,6 +16,7 @@ import org.labcabrera.sample.archetype.shared.interfaces.http.PageResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +51,7 @@ public interface PlayerControllerDefinition {
     @PostMapping
     @Operation(summary = "Create new player", description = "Creates a new player using the CQRS pattern. Sends a command that emits an event.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
+        @ApiResponse(responseCode = "201", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerDto.class))),
         @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<PlayerDto> create(
@@ -66,6 +67,15 @@ public interface PlayerControllerDefinition {
     ResponseEntity<PlayerDto> update(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to update", required = true) @RequestBody UpdatePlayerRequest request);
+
+    @DeleteMapping("/{playerId}")
+    @Operation(summary = "Delete player", description = "Deletes an existing player using the CQRS pattern. Sends a command that emits an event.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Player deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Player not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    ResponseEntity<Void> delete(
+        @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 
     @PostMapping("/{playerId}/resend-confirmation")
     @Operation(summary = "Resend player confirmation", description = "Resends the confirmation for a specific player")
