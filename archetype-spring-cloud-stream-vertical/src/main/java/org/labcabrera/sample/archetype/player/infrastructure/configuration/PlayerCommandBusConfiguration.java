@@ -13,11 +13,9 @@ import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class PlayerCommandBusConfiguration {
 
     private final SimpleCommandBus commandBus;
@@ -28,7 +26,6 @@ public class PlayerCommandBusConfiguration {
 
     @PostConstruct
     public void registerHandlers() {
-        log.info("Registering command handlers");
         commandBus.registerHandler(CreatePlayerCommand.class, createPlayerCommandHandler);
         commandBus.registerHandler(UpdatePlayerCommand.class, updatePlayerCommandHandler);
         commandBus.registerHandler(DeletePlayerCommand.class, deletePlayerCommandHandler);

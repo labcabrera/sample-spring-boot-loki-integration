@@ -9,11 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class PlayerQueryBusConfiguration {
 
     private final SimpleQueryBus queryBus;
@@ -22,7 +20,6 @@ public class PlayerQueryBusConfiguration {
 
     @PostConstruct
     public void registerHandlers() {
-        log.info("Registering query handlers");
         queryBus.registerHandler(GetPlayerByIdQuery.class, getPlayerByIdQueryHandler);
         queryBus.registerHandler(GetPlayersByRsqlQuery.class, getPlayersByRsqlQueryHandler);
     }

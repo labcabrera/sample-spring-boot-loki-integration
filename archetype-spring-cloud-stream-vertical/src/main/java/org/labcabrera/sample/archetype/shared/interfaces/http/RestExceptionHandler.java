@@ -3,11 +3,7 @@ package org.labcabrera.sample.archetype.shared.interfaces.http;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
@@ -124,20 +120,23 @@ public class RestExceptionHandler {
         if (ex instanceof ConstraintViolationException) {
             var ve = (ConstraintViolationException) ex;
             ve.getViolations().stream()
-                .map(v -> new ApiErrorDetail("violation", String.format("%s: %s", v.getPropertyPath(), v.getMessage())))
+                .map(v -> new ApiErrorDetail("violation", String.format("%s %s", i18n(v.getPropertyPath().toString()), v.getMessage())))
                 .forEach(e -> details.add(e));
         }
-        details.add(new ApiErrorDetail("stack_trace", ExceptionUtils.getStackTrace(ex)));
-        String msg = messageSource.getMessage(
-            ex.getMessage(),
-            ex.getArgs(),
-            ex.getMessage(),
-            LocaleContextHolder.getLocale());
+        details.add(new ApiErrorDetail("stacktrace", ExceptionUtils.getStackTrace(ex)));
         return new ApiError(
             ex.getMessage(),
-            msg,
+            i18n(ex.getMessage(), ex.getArgs()),
             LocalDateTime.now(),
             details);
+    }
+
+    private String i18n(String message, Object... args) {
+        return messageSource.getMessage(
+            message,
+            args,
+            message,
+            LocaleContextHolder.getLocale());
     }
 
 }
