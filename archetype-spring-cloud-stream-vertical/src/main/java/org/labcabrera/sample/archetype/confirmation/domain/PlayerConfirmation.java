@@ -2,21 +2,24 @@ package org.labcabrera.sample.archetype.confirmation.domain;
 
 import java.time.LocalDateTime;
 
-import lombok.Data;
+public record PlayerConfirmation(
 
-@Data
-public class PlayerConfirmation {
+    String id,
 
-    private String email;
+    String email,
 
-    private String confirmationCode;
+    String confirmationCode,
 
-    private String confirmationToken;
+    String confirmationToken,
 
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt,
 
-    private LocalDateTime revokedAt;
+    LocalDateTime expiresAt,
 
-    private LocalDateTime expiresAt;
+    LocalDateTime revokedAt,
+
+    LocalDateTime confirmedAt
+
+) {
 
 }

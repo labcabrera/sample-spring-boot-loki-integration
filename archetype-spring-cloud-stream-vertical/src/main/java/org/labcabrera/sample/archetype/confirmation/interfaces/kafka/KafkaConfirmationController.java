@@ -2,6 +2,7 @@ package org.labcabrera.sample.archetype.confirmation.interfaces.kafka;
 
 import java.util.function.Consumer;
 
+import org.labcabrera.sample.archetype.confirmation.application.cqrs.commands.PlayerConfirmationCommand;
 import org.labcabrera.sample.archetype.player.domain.events.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandBus;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ public class KafkaConfirmationController {
     public Consumer<PlayerCreatedEvent> processConfirmationOnPlayerCreation() {
         return event -> {
             log.info("Received PlayerCreatedEvent from Kafka: {}", event);
+            var command = new PlayerConfirmationCommand(event.email());
+            commandBus.dispatch(command);
         };
     }
 }
