@@ -1,8 +1,11 @@
 package org.labcabrera.sample.archetype.confirmation.infrastructure.repositories;
 
+import java.time.LocalDateTime;
+
 import org.labcabrera.sample.archetype.confirmation.application.ports.PlayerConfirmationRepository;
 import org.labcabrera.sample.archetype.confirmation.domain.PlayerConfirmation;
 import org.labcabrera.sample.archetype.confirmation.infrastructure.entities.PlayerConfirmationEntity;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +35,7 @@ public class PlayerConfirmationRepositoryJpaAdapter implements PlayerConfirmatio
 
     @Override
     public void revokePrevious(String email) {
+        repository.revokePrevious(email, LocalDateTime.now());
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'revokePrevious'");
     }

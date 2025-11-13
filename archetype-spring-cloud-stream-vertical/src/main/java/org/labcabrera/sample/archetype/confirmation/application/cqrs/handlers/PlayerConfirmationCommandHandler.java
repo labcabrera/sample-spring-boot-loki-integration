@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.labcabrera.sample.archetype.confirmation.application.cqrs.commands.PlayerConfirmationCommand;
+import org.labcabrera.sample.archetype.confirmation.application.ports.EmailSenderPort;
 import org.labcabrera.sample.archetype.confirmation.application.ports.PlayerConfirmationRepository;
 import org.labcabrera.sample.archetype.confirmation.domain.PlayerConfirmation;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
@@ -23,6 +24,7 @@ public class PlayerConfirmationCommandHandler implements CommandHandler<PlayerCo
 
     private final PlayerRepository playerRepository;
     private final PlayerConfirmationRepository playerConfirmationRepository;
+    private final EmailSenderPort emailSenderPort;
 
     @Override
     public PlayerConfirmation handle(PlayerConfirmationCommand command) {
@@ -43,7 +45,9 @@ public class PlayerConfirmationCommandHandler implements CommandHandler<PlayerCo
             LocalDateTime.now().plusHours(24),
             null,
             null);
+        playerConfirmationRepository.revokePrevious(confirmationToken);
         playerConfirmationRepository.save(confirmation);
+        emailSenderPort.sendEmail(command.email(), confirmationCode);
         return confirmation;
     }
 

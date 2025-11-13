@@ -1,6 +1,7 @@
 package org.labcabrera.sample.archetype.player.interfaces.http;
 
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.CreatePlayerCommand;
+import org.labcabrera.sample.archetype.player.application.cqrs.commands.ResendConfirmationCommand;
 import org.labcabrera.sample.archetype.player.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.player.application.cqrs.queries.GetPlayersByRsqlQuery;
@@ -37,7 +38,7 @@ public class PlayerController implements PlayerControllerDefinition {
         var command = new CreatePlayerCommand(request.name(), request.email(), request.elo());
         Player player = commandBus.dispatch(command);
         var playerDto = objectMapper.convertValue(player, PlayerDto.class);
-        return ResponseEntity.ok(playerDto);
+        return ResponseEntity.status(201).body(playerDto);
     }
 
     @Override
@@ -66,6 +67,13 @@ public class PlayerController implements PlayerControllerDefinition {
         Player player = commandBus.dispatch(command);
         var playerDto = objectMapper.convertValue(player, PlayerDto.class);
         return ResponseEntity.ok(playerDto);
+    }
+
+    @Override
+    public ResponseEntity<Void> resendConfirmation(String playerId) {
+        var command = new ResendConfirmationCommand(playerId);
+        commandBus.dispatch(command);
+        return ResponseEntity.noContent().build();
     }
 
 }

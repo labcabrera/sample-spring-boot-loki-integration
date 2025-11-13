@@ -44,7 +44,7 @@ public interface PlayerControllerDefinition {
         @ApiResponse(responseCode = "400", description = "Invalid RSQL expression", content = @Content(schema = @Schema(implementation = ApiError.class))),
     })
     ResponseEntity<PageResponse<PlayerDto>> getPlayersByRsql(
-        @Parameter(description = "RSQL expression to filter players", required = false) @RequestParam(required = false) String rsql,
+        @Parameter(description = "RSQL expression to filter players", name = "q", required = false) @RequestParam(required = false, name = "q") String rsql,
         @ParameterObject Pageable pageable);
 
     @PostMapping
@@ -66,4 +66,13 @@ public interface PlayerControllerDefinition {
     ResponseEntity<PlayerDto> update(
         @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Player data to update", required = true) @RequestBody UpdatePlayerRequest request);
+
+    @PostMapping("/{playerId}/resend-confirmation")
+    @Operation(summary = "Resend player confirmation", description = "Resends the confirmation for a specific player")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Confirmation resent successfully"),
+        @ApiResponse(responseCode = "404", description = "Player not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    ResponseEntity<Void> resendConfirmation(
+        @Parameter(description = "Unique player ID", required = true) @PathVariable String playerId);
 }
