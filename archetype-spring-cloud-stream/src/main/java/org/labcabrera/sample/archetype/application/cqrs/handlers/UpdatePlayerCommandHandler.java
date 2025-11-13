@@ -1,5 +1,6 @@
 package org.labcabrera.sample.archetype.application.cqrs.handlers;
 
+import org.labcabrera.sample.archetype.application.cqrs.CommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.commands.UpdatePlayerCommand;
 import org.labcabrera.sample.archetype.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.application.services.UpdatePlayerService;
@@ -13,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UpdatePlayerCommandHandler {
+public class UpdatePlayerCommandHandler implements CommandHandler<UpdatePlayerCommand, Player> {
 
     private final UpdatePlayerService updatePlayerService;
     private final PlayerEventBusPort playerEventBusPort;

@@ -1,13 +1,13 @@
 package org.labcabrera.sample.archetype.interfaces.http.impl;
 
+import org.labcabrera.sample.archetype.application.cqrs.CommandBus;
 import org.labcabrera.sample.archetype.application.cqrs.commands.CreatePlayerCommand;
 import org.labcabrera.sample.archetype.application.cqrs.commands.UpdatePlayerCommand;
-import org.labcabrera.sample.archetype.application.cqrs.handlers.CreatePlayerCommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayerByIdQueryHandler;
 import org.labcabrera.sample.archetype.application.cqrs.handlers.GetPlayersByRsqlQueryHandler;
-import org.labcabrera.sample.archetype.application.cqrs.handlers.UpdatePlayerCommandHandler;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayerByIdQuery;
 import org.labcabrera.sample.archetype.application.cqrs.queries.GetPlayersByRsqlQuery;
+import org.labcabrera.sample.archetype.domain.player.Player;
 import org.labcabrera.sample.archetype.interfaces.http.PlayerControllerDefinition;
 import org.labcabrera.sample.archetype.interfaces.http.dto.CreatePlayerRequest;
 import org.labcabrera.sample.archetype.interfaces.http.dto.PageResponse;
@@ -29,16 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PlayerController implements PlayerControllerDefinition {
 
-    private final CreatePlayerCommandHandler createPlayerCommandHandler;
+    private final CommandBus commandBus;
     private final GetPlayerByIdQueryHandler getPlayerByIdQueryHandler;
     private final GetPlayersByRsqlQueryHandler getPlayersByRsqlQueryHandler;
-    private final UpdatePlayerCommandHandler updatePlayerCommandHandler;
     private final ObjectMapper objectMapper;
 
     @Override
     public ResponseEntity<PlayerDto> create(@RequestBody CreatePlayerRequest request) {
         var command = new CreatePlayerCommand(request.name(), request.email(), request.elo());
-        var player = createPlayerCommandHandler.handle(command);
+        Player player = commandBus.dispatch(command);
         var playerDto = objectMapper.convertValue(player, PlayerDto.class);
         return ResponseEntity.ok(playerDto);
     }
@@ -66,7 +65,7 @@ public class PlayerController implements PlayerControllerDefinition {
             playerId,
             request.name(),
             request.status());
-        var player = updatePlayerCommandHandler.handle(command);
+        Player player = commandBus.dispatch(command);
         var playerDto = objectMapper.convertValue(player, PlayerDto.class);
         return ResponseEntity.ok(playerDto);
     }
