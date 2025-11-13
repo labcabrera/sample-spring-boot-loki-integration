@@ -4,7 +4,7 @@ import org.labcabrera.sample.archetype.player.application.cqrs.commands.UpdatePl
 import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.player.application.services.UpdatePlayerService;
 import org.labcabrera.sample.archetype.player.domain.Player;
-import org.labcabrera.sample.archetype.player.domain.event.PlayerUpdatedEvent;
+import org.labcabrera.sample.archetype.player.domain.events.PlayerUpdatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
-package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.repository;
+package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.repositories;
 
 import java.util.Optional;
 
-import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entity.PlayerEntity;
+import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entities.PlayerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

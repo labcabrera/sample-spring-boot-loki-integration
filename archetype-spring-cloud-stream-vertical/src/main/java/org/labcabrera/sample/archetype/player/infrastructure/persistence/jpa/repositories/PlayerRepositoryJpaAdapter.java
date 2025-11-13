@@ -1,11 +1,11 @@
-package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.repository;
+package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.repositories;
 
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.player.application.ports.PlayerRepository;
 import org.labcabrera.sample.archetype.player.domain.Player;
-import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entity.PlayerEntity;
+import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entities.PlayerEntity;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("null")
-public class PlayerRepositoryImpl implements PlayerRepository {
+public class PlayerRepositoryJpaAdapter implements PlayerRepository {
 
     private final PlayerJpaRepository jpaRepository;
     private final ObjectMapper objectMapper;

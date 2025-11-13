@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.player.domain.event;
+package org.labcabrera.sample.archetype.player.domain.events;
 
 import org.labcabrera.sample.archetype.player.domain.PlayerStatus;
 

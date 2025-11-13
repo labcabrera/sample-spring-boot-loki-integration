@@ -2,7 +2,7 @@ package org.labcabrera.sample.archetype.confirmation.interfaces.kafka;
 
 import java.util.function.Consumer;
 
-import org.labcabrera.sample.archetype.player.domain.event.PlayerCreatedEvent;
+import org.labcabrera.sample.archetype.player.domain.events.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

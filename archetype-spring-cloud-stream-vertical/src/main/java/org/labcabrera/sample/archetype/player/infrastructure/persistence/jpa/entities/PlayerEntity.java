@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entity;
+package org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

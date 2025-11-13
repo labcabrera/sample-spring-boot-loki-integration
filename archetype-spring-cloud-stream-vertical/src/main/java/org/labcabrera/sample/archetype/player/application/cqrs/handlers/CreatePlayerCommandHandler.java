@@ -4,7 +4,7 @@ import org.labcabrera.sample.archetype.player.application.cqrs.commands.CreatePl
 import org.labcabrera.sample.archetype.player.application.ports.PlayerEventBusPort;
 import org.labcabrera.sample.archetype.player.application.services.CreatePlayerService;
 import org.labcabrera.sample.archetype.player.domain.Player;
-import org.labcabrera.sample.archetype.player.domain.event.PlayerCreatedEvent;
+import org.labcabrera.sample.archetype.player.domain.events.PlayerCreatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.springframework.stereotype.Component;
 

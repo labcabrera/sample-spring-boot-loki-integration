@@ -15,6 +15,9 @@ logging:
   level:
     org.labcabrera: ${LOG_LEVEL:DEBUG} 
     org.apache.kafka: ${KAFKA_LOG_LEVEL:INFO}
+    org.springframework.cloud.stream: INFO
+    org.springframework.cloud.function: INFO
+    org.springframework.kafka: INFO
     org.hibernate.SQL: WARN
     org.hibernate.orm.jdbc.bind: WARN
     root: INFO
