@@ -3,8 +3,6 @@ spring:
     function:
       definition: processPlayerCreation;processConfirmationOnPlayerCreation
     stream:
-      # function:
-      #   definition: processPlayerCreation
       bindings:
         processPlayerCreation-in-0:
           destination: sample.players.creation.v1
@@ -25,7 +23,7 @@ spring:
           contentType: application/json
       kafka:
         binder:
-          brokers: localhost:9092
+          brokers: ${KAFKA_BROKERS:localhost:9092}
           autoCreateTopics: true
           minPartitionCount: 1
         bindings:

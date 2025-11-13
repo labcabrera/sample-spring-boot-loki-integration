@@ -9,10 +9,12 @@ import org.labcabrera.sample.archetype.player.infrastructure.persistence.jpa.ent
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +23,8 @@ import cz.jirutka.rsql.parser.ast.Node;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("null")
@@ -62,13 +65,24 @@ public class PlayerRepositoryJpaAdapter implements PlayerRepository {
     }
 
     @Override
+    @Transactional
     public Player save(Player player) {
-        var entity = objectMapper.convertValue(player, PlayerEntity.class);
-        var savedEntity = jpaRepository.save(entity);
-        return objectMapper.convertValue(savedEntity, Player.class);
+        try {
+            if (player.getId() != null && jpaRepository.existsById(player.getId())) {
+                throw new BadRequestException("Player already exists with id: " + player.getId());
+            }
+            var entity = objectMapper.convertValue(player, PlayerEntity.class);
+            var savedEntity = jpaRepository.save(entity);
+            return objectMapper.convertValue(savedEntity, Player.class);
+        }
+        catch (DataIntegrityViolationException ex) {
+            log.error("Data integrity violation while saving player: {}", player, ex);
+            throw new BadRequestException("Data integrity error saving player", ex);
+        }
     }
 
     @Override
+    @Transactional
     public Player update(Player player) {
         var current = jpaRepository.findById(player.getId())
             .orElseThrow(() -> new BadRequestException("Player not found with id: " + player.getId()));
@@ -85,6 +99,7 @@ public class PlayerRepositoryJpaAdapter implements PlayerRepository {
     }
 
     @Override
+    @Transactional
     public void deleteById(String playerId) {
         jpaRepository.deleteById(playerId);
     }
