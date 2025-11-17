@@ -76,80 +76,67 @@ Y levantaremos la aplicación a través del comando:
 java -jar build/libs/*.jar
 ----
 
-== Transaccionalidad y persistencia (recomendaciones)
+// == Transaccionalidad y persistencia (recomendaciones)
 
-Patrones y recomendaciones observadas en este arquetipo:
+// Patrones y recomendaciones observadas en este arquetipo:
 
-- Límite de transacción en la capa de aplicación (services): Anotar los métodos que orquestan persistencia y publicación de eventos con `@Transactional`.
-- Repositorios / adapters deben exponer operaciones atómicas simples (save, update) y evitar decidir transacciones por sí mismos.
-- Para evitar inconsistencias DB → Kafka, considerar:
-	- Outbox pattern (persistir evento en tabla outbox en la misma transacción y luego publicar desde un proceso separado), o
-	- Usar TransactionSynchronizationManager / TransactionSynchronization para publicar eventos después del commit si el binder/producer lo permite.
-- Evitar crear instancias Entity (nuevas) con IDs que ya están gestionadas por la sesión — para updates, obtener la entidad gestionada (find) y aplicar cambios sobre ella.
+// - Límite de transacción en la capa de aplicación (services): Anotar los métodos que orquestan persistencia y publicación de eventos con `@Transactional`.
+// - Repositorios / adapters deben exponer operaciones atómicas simples (save, update) y evitar decidir transacciones por sí mismos.
+// - Para evitar inconsistencias DB → Kafka, considerar:
+// 	- Outbox pattern (persistir evento en tabla outbox en la misma transacción y luego publicar desde un proceso separado), o
+// 	- Usar TransactionSynchronizationManager / TransactionSynchronization para publicar eventos después del commit si el binder/producer lo permite.
+// - Evitar crear instancias Entity (nuevas) con IDs que ya están gestionadas por la sesión — para updates, obtener la entidad gestionada (find) y aplicar cambios sobre ella.
 
-Ejemplo breve:
+// Ejemplo breve:
 
-```java
-@Service
-public class CreatePlayerService {
-	@Transactional
-	public Player createPlayer(...) {
-		// validar y persistir mediante el puerto repository
-		// preparar evento y publicarlo AFTER COMMIT o mediante outbox
-	}
-}
-```
+// ```java
+// @Service
+// public class CreatePlayerService {
+// 	@Transactional
+// 	public Player createPlayer(...) {
+// 		// validar y persistir mediante el puerto repository
+// 		// preparar evento y publicarlo AFTER COMMIT o mediante outbox
+// 	}
+// }
+// ```
 
-== Spring Cloud Stream y Kafka
+// == Spring Cloud Stream y Kafka
 
-- `src/main/resources/application-cloud-stream.yaml` contiene la definición de la función usada por Spring Cloud Stream:
-	- `spring.cloud.stream.function.definition` debe coincidir exactamente con el nombre del bean `@Bean` que devuelve `Consumer/Function/Supplier`.
-	- Para cada binding (`<function>-in-0`, `<function>-out-0`) configurar `destination`, `group` y `contentType`.
-- Variables a ajustar en entornos:
-	- `spring.cloud.stream.kafka.binder.brokers` o `KAFKA_BROKERS`.
-	- `spring.cloud.stream.bindings.<name>.consumer.startOffset` (ej. earliest) para desarrollo.
+// - `src/main/resources/application-cloud-stream.yaml` contiene la definición de la función usada por Spring Cloud Stream:
+// 	- `spring.cloud.stream.function.definition` debe coincidir exactamente con el nombre del bean `@Bean` que devuelve `Consumer/Function/Supplier`.
+// 	- Para cada binding (`<function>-in-0`, `<function>-out-0`) configurar `destination`, `group` y `contentType`.
+// - Variables a ajustar en entornos:
+// 	- `spring.cloud.stream.kafka.binder.brokers` o `KAFKA_BROKERS`.
+// 	- `spring.cloud.stream.bindings.<name>.consumer.startOffset` (ej. earliest) para desarrollo.
 
-== Manejo de errores en Consumers
+// == Manejo de errores en Consumers
 
-- Implementar validación de payloads antes de procesar.
-- Configurar DLQ y retry (reintentos) en binder si se requiere garantia de entrega y manejo de errores.
+// - Implementar validación de payloads antes de procesar.
+// - Configurar DLQ y retry (reintentos) en binder si se requiere garantia de entrega y manejo de errores.
 
-== Pruebas
+// == Pruebas
 
-- Unit tests: usar `spring-boot-starter-test` y Mockito para servicios y handlers.
-- Integration tests:
-	- Usar Testcontainers Kafka para levantar un broker y probar el flujo E2E de publicación/consumo.
-	- Usar `@DataJpaTest` para repositorios y `@SpringBootTest` con Testcontainers para orquestación completa.
+// - Unit tests: usar `spring-boot-starter-test` y Mockito para servicios y handlers.
+// - Integration tests:
+// 	- Usar Testcontainers Kafka para levantar un broker y probar el flujo E2E de publicación/consumo.
+// 	- Usar `@DataJpaTest` para repositorios y `@SpringBootTest` con Testcontainers para orquestación completa.
 
-Ejemplo (esqueleto) con Testcontainers Kafka:
+// Ejemplo (esqueleto) con Testcontainers Kafka:
 
-```java
-@Testcontainers
-@SpringBootTest
-class KafkaIntegrationTest {
-	@Container
-	static KafkaContainer kafka = new KafkaContainer("confluentinc/cp-kafka:7.4.1");
+// ```java
+// @Testcontainers
+// @SpringBootTest
+// class KafkaIntegrationTest {
+// 	@Container
+// 	static KafkaContainer kafka = new KafkaContainer("confluentinc/cp-kafka:7.4.1");
 
-	@BeforeAll
-	static void setup() {
-		System.setProperty("KAFKA_BROKERS", kafka.getBootstrapServers());
-	}
-	// tests...
-}
-```
-
-== Observabilidad
-
-- Actuator + Prometheus (micrometer) están incluidos en el proyecto. Ver endpoints en `/actuator`.
-- Logs: `logback-spring.xml` está preconfigurado; ajustar niveles desde `application.yaml` para ver binder/kafka y cloud stream en `DEBUG` si es necesario.
-
-== Buenas prácticas y tareas recomendadas
-
-- Mapeo: usar MapStruct para conversiones entre domain/entity/DTO en lugar de `ObjectMapper` cuando sea posible.
-- Validación: usar Bean Validation (`jakarta.validation`) en DTO/commands.
-- Events: definir esquemas (JSON Schema / Avro) para eventos y versionarlos.
-- Manejo transaccional: usar outbox si necesitas garantía estricta DB->Kafka.
-- Añadir tests de integración usando Testcontainers para Kafka y la BD.
+// 	@BeforeAll
+// 	static void setup() {
+// 		System.setProperty("KAFKA_BROKERS", kafka.getBootstrapServers());
+// 	}
+// 	// tests...
+// }
+// ```
 
 == Notas sobre la implementación
 
@@ -245,6 +232,19 @@ Los mensajes de error y validación se han externalizado en archivos de propieda
 El manejo de mensajes de realiza a través de la interfaz Spring MessageSource que permite cargar los mensajes según la configuración regional del cliente.
 
 A través de la propiedad HTTP _Accept-Language_ se puede especificar el idioma preferido para las respuestas.
+
+== Observabilidad
+
+- Actuator + Prometheus (micrometer) están incluidos en el proyecto. Ver endpoints en `/actuator`.
+- Logs: `logback-spring.xml` está preconfigurado; ajustar niveles desde `application.yaml` para ver binder/kafka y cloud stream en `DEBUG` si es necesario.
+
+// == Buenas prácticas y tareas recomendadas
+
+// - Mapeo: usar MapStruct para conversiones entre domain/entity/DTO en lugar de `ObjectMapper` cuando sea posible.
+// - Validación: usar Bean Validation (`jakarta.validation`) en DTO/commands.
+// - Events: definir esquemas (JSON Schema / Avro) para eventos y versionarlos.
+// - Manejo transaccional: usar outbox si necesitas garantía estricta DB->Kafka.
+// - Añadir tests de integración usando Testcontainers para Kafka y la BD.
 
 == Referencias
 

@@ -9,6 +9,9 @@ spring:
   main:
     banner-mode: off
 
+server:
+  port: 8082
+
 logging:
   pattern:
     console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}\n'
@@ -22,8 +25,6 @@ logging:
     org.hibernate.orm.jdbc.bind: WARN
     root: INFO
 
-server:
-  port: 8082
   
 management:
   endpoints:
@@ -33,3 +34,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+app:
+  elo:
+    k-factor: 0
