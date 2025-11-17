@@ -1,4 +1,4 @@
-= Prototipo de Arquetipo para Spring Boot con Clean Architecture y Spring Cloud Stream Vertical Slices
+= Prototipo de Arquetipo para Spring Boot con Clean Architecture y Spring Cloud Stream usando Vertical Slices
 
 == Introducción
 
@@ -151,11 +151,62 @@ class KafkaIntegrationTest {
 - Manejo transaccional: usar outbox si necesitas garantía estricta DB->Kafka.
 - Añadir tests de integración usando Testcontainers para Kafka y la BD.
 
-== Notas sobre la implementación (puntos detectados)
+== Notas sobre la implementación
 
 === Spring Cloud Stream
 
 Se ha utilizado Spring Cloud Stream con Kafka binder para la integración basada en eventos. Los consumidores y productores están definidos como beans `@Bean` de tipo `Consumer` o `Function`.
+
+Dentro de la configuración realizamos el mapeo de los bindings a destinos Kafka específicos y grupos de consumidores:
+
+[source,yaml]
+----
+spring:
+  cloud:
+    function:
+      definition: processPlayerCreation;processConfirmationOnPlayerCreation
+    stream:
+      bindings:
+        processPlayerCreation-in-0:
+          destination: sample.players.creation.v1
+          group: players-svc
+          contentType: application/json
+        processConfirmationOnPlayerCreation-in-0:
+          destination: sample.players.created.v1
+          group: player-confirmations-svc
+          contentType: application/json
+        playerCreated-out-0:
+          destination: sample.players.created.v1
+          contentType: application/json
+        playerUpdated-out-0:
+          destination: sample.players.updated.v1
+          contentType: application/json
+        playerDeleted-out-0:
+          destination: sample.players.deleted.v1
+          contentType: application/json
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:9092}
+          autoCreateTopics: true
+          minPartitionCount: 1
+----
+
+Esta configuración realiza el binding automático de los consumidores y productores a los topics Kafka correspondientes por ejemplo en nuestro controlador de Kafka:
+
+[source,java]
+----
+public class KafkaPlayerController {
+
+    private final CommandBus commandBus;
+
+    @Bean
+    public Consumer<CreatePlayerCommand> processPlayerCreation() {
+        return command -> {
+            commandBus.dispatch(command);
+        };
+    }
+}
+----
 
 === RSQL
 
@@ -180,6 +231,20 @@ Podemos consultar la API localmente en `http://localhost:8080/swagger-ui.html`
 === Mapeo de campos
 
 En este ejemplo se ha utilizado Jackson `ObjectMapper` para conversiones entre entidades JPA, objetos de dominio y DTOs. Sin embargo, se recomienda usar MapStruct para un mapeo más eficiente y mantenible en proyectos reales.
+
+=== Gestión de errores
+
+Los errores de la aplicación se manejan extendiendo de _DomainException_.
+
+En la capa de infraestructura REST se ha agregado un _@RestControllerAdvice_ que se encarga de capturar las excepciones lanzadas por los controladores y devolver respuestas HTTP adecuadas con códigos de estado y mensajes de error.
+
+=== I18n
+
+Los mensajes de error y validación se han externalizado en archivos de propiedades para facilitar la internacionalización (i18n). Actualmente solo está el archivo `messages.properties` en inglés, pero se pueden agregar más archivos para otros idiomas.
+
+El manejo de mensajes de realiza a través de la interfaz Spring MessageSource que permite cargar los mensajes según la configuración regional del cliente.
+
+A través de la propiedad HTTP _Accept-Language_ se puede especificar el idioma preferido para las respuestas.
 
 == Referencias
 
