@@ -28,15 +28,13 @@ public class PlayerConfirmationRepositoryJpaAdapter implements PlayerConfirmatio
 
     @Override
     public PlayerConfirmation findByEmail(String email) {
-        // TODO Auto-generated method stub
+        // TODO
         throw new UnsupportedOperationException("Unimplemented method 'findByEmail'");
     }
 
     @Override
     public void revokePrevious(String email) {
-        repository.revokePrevious(email, LocalDateTime.now());
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'revokePrevious'");
+        //repository.revokePrevious(email, LocalDateTime.now());
     }
 
 }

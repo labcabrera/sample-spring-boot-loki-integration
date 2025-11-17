@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PlayerConfirmationJpaRepository extends JpaRepository<PlayerConfirmationEntity, String> {
 
-    @Query("UPDATE PlayerConfirmationEntity pc SET pc.revokedAt = ?2 WHERE pc.email = ?1 AND pc.revokedAt IS NULL AND pc.confirmedAt IS NULL")
+    @Query("UPDATE PlayerConfirmationEntity pc SET pc.revokedAt = ?2 WHERE pc.email = ?1 AND pc.revokedAt IS NULL")
     void revokePrevious(String email, LocalDateTime now);
 
 }
