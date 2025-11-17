@@ -8,7 +8,7 @@ Se pretende ser un punto de partida para microservicios que publican y consumen 
 
 == Estructura del proyecto
 
-En este proyecto de ejemplo tendremos dos módulos verticales principales: `player` y `confirmation`, además de un módulo `shared` para código común.
+En este proyecto de ejemplo tendremos dos módulos verticales principales: _player_ y _confirmation_, además de un módulo _shared_ para código común.
 
 El módulo _player_ define la lógica relacionada con la gestión de jugadores (creación, actualización, consulta) y publica eventos cuando se crean nuevos jugadores.
 
@@ -16,11 +16,17 @@ El módulo _confirmation_ consume eventos de creación de jugadores y maneja la 
 
 ----
 src/
- ├── src/labcabrera/sample/archetype
- │   ├── confirmation
+ ├── org/labcabrera/sample/archetype
  │   ├── player
+ │   ├── confirmation
  │   └── shared
 ----
+
+TIP: El contenido del módulo _shared_ podría extraerse a módulos externos autoconfigurables equivalentes a los starters de Spring Boot para compartir entre proyectos.
+
+El flujo general es:
+
+image::./images/sample-sequence.png[]
 
 Dentro de cada módulo vertical, seguimos la estructura típica de Clean Architecture:
 
@@ -36,8 +42,6 @@ module/
 - *application*: casos de uso y servicios que orquestan la lógica de negocio. En estos se encuentran los handlers CQRS, servicios de aplicación y puertos (interfaces) hacia infraestructuras externas.
 - *infrastructure*: adaptadores hacia infraestructuras externas (JPA, Kafka, mappers).
 - *interfaces*: adaptadores de entrada (controladores HTTP, consumidores/productores de Spring Cloud Stream).
-
-TIP: El contenido del módulo `shared/` podría extraerse a módulos externos autoconfigurables equivalentes a los starters de Spring Boot para compartir entre proyectos.
 
 TIP: La configuración que se encuentra en `src/main/resources/` podría resolverse externamente a través de un servidor de configuración, por ejemplo Spring Cloud Config Server.
 
@@ -167,8 +171,19 @@ En lugar de utilizar una implementación compleja de bus de comandos, se ha opta
 
 === Springdoc
 
-Se ha integrado `springdoc-openapi` para generar documentación OpenAPI/Swagger automáticamente a partir de los controladores REST. Esto facilita la exploración y prueba de la API durante el desarrollo.
+En este caso el enfoque REST es _code-first_, por lo que se ha utilizado anotaciones en los controladores para definir los endpoints y sus contratos.
+
+Podemos consultar la API localmente en `http://localhost:8080/swagger-ui.html`
 
 === Mapeo de campos
 
 En este ejemplo se ha utilizado Jackson `ObjectMapper` para conversiones entre entidades JPA, objetos de dominio y DTOs. Sin embargo, se recomienda usar MapStruct para un mapeo más eficiente y mantenible en proyectos reales.
+
+== Referencias
+
+- [Spring Boot](https://spring.io/projects/spring-boot)
+- [Spring Cloud Stream](https://spring.io/projects/spring-cloud-stream)
+- [Clean Architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Testcontainers](https://www.testcontainers.org/)
+- [MapStruct](https://mapstruct.org/)
+- [RSQL Parser](https://github.com/jirutka/rsql-parser)
