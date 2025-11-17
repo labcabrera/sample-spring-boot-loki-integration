@@ -1,5 +1,5 @@
-@startuml Sample Sequence Diagram
-title Sample Sequence Diagram
+@startuml Player Creation Sequence Diagram
+title Player Creation Sequence Diagram
 
 skinparam ParticipantBackgroundColor #005b72
 skinparam ParticipantFontColor #ffffff

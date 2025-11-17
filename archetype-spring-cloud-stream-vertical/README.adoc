@@ -37,7 +37,7 @@ TIP: El contenido del módulo _shared_ podría extraerse a módulos externos aut
 
 El flujo general es:
 
-image::./images/sample-sequence.png[]
+image::./images/player-creation-sequence-diagram.png[]
 
 Dentro de cada módulo vertical, seguimos la estructura típica de Clean Architecture:
 
