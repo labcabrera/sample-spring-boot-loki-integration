@@ -7,8 +7,8 @@ springdoc:
     tagsSorter: alpha
   info:
     title: "Loki Integration API"
-    description: "REST API for player management using CQRS/Event Sourcing with Axon Framework"
+    description: "REST API for player management using Spring Cloud Stream, CQRS and Vertical Slices."
     version: "1.0.0"
     contact:
       name: "Lab Cabrera"
-      email: "lab@example.com"
+      email: "lab.cabrera@gmail.com"
