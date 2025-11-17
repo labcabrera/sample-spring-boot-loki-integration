@@ -1,4 +1,4 @@
-package org.labcabrera.sample.archetype.confirmation.infrastructure.entities;
+package org.labcabrera.sample.archetype.confirmation.infrastructure.persistence.jpa.entities;
 
 import java.time.LocalDateTime;
 

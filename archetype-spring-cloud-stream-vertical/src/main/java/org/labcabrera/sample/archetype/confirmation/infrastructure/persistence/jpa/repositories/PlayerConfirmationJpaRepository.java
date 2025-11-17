@@ -1,8 +1,8 @@
-package org.labcabrera.sample.archetype.confirmation.infrastructure.repositories;
+package org.labcabrera.sample.archetype.confirmation.infrastructure.persistence.jpa.repositories;
 
 import java.time.LocalDateTime;
 
-import org.labcabrera.sample.archetype.confirmation.infrastructure.entities.PlayerConfirmationEntity;
+import org.labcabrera.sample.archetype.confirmation.infrastructure.persistence.jpa.entities.PlayerConfirmationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,10 +1,10 @@
-package org.labcabrera.sample.archetype.confirmation.infrastructure.repositories;
+package org.labcabrera.sample.archetype.confirmation.infrastructure.persistence.jpa.repositories;
 
 import java.time.LocalDateTime;
 
 import org.labcabrera.sample.archetype.confirmation.application.ports.PlayerConfirmationRepository;
 import org.labcabrera.sample.archetype.confirmation.domain.PlayerConfirmation;
-import org.labcabrera.sample.archetype.confirmation.infrastructure.entities.PlayerConfirmationEntity;
+import org.labcabrera.sample.archetype.confirmation.infrastructure.persistence.jpa.entities.PlayerConfirmationEntity;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
