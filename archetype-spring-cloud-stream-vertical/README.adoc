@@ -2,33 +2,40 @@
 
 == Introducción
 
-Este proyecto es un arquetipo/prototipo que muestra una aplicación Java Spring Boot diseñada siguiendo principios de Clean Architecture (hexagonal / ports & adapters) y usando Spring Cloud Stream para integración con Kafka en un enfoque "vertical slices" (cada módulo contiene sus capas: domain, application, interfaces, infrastructure).
+Este proyecto es un prototipo que muestra una aplicación Java Spring Boot diseñada siguiendo principios de Clean Architecture (hexagonal / ports & adapters) y usando Spring Cloud Stream para integración con Kafka en un enfoque "vertical slices" (cada módulo contiene sus capas: domain, application, interfaces, infrastructure).
 
 Se pretende ser un punto de partida para microservicios que publican y consumen eventos, JPA para la persistencia, CQRS para la integración de commands y queries.
 
 == Estructura del proyecto
 
-Los módulos verticales principales son `player` y `confirmation`, cada uno con su propia estructura interna siguiendo Clean Architecture.
-Dentro de cada módulo encontraremos:
+En este proyecto de ejemplo tendremos dos módulos verticales principales: `player` y `confirmation`, además de un módulo `shared` para código común.
 
-- `domain`: entidades de dominio y lógica de negocio pura.
-- `application`: casos de uso y servicios que orquestan la lógica de negocio. En estos se encuentran los handlers CQRS, servicios de aplicación y puertos (interfaces) hacia infraestructuras externas.
-- `infrastructure`: adaptadores hacia infraestructuras externas (JPA, Kafka, mappers).
-- `interfaces`: adaptadores de entrada (controladores HTTP, consumidores/productores de Spring Cloud Stream).
+El módulo _player_ define la lógica relacionada con la gestión de jugadores (creación, actualización, consulta) y publica eventos cuando se crean nuevos jugadores.
 
-Resumen de las carpetas y su responsabilidad principal:
+El módulo _confirmation_ consume eventos de creación de jugadores y maneja la lógica relacionada con la confirmación de jugadores (por ejemplo, enviar emails de confirmación).
 
-- `src/main/java/org/labcabrera/sample/archetype` — paquete base del proyecto.
-    - `player/` — módulo vertical para la funcionalidad de jugador.
-        - `application/` — casos de uso y servicios (orquestación, validación, reglas de negocio).
-            - `cqrs/` — handlers y comandos/consultas.
-            - `services/` — servicios de aplicación (ej. CreatePlayerService, UpdatePlayerService).
-            - `ports/` — interfaces (puertos) hacia infraestructuras (repositorios, eventbus).
-        - `domain/` — entidades de dominio, value objects y enums (ej. `Player`, `PlayerStatus`).
-        - `infrastructure/` — adaptadores (JPA, Kafka, mappers). Ej: `persistence/jpa` contiene entidades JPA y adaptadores que implementan los puertos.
-        - `interfaces/` — adaptadores de entrada (HTTP controllers, Spring Cloud Stream Consumers/Producers). Ej: `kafka/KafkaPlayerController`.
-- `confirmation/` — módulo para la lógica de confirmaciones de email; estructura similar al módulo `player`.
-- `shared/` — código compartido: excepciones, utilidades, bus de comandos simple, modelos comunes.
+----
+src/
+ ├── src/labcabrera/sample/archetype
+ │   ├── confirmation
+ │   ├── player
+ │   └── shared
+----
+
+Dentro de cada módulo vertical, seguimos la estructura típica de Clean Architecture:
+
+----
+module/
+ ├── domain
+ ├── application
+ ├── infrastructure
+ └── interfaces
+----
+
+- *domain*: entidades de dominio y lógica de negocio pura.
+- *application*: casos de uso y servicios que orquestan la lógica de negocio. En estos se encuentran los handlers CQRS, servicios de aplicación y puertos (interfaces) hacia infraestructuras externas.
+- *infrastructure*: adaptadores hacia infraestructuras externas (JPA, Kafka, mappers).
+- *interfaces*: adaptadores de entrada (controladores HTTP, consumidores/productores de Spring Cloud Stream).
 
 TIP: El contenido del módulo `shared/` podría extraerse a módulos externos autoconfigurables equivalentes a los starters de Spring Boot para compartir entre proyectos.
 
@@ -36,12 +43,12 @@ TIP: La configuración que se encuentra en `src/main/resources/` podría resolve
 
 == Tecnologías utilizadas
 
-- Spring Boot 3.x (Java 21 toolchain)
+- Spring Boot 3.x (Java 21)
 - Spring Cloud Stream + Kafka binder
 - Spring Data JPA + Hibernate
 - Jackson
 - MapStruct (recomendado, no obligatorio) o ObjectMapper para conversiones
-- Rsql parser para filtros en endpoints REST
+- RSQL parser para filtros en endpoints REST
 - Micrometer / Actuator
 - Testcontainers (recomendado para pruebas de integración con Kafka)
 
