@@ -6,6 +6,17 @@ Este proyecto es un prototipo que muestra una aplicación Java Spring Boot dise�
 
 Se pretende ser un punto de partida para microservicios que publican y consumen eventos, JPA para la persistencia, CQRS para la integración de commands y queries.
 
+== Tecnologías utilizadas
+
+- Spring Boot 3.x (Java 21)
+- Spring Cloud Stream + Kafka binder
+- Spring Data JPA + Hibernate
+- Jackson
+- MapStruct
+- Springdoc OpenAPI para documentación de la API REST
+- RSQL parser para filtros en endpoints REST
+- Micrometer / Actuator
+
 == Estructura del proyecto
 
 En este proyecto de ejemplo tendremos dos módulos verticales principales: _player_ y _confirmation_, además de un módulo _shared_ para código común.
@@ -45,17 +56,6 @@ module/
 
 TIP: La configuración que se encuentra en `src/main/resources/` podría resolverse externamente a través de un servidor de configuración, por ejemplo Spring Cloud Config Server.
 
-== Tecnologías utilizadas
-
-- Spring Boot 3.x (Java 21)
-- Spring Cloud Stream + Kafka binder
-- Spring Data JPA + Hibernate
-- Jackson
-- MapStruct (recomendado, no obligatorio) o ObjectMapper para conversiones
-- RSQL parser para filtros en endpoints REST
-- Micrometer / Actuator
-- Testcontainers (recomendado para pruebas de integración con Kafka)
-
 == Cómo compilar y ejecutar
 
 Compilar:
@@ -64,15 +64,17 @@ Compilar:
 ./gradlew clean build
 ```
 
-Ejecutar en local (con Kafka accesible en `localhost:9092` o cambiando la variable):
+Después levantaremos Kafka localmente a través de docker compose ejecutando:
 
-```bash
-KAFKA_BROKERS=localhost:9092 ./gradlew bootRun
-```
+----
+docker-compose -f ../docker/docker-compose.yaml -d
+----
 
-Notas:
-- La configuración de `application-cloud-stream.yaml` define las funciones y bindings. Cambia `spring.cloud.stream.kafka.binder.brokers` o usa la variable de entorno `KAFKA_BROKERS` si la personalizas.
-- Para pruebas locales aisladas, usa Testcontainers (ver sección pruebas).
+Y levantaremos la aplicación a través del comando:
+
+----
+java -jar build/libs/*.jar
+----
 
 == Transaccionalidad y persistencia (recomendaciones)
 
