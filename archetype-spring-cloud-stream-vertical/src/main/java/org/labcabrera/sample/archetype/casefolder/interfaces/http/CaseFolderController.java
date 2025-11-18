@@ -15,12 +15,14 @@ import org.labcabrera.sample.archetype.shared.interfaces.http.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +36,7 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
     private final ObjectMapper objectMapper;
 
     @Override
-    public ResponseEntity<CaseFolderDto> create(@RequestBody CreateCaseFolderRequest request) {
+    public ResponseEntity<CaseFolderDto> create(@RequestBody @Valid @Validated CreateCaseFolderRequest request) {
         var command = new CreateCaseFolderCommand(
             request.name(),
             request.firstSurname(),

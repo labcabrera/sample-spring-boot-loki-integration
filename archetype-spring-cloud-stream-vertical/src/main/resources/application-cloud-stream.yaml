@@ -1,25 +1,23 @@
 spring:
   cloud:
     function:
-      definition: processPlayerCreation;processConfirmationOnPlayerCreation
+      definition: processCaseFolderCreation
     stream:
       bindings:
-        processPlayerCreation-in-0:
-          destination: sample.players.creation.v1
-          group: players-svc
+        # input bindings
+        processCaseFolderCreation-in-0:
+          destination: sample.case-folders.creation.v1
+          group: case-folders-svc
           contentType: application/json
-        processConfirmationOnPlayerCreation-in-0:
-          destination: sample.players.created.v1
-          group: player-confirmations-svc
+        # output bindings
+        caseFolderCreated-out-0:
+          destination: sample.case-folders.created.v1
           contentType: application/json
-        playerCreated-out-0:
-          destination: sample.players.created.v1
+        caseFolderUpdated-out-0:
+          destination: sample.case-folders.updated.v1
           contentType: application/json
-        playerUpdated-out-0:
-          destination: sample.players.updated.v1
-          contentType: application/json
-        playerDeleted-out-0:
-          destination: sample.players.deleted.v1
+        caseFolderDeleted-out-0:
+          destination: sample.case-folders.deleted.v1
           contentType: application/json
       kafka:
         binder:
@@ -27,5 +25,5 @@ spring:
           autoCreateTopics: true
           minPartitionCount: 1
         bindings:
-          processPlayerCreation-in-0:
+          processCaseFolderCreation-in-0:
             startOffset: earliest

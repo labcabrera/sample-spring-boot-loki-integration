@@ -8,20 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
-public class KafkaPlayerController {
+public class KafkaCaseFolderController {
 
     private final CommandBus commandBus;
 
     @Bean
-    public Consumer<CreateCaseFolderCommand> processPlayerCreation() {
-        return command -> {
-            log.info("Received PlayerCreatedEvent from Kafka: {}", command);
-            commandBus.dispatch(command);
-        };
+    public Consumer<CreateCaseFolderCommand> processCaseFolderCreation() {
+        return command -> commandBus.dispatch(command);
     }
 }

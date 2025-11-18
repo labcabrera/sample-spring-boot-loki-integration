@@ -8,6 +8,7 @@ import org.labcabrera.sample.archetype.casefolder.domain.events.CaseFolderCreate
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
 import org.springframework.stereotype.Component;
 
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,9 +19,14 @@ public class CreateCaseFolderCommandHandler implements CommandHandler<CreateCase
 
     private final CreateCaseFolderService createCaseFolderService;
     private final CaseFolderEventBusPort caseFolderEventBusPort;
+    private final Validator validator;
 
     public CaseFolder handle(CreateCaseFolderCommand command) {
         log.info("Create case folder << {}", command.idCardNumber());
+        var violations = validator.validate(command);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("CreateCaseFolderCommand validation failed: " + violations);
+        }
         var caseFolder = createCaseFolderService.createCaseFolder(
             command.name(),
             command.firstSurname(),

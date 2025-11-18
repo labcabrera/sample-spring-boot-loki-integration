@@ -19,17 +19,17 @@ public class KafkaCaseHolderEventBusAdapter implements CaseFolderEventBusPort {
 
     @Override
     public void publish(CaseFolderCreatedEvent event) {
-        sendNotification("playerCreated-out-0", event);
+        sendNotification("caseFolderCreated-out-0", event);
     }
 
     @Override
     public void publish(CaseFolderUpdatedEvent event) {
-        sendNotification("playerUpdated-out-0", event);
+        sendNotification("caseFolderCreated-out-0", event);
     }
 
     @Override
     public void publish(CaseFolderDeletedEvent event) {
-        sendNotification("playerDeleted-out-0", event);
+        sendNotification("caseFolderCreated-out-0", event);
     }
 
     private void sendNotification(String binding, Object event) {
