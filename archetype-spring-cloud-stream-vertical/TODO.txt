@@ -9,12 +9,13 @@ Cache (Redis)
 
 Cambio Modelo:
 
+Expendiente             Case
+- idExpendiente         idCase
+- nombre y apellidos    name, firstName, lastName
+- nif                   idCard (extraer tipo)
+
 Tramite                 CaseStep
 - idTramite             idCaseStep
 - idExpendiente         idCase
 - tipoTramite           stepType
  
-Expendiente             Case
-- idExpendiente         idCase
-- nombre y apellidos    name, firstName, lastName
-- nif                   idCard (extraer tipo)
