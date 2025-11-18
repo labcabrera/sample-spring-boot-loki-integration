@@ -1,0 +1,40 @@
+spring:
+  config:
+    import:
+      - classpath:application-db.yaml
+      - classpath:application-cloud-stream.yaml
+      - classpath:application-springdoc.yaml
+  application:
+    name: archetype-spring-cloud-stream
+  main:
+    banner-mode: off
+
+server:
+  port: 8082
+
+logging:
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}\n'
+  level:
+    org.labcabrera: ${LOG_LEVEL:DEBUG} 
+    org.apache.kafka: ${KAFKA_LOG_LEVEL:WARN}
+    org.springframework.cloud.stream: WARN
+    org.springframework.cloud.function: WARN
+    org.springframework.kafka: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+    root: INFO
+
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,axon
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  elo:
+    k-factor: 0

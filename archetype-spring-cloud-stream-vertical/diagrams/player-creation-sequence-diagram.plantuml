@@ -1,0 +1,64 @@
+@startuml Player Creation Sequence Diagram
+title Player Creation Sequence Diagram
+
+skinparam ParticipantBackgroundColor #005b72
+skinparam ParticipantFontColor #ffffff
+skinparam ArrowColor #000000
+
+participant "REST Client" as Client
+participant "Player Controller\n(Infrastructure)" as PlayerCtrl
+participant "CreatePlayerHandler\n(Application)" as PlayerHandler
+participant "Player Repository\n(Infrastructure)" as PlayerRepo
+participant "Database" as DB
+participant "Kafka" as Kafka
+participant "Confirmation Consumer\n(Infrastructure)" as ConfConsumer
+participant "Confirmation Service\n(Application)" as ConfService
+participant "Confirmation Repository\n(Infrastructure)" as ConfRepo
+
+Client -> PlayerCtrl: POST /players
+activate PlayerCtrl
+
+PlayerCtrl -> PlayerHandler: handle(CQRS Command)
+activate PlayerHandler
+
+PlayerHandler -> PlayerHandler: validate()
+PlayerHandler -> PlayerRepo: save(Player)
+activate PlayerRepo
+PlayerRepo -> DB: INSERT player
+activate DB
+DB --> PlayerRepo: player saved
+deactivate DB
+PlayerRepo --> PlayerHandler: Player entity
+deactivate PlayerRepo
+
+PlayerHandler -> Kafka: publish PlayerCreatedEvent (Cloud Stream)
+activate Kafka
+Kafka --> PlayerHandler: ack
+deactivate Kafka
+
+PlayerHandler --> PlayerCtrl: PlayerResponse
+deactivate PlayerHandler
+
+PlayerCtrl --> Client: 201 Created
+deactivate PlayerCtrl
+
+Kafka -> ConfConsumer: consume PlayerCreatedEvent
+activate ConfConsumer
+
+ConfConsumer -> ConfService: processPlayerCreated(event)
+activate ConfService
+
+ConfService -> ConfRepo: save(Confirmation)
+activate ConfRepo
+ConfRepo -> DB: INSERT confirmation
+activate DB
+DB --> ConfRepo: confirmation saved
+deactivate DB
+ConfRepo --> ConfService: Confirmation entity
+deactivate ConfRepo
+
+ConfService --> ConfConsumer: processed
+deactivate ConfService
+deactivate ConfConsumer
+
+@enduml

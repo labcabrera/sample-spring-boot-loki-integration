@@ -1,0 +1,14 @@
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+  info:
+    title: "Loki Integration API"
+    description: "REST API for player management using Spring Cloud Stream, CQRS and Vertical Slices."
+    version: "1.0.0"
+    contact:
+      name: "Lab Cabrera"
+      email: "lab.cabrera@gmail.com"
