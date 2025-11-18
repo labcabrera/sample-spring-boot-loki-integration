@@ -9,8 +9,8 @@ Cache (Redis)
 
 Cambio Modelo:
 
-Expendiente             Case
-- idExpendiente         idCase
+Expendiente             CaseFolder
+- idExpendiente         idCaseFolder
 - nombre y apellidos    name, firstName, lastName
 - nif                   idCard (extraer tipo)
 
