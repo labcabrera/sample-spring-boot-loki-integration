@@ -3,7 +3,7 @@ spring:
     function:
       # Explicit default function definition to avoid ambiguity when multiple function beans exist.
       # Use semicolon-separated list when registering multiple functions.
-      definition: processCaseFolderCreation;processCaseStepCreation
+      definition: processCaseFolderCreation;processInitialCaseStepCreation
     stream:
       bindings:
         # input bindings
@@ -11,7 +11,7 @@ spring:
           destination: sample.case-folders.creation.v1
           group: case-folders-svc
           contentType: application/json
-        processCaseStepCreation-in-0:
+        processInitialCaseStepCreation-in-0:
           destination: sample.case-folders.created.v1
           group: case-folders-svc
           contentType: application/json

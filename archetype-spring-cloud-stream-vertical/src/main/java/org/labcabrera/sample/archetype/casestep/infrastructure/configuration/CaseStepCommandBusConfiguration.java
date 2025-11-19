@@ -1,7 +1,7 @@
 package org.labcabrera.sample.archetype.casestep.infrastructure.configuration;
 
-import org.labcabrera.sample.archetype.casestep.application.cqrs.commands.CreateCaseStepCommand;
-import org.labcabrera.sample.archetype.casestep.application.cqrs.handlers.CreateCaseStepCommandHandler;
+import org.labcabrera.sample.archetype.casestep.application.cqrs.commands.CreateInitialCaseStepCommand;
+import org.labcabrera.sample.archetype.casestep.application.cqrs.handlers.CreateInitialCaseStepCommandHandler;
 import org.labcabrera.sample.archetype.shared.application.SimpleCommandBus;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,11 +13,11 @@ import lombok.RequiredArgsConstructor;
 public class CaseStepCommandBusConfiguration {
 
     private final SimpleCommandBus commandBus;
-    private final CreateCaseStepCommandHandler createHandler;
+    private final CreateInitialCaseStepCommandHandler createHandler;
 
     @PostConstruct
     public void registerHandlers() {
-        commandBus.registerHandler(CreateCaseStepCommand.class, createHandler);
+        commandBus.registerHandler(CreateInitialCaseStepCommand.class, createHandler);
     }
 
 }

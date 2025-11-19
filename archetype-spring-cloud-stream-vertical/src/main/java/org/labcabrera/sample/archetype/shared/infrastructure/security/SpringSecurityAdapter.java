@@ -9,6 +9,7 @@ import java.util.Map;
 import org.labcabrera.sample.archetype.shared.application.SecurityPort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +30,15 @@ public class SpringSecurityAdapter implements SecurityPort {
             Set<String> scopes = extractScopes(jwt);
             return Optional.of(new AuthenticatedUser(id, username, roles, scopes));
         }
-        if (principal instanceof org.springframework.security.core.userdetails.UserDetails ud) {
+        if (principal instanceof UserDetails ud) {
             String username = ud.getUsername();
             Set<String> roles = new HashSet<>();
             ud.getAuthorities().forEach(a -> roles.add(a.getAuthority()));
+            return Optional.of(new AuthenticatedUser(null, username, roles, Set.of()));
+        }
+        if (principal instanceof String username) {
+            Set<String> roles = new HashSet<>();
+            auth.getAuthorities().forEach(a -> roles.add(a.getAuthority()));
             return Optional.of(new AuthenticatedUser(null, username, roles, Set.of()));
         }
         return Optional.empty();
