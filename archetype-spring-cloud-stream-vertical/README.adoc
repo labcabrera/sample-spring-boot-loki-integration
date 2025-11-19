@@ -147,7 +147,6 @@ spring:
           issuer-uri: ${IAM_ISSUER_URI:http://localhost:8090/auth/realms/sample}
 ----
 
-
 === RSQL
 
 Se ha utilizado la libreria `rsql-parser` para parsear filtros RSQL en endpoints REST. Esto permite construir queries dinámicas basadas en parámetros de consulta.
@@ -165,6 +164,23 @@ En este caso el enfoque REST es _code-first_, por lo que se ha utilizado anotaci
 Podemos consultar la API localmente en `http://localhost:8080/swagger-ui.html`
 
 Las anotaciones se han definido en una interface _{controller}Definition_ que será implementada por nuestro controlador. De este modo separamos la definición del contrato de la implementación.
+
+Hemos añadido también una configuración personalizada de OpenAPI para definir la seguridad OAuth2 en la documentación para usar tanto un Bearer token como el flujo Authorization Code añadiendo en la configuracion de OpenAPI lo siguiente:
+
+[source,java]
+----
+		components.addSecuritySchemes(("oidc"), new SecurityScheme()
+			.type(SecurityScheme.Type.OAUTH2)
+			.description("OAuth2 con OIDC contra IAM")
+			.flows(new OAuthFlows()
+				.authorizationCode(new OAuthFlow()
+					.authorizationUrl(authorizationUrl)
+					.tokenUrl(tokenUrl)
+					.scopes(new Scopes()
+						.addString("openid", "OpenID scope")
+						.addString("profile", "User profile scope")
+						.addString("api", "API access scope")))));
+----
 
 === Mapeo de campos
 

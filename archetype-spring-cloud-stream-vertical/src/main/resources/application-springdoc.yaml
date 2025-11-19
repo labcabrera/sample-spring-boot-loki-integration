@@ -5,6 +5,14 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: alpha
     tagsSorter: alpha
+    oauth:
+      client-id: tu-client-id
+      client-secret: tu-client-secret   # si aplica (para confidential clients)
+      scope-separator: " "
+      use-pkce-with-authorization-code-grant: true
+  oAuthFlow:
+    authorizationUrl: http://localhost:8090/realms/sample/protocol/openid-connect/auth
+    tokenUrl: http://localhost:8090/realms/sample/protocol/openid-connect/token
   info:
     title: Sample Spring Cloud Stream Vertical Slices Archetype
     description: "REST API for Case Folder and Case Steps management using Spring Cloud Stream, CQRS and Vertical Slices."
