@@ -1,13 +1,13 @@
 package org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.repositories;
 
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
-import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities.CaseHolderEntity;
+import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities.CaseFolderEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CaseHolderMerger {
+public class CaseFolderMerger {
 
-    public boolean mergeChanges(CaseHolderEntity current, CaseFolder updated) {
+    public boolean mergeChanges(CaseFolderEntity current, CaseFolder updated) {
         boolean modified = false;
         if (!current.getName().equals(updated.getName())) {
             current.setName(updated.getName());

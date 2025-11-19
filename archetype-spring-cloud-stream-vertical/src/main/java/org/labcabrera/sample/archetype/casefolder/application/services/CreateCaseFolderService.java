@@ -1,7 +1,6 @@
 package org.labcabrera.sample.archetype.casefolder.application.services;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +11,6 @@ import org.labcabrera.sample.archetype.casefolder.domain.IdCardType;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +30,7 @@ public class CreateCaseFolderService {
             .idCard(new IdCard(idCardNumber, idCardType))
             .createdAt(LocalDateTime.now())
             .build();
-        Set<ConstraintViolation<CaseFolder>> violations = validator.validate(caseFolder);
+        var violations = validator.validate(caseFolder);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("case-folder.msg.err.validation-error", violations);
         }

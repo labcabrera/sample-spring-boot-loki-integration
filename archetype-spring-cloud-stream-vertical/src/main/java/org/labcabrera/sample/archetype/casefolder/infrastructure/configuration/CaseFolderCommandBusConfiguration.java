@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class PlayerCommandBusConfiguration {
+public class CaseFolderCommandBusConfiguration {
 
     private final SimpleCommandBus commandBus;
     private final CreateCaseFolderCommandHandler createHandler;

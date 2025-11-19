@@ -18,7 +18,7 @@ public class GetCaseHoldersByRsqlQueryHandler implements QueryHandler<GetCaseFol
     private final CaseFolderRepository caseFolderRepository;
 
     public Page<CaseFolder> handle(GetCaseFoldersByRsqlQuery query) {
-        log.debug("Handling RSQL query for player <<< {}", query.rsql());
+        log.debug("Handling RSQL query for case folder <<< {}", query.rsql());
         return caseFolderRepository.findByRsql(query.rsql(), query.pageable());
     }
 }

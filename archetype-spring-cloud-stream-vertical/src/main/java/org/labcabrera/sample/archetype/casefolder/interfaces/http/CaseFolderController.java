@@ -37,9 +37,9 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
     @Override
     public ResponseEntity<CaseFolderDto> getCaseFolderById(@PathVariable String caseFolderId) {
         var query = new GetCaseFolderByIdQuery(caseFolderId);
-        CaseFolder player = queryBus.dispatch(query);
-        var playerDto = mapper.toDto(player);
-        return ResponseEntity.ok(playerDto);
+        CaseFolder caseFolder = queryBus.dispatch(query);
+        var caseFolderDto = mapper.toDto(caseFolder);
+        return ResponseEntity.ok(caseFolderDto);
     }
 
     @Override
@@ -51,15 +51,15 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
             request.idCard().type(),
             request.idCard().number());
         CaseFolder caseFolder = commandBus.dispatch(command);
-        var playerDto = mapper.toDto(caseFolder);
-        return ResponseEntity.status(201).body(playerDto);
+        var caseFolderDto = mapper.toDto(caseFolder);
+        return ResponseEntity.status(201).body(caseFolderDto);
     }
 
     @Override
     public ResponseEntity<PageResponse<CaseFolderDto>> getCaseFoldersByRsql(String rsql, Pageable pageable) {
         var query = new GetCaseFoldersByRsqlQuery(rsql, pageable);
         Page<CaseFolder> page = queryBus.dispatch(query);
-        var pageDto = page.map(player -> mapper.toDto(player));
+        var pageDto = page.map(caseFolder -> mapper.toDto(caseFolder));
         var response = new PageResponse<>(pageDto);
         return ResponseEntity.ok(response);
     }
@@ -71,9 +71,9 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
             request.name(),
             request.firstSurname(),
             request.lastSurname());
-        CaseFolder player = commandBus.dispatch(command);
-        var playerDto = mapper.toDto(player);
-        return ResponseEntity.ok(playerDto);
+        CaseFolder caseFolder = commandBus.dispatch(command);
+        var caseFolderDto = mapper.toDto(caseFolder);
+        return ResponseEntity.ok(caseFolderDto);
     }
 
     @Override

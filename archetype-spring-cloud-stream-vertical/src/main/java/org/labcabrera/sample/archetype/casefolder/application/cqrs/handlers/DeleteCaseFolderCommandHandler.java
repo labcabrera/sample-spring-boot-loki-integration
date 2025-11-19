@@ -17,14 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DeleteCaseFolderCommandHandler implements CommandHandler<DeleteCaseFolderCommand, Void> {
 
-    private final CaseFolderRepository playerRepository;
-    private final CaseFolderEventBusPort playerEventBusPort;
+    private final CaseFolderRepository caseFolderRepository;
+    private final CaseFolderEventBusPort caseFolderEventBusPort;
 
     @Override
     public Void handle(DeleteCaseFolderCommand command) {
-        var caseFolder = playerRepository.findById(command.caseFolderId())
+        var caseFolder = caseFolderRepository.findById(command.caseFolderId())
             .orElseThrow(() -> new NotFoundException(command.caseFolderId(), CaseFolder.class));
-        playerRepository.deleteById(command.caseFolderId());
+        caseFolderRepository.deleteById(command.caseFolderId());
         sendNotification(caseFolder);
         return null;
     }
@@ -34,6 +34,6 @@ public class DeleteCaseFolderCommandHandler implements CommandHandler<DeleteCase
             caseFolder.getId(),
             caseFolder.getIdCard().idCardType(),
             caseFolder.getIdCard().idCardNumber());
-        playerEventBusPort.publish(event);
+        caseFolderEventBusPort.publish(event);
     }
 }

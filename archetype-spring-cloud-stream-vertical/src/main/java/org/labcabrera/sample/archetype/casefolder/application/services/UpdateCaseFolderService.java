@@ -3,7 +3,7 @@ package org.labcabrera.sample.archetype.casefolder.application.services;
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
-import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class UpdateCaseFolderService {
         }
         var violations = validator.validate(caseFolder);
         if (!violations.isEmpty()) {
-            throw new BadRequestException("Player entity validation failed: " + violations);
+            throw new ConstraintViolationException("Case folder entity validation failed", violations);
         }
         return caseFolderRepository.update(caseFolder);
     }

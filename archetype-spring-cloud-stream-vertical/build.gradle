@@ -43,8 +43,6 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackVersion}"
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
-	// swagger annotations are provided by springdoc starter (jakarta variant).
-	// Remove explicit older `swagger-annotations` to avoid runtime conflicts (NoSuchMethodError).
 	implementation "cz.jirutka.rsql:rsql-parser:${rsqlParserVersion}"
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
@@ -66,11 +64,8 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// Configure annotation-processor generated sources directory and MapStruct defaults
 tasks.withType(JavaCompile).configureEach {
-	// place generated sources where IDEs and Gradle expect them
 	options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotations")
-	// set MapStruct default component model to spring if not specified on mappers
 	options.compilerArgs += ["-Amapstruct.defaultComponentModel=spring"]
 }
 

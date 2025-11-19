@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
-import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities.CaseHolderEntity;
+import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities.CaseFolderEntity;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
@@ -27,11 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("null")
-public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
+public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
-    private final CaseHolderJpaRepository jpaRepository;
+    private final CaseFolderJpaRepository jpaRepository;
     private final CaseFolderMapper mapper;
-    private final CaseHolderMerger caseHolderMerger;
+    private final CaseFolderMerger caseFolderMerger;
     private final RSQLParser rsqlParser;
 
     @Override
@@ -54,7 +54,7 @@ public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
         }
         try {
             Node rootNode = rsqlParser.parse(rsql);
-            Specification<CaseHolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseHolderEntity>());
+            Specification<CaseFolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseFolderEntity>());
             var page = jpaRepository.findAll(spec, pageable);
             return page.map(entity -> mapper.toDomain(entity));
         }
@@ -86,7 +86,7 @@ public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
     public CaseFolder update(CaseFolder caseFolder) {
         var current = jpaRepository.findById(caseFolder.getId())
             .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolder.getId()));
-        boolean modified = caseHolderMerger.mergeChanges(current, caseFolder);
+        boolean modified = caseFolderMerger.mergeChanges(current, caseFolder);
         if (!modified) {
             throw new NotModifiedException("No changes detected for case folder with id " + caseFolder.getId());
         }

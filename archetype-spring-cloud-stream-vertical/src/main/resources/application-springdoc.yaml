@@ -6,9 +6,9 @@ springdoc:
     operationsSorter: alpha
     tagsSorter: alpha
   info:
-    title: "Loki Integration API"
-    description: "REST API for player management using Spring Cloud Stream, CQRS and Vertical Slices."
-    version: "1.0.0"
+    title: Sample Spring Cloud Stream Vertical Slices Archetype
+    description: "REST API for Case Folder and Case Steps management using Spring Cloud Stream, CQRS and Vertical Slices."
+    version: 1.0.0
     contact:
-      name: "Lab Cabrera"
-      email: "lab.cabrera@gmail.com"
+      name: Luis Cabrera
+      email: lab.cabrera@gmail.com

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class PlayerQueryBusConfiguration {
+public class CaseFolderQueryBusConfiguration {
 
     private final SimpleQueryBus queryBus;
     private final GetCaseFolderByIdQueryHandler idQueryHandler;

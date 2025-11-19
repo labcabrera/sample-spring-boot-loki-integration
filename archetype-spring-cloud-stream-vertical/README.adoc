@@ -89,58 +89,49 @@ Dentro de la configuración realizamos el mapeo de los bindings a destinos Kafka
 spring:
   cloud:
     function:
-      definition: processPlayerCreation;processConfirmationOnPlayerCreation
+      definition: processCaseFolderCreation
     stream:
       bindings:
-        processPlayerCreation-in-0:
-          destination: sample.players.creation.v1
-          group: players-svc
+        # input bindings
+        processCaseFolderCreation-in-0:
+          destination: sample.case-folders.creation.v1
+          group: case-folders-svc
           contentType: application/json
-        processConfirmationOnPlayerCreation-in-0:
-          destination: sample.players.created.v1
-          group: player-confirmations-svc
+        # output bindings
+        caseFolderCreated-out-0:
+          destination: sample.case-folders.created.v1
           contentType: application/json
-        playerCreated-out-0:
-          destination: sample.players.created.v1
+        caseFolderUpdated-out-0:
+          destination: sample.case-folders.updated.v1
           contentType: application/json
-        playerUpdated-out-0:
-          destination: sample.players.updated.v1
+        caseFolderDeleted-out-0:
+          destination: sample.case-folders.deleted.v1
           contentType: application/json
-        playerDeleted-out-0:
-          destination: sample.players.deleted.v1
-          contentType: application/json
-      kafka:
-        binder:
-          brokers: ${KAFKA_BROKERS:localhost:9092}
-          autoCreateTopics: true
-          minPartitionCount: 1
 ----
 
 Esta configuración realiza el binding automático de los consumidores y productores a los topics Kafka correspondientes por ejemplo en nuestro controlador de Kafka:
 
 [source,java]
 ----
-public class KafkaPlayerController {
+@Configuration
+@RequiredArgsConstructor
+public class KafkaCaseFolderController {
 
     private final CommandBus commandBus;
 
     @Bean
-    public Consumer<CreatePlayerCommand> processPlayerCreation() {
-        return command -> {
-            commandBus.dispatch(command);
-        };
+    public Consumer<CreateCaseFolderCommand> processCaseFolderCreation() {
+        return command -> commandBus.dispatch(command);
     }
 }
 ----
+
+TIP: Usando Spring Cloud Stream evitamos que nuestro código tenga dependencias directas con la API de Kafka de modo que puede ser fácilmente adaptado a otros sistemas de mensajería compatibles con Spring Cloud Stream como por ejemplo RabbitMQ, AWS SQS, etc.
 
 === RSQL
 
 Se ha utilizado la libreria `rsql-parser` para parsear filtros RSQL en endpoints REST. Esto permite construir queries dinámicas basadas en parámetros de consulta.
 Se ha añadido el operador `=re=` para búsquedas "contiene" (like %value%) en strings.
-
-=== Validation
-
-Se ha integrado Bean Validation (`jakarta.validation`) para validar DTOs y comandos entrantes. Usar anotaciones como `@NotNull`, `@Size`, etc. en las clases de request/command.
 
 === CQRS
 
@@ -153,9 +144,72 @@ En este caso el enfoque REST es _code-first_, por lo que se ha utilizado anotaci
 
 Podemos consultar la API localmente en `http://localhost:8080/swagger-ui.html`
 
+Las anotaciones se han definido en una interface _{controller}Definition_ que será implementada por nuestro controlador. De este modo separamos la definición del contrato de la implementación.
+
 === Mapeo de campos
 
-En este ejemplo se ha utilizado Jackson `ObjectMapper` para conversiones entre entidades JPA, objetos de dominio y DTOs. Sin embargo, se recomienda usar MapStruct para un mapeo más eficiente y mantenible en proyectos reales.
+Para los mapeos de nuestro objeto de dominio con las entidades JPA y los DTOs de nuestra capa de exposición REST utilizamos MapStruct. Este mapeador genera código en tiempo de compilación para realizar las conversiones de manera eficiente.
+
+Para ello, primeramente definimos en el fichero gradle la configuración necesaria para que MapStruct genere el código:
+
+[source]
+----
+tasks.withType(JavaCompile).configureEach {
+  options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotations")
+  options.compilerArgs += ["-Amapstruct.defaultComponentModel=spring"]
+}
+----
+
+Y después definimos los mapeadores como interfaces anotadas con `@Mapper`:
+
+[source,java]
+----
+@Mapper
+public interface CaseFolderMapper {
+    CaseFolder toDomainEntity(CreateCaseFolderCommand command);
+    CaseFolderDTO toDTO(CaseFolder entity);
+}
+----
+
+=== Validation
+
+Este prototipo integra Bean Validation (`jakarta.validation`) para validar tanto nuestros objetos de dominio como los DTOs de nuestra capa de exposición REST.
+
+En nuestros servicios podremos inyectar un validador y utilizarlo para validar las entidades antes de persistirlas o procesarlas:
+
+[source,java]
+----
+public class CreateCaseFolderService {
+
+    public CaseFolder createCaseFolder(...) {
+        var caseFolder = ...
+        Set<ConstraintViolation<CaseFolder>> violations = validator.validate(caseFolder);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("case-folder.msg.err.validation-error", violations);
+        }
+        return caseFolderRepository.save(caseFolder);
+    }
+
+}
+----
+
+En nuestra capa de exposición REST, podemos utilizar la anotación `@Validated` en los controladores para validar automáticamente los DTOs entrantes:
+
+[source,java]
+----
+@Override
+    public ResponseEntity<CaseFolderDto> create(@RequestBody @Validated CreateCaseFolderRequest request) {
+        var command = new CreateCaseFolderCommand(
+            request.name(),
+            request.firstSurname(),
+            request.lastSurname(),
+            request.idCard().type(),
+            request.idCard().number());
+        CaseFolder caseFolder = commandBus.dispatch(command);
+        var playerDto = mapper.toDto(caseFolder);
+        return ResponseEntity.status(201).body(playerDto);
+    }
+----
 
 === Gestión de errores
 
@@ -175,14 +229,6 @@ A través de la propiedad HTTP _Accept-Language_ se puede especificar el idioma 
 
 - Actuator + Prometheus (micrometer) están incluidos en el proyecto. Ver endpoints en `/actuator`.
 - Logs: `logback-spring.xml` está preconfigurado; ajustar niveles desde `application.yaml` para ver binder/kafka y cloud stream en `DEBUG` si es necesario.
-
-// == Buenas prácticas y tareas recomendadas
-
-// - Mapeo: usar MapStruct para conversiones entre domain/entity/DTO en lugar de `ObjectMapper` cuando sea posible.
-// - Validación: usar Bean Validation (`jakarta.validation`) en DTO/commands.
-// - Events: definir esquemas (JSON Schema / Avro) para eventos y versionarlos.
-// - Manejo transaccional: usar outbox si necesitas garantía estricta DB->Kafka.
-// - Añadir tests de integración usando Testcontainers para Kafka y la BD.
 
 == Referencias
 

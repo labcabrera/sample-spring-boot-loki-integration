@@ -1,20 +1,26 @@
 package org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "case_holder")
+@Table(name = "case_folder")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CaseHolderEntity {
+public class CaseFolderEntity {
 
     @Id
     @Column(name = "id", length = 36)
