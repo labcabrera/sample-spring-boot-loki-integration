@@ -38,7 +38,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
     private final RSQLParser rsqlParser;
 
     @Override
-    @Cacheable(value = "caseFolder", key = "#caseFolderId")
+    @Cacheable(value = "caseFolder", key = "#caseFolderId", unless = "#result == null || #result.isEmpty()")
     public Optional<CaseFolder> findById(String caseFolderId) {
         return jpaRepository.findById(caseFolderId).map(entity -> mapper.toDomain(entity));
     }

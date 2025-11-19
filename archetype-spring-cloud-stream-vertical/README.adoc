@@ -344,13 +344,17 @@ Se han activado las anotaciones de caché en la implementación del repositorio 
 [source,java]
 ----
     @Override
-    @Cacheable(value = "caseFolder", key = "#caseFolderId")
+    @Cacheable(value = "caseFolder", key = "#caseFolderId", unless = "#result == null || #result.isEmpty()")
     public Optional<CaseFolder> findById(String caseFolderId) {
         return jpaRepository.findById(caseFolderId).map(entity -> mapper.toDomain(entity));
     }
 ----
 
 Añadiendo las anotaciones `@Cacheable`, `@CachePut` y `@CacheEvict` en los métodos correspondientes para gestionar el almacenamiento, actualización y eliminación de entradas en la caché.
+
+Si accedemos a la consola de Redis podemos ver que las entradas se almacenan correctamente serializadas en JSON:
+
+image::./images/redis.png[]
 
 === I18n
 
