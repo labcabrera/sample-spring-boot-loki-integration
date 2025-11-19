@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +59,8 @@ public class RestExceptionHandler {
             errors.add(new ApiErrorDetail(fieldName, errorMessage));
         });
         var apiError = new ApiError(
-            "VALIDATION_FAILED",
-            "Validation failed",
+            "msg.err.validation-error",
+            i18n("msg.err.validation-error"),
             LocalDateTime.now(),
             errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
@@ -69,7 +70,7 @@ public class RestExceptionHandler {
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("Illegal argument exception", ex);
         ApiError error = new ApiError(
-            "BAD_REQUEST",
+            "msg.err.illegal-argument",
             ex.getMessage(),
             LocalDateTime.now(),
             Collections.emptyList());
@@ -85,7 +86,7 @@ public class RestExceptionHandler {
             ex.getName(),
             typeName);
         ApiError error = new ApiError(
-            "BAD_REQUEST",
+            "msg.err.method-argument-type-mismatch",
             message,
             LocalDateTime.now(),
             Collections.emptyList());
@@ -96,19 +97,30 @@ public class RestExceptionHandler {
     public ResponseEntity<ApiError> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         log.error("HTTP message not readable exception", ex);
         ApiError error = new ApiError(
-            "BAD_REQUEST",
-            "Malformed JSON request or invalid data format",
+            "msg.err.http-message-not-readable",
+            i18n("msg.err.http-message-not-readable"),
             LocalDateTime.now(),
             Collections.emptyList());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNoResourceFoundException(NoResourceFoundException ex) {
+        log.error("No resource found exception", ex);
+        ApiError error = new ApiError(
+            "msg.err.no-resource-found",
+            i18n("msg.err.no-resource-found"),
+            LocalDateTime.now(),
+            Collections.emptyList());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiError> handleNoHandlerFoundException(NoHandlerFoundException ex) {
         log.error("No handler found exception", ex);
         ApiError error = new ApiError(
-            "NOT_FOUND",
-            "Resource not found",
+            "msg.err.no-handler-found",
+            i18n("msg.err.no-handler-found"),
             LocalDateTime.now(),
             Collections.emptyList());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

@@ -196,6 +196,36 @@ Dentro de la implementación del repositorio JPA para la entidad _CaseFolder_ se
     }
 ----
 
+De este modo, si el usuario no tiene el rol de administración, solo podrá ver los expedientes que él mismo es propietario. Si habilitamos el logging de SQL podremos ver como se añade la condición adicional en la consulta _name=re=JO_ generada por Hibernate:
+
+----
+2025-11-19 15:53:09.853 [http-nio-8082-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        cfe1_0.id,
+        cfe1_0.created_at,
+        cfe1_0.first_surname,
+        cfe1_0.id_card_number,
+        cfe1_0.id_card_type,
+        cfe1_0.last_surname,
+        cfe1_0.name,
+        cfe1_0.owner,
+        cfe1_0.updated_at,
+        cfe1_0.version 
+    from
+        case_folder cfe1_0 
+    where
+        cfe1_0.name like ? escape '' 
+        and cfe1_0.owner=? 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+2025-11-19 15:53:09.853 [http-nio-8082-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [%JO%]
+2025-11-19 15:53:09.853 [http-nio-8082-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sample-user-viewer]
+2025-11-19 15:53:09.853 [http-nio-8082-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:INTEGER) <- [0]
+2025-11-19 15:53:09.853 [http-nio-8082-exec-9] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:INTEGER) <- [10]
+----
+
 === RSQL
 
 Se ha utilizado la libreria `rsql-parser` para parsear filtros RSQL en endpoints REST. Esto permite construir queries dinámicas basadas en parámetros de consulta.
