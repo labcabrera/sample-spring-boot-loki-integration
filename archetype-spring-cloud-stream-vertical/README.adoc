@@ -165,6 +165,37 @@ public interface Guard<T> {
 Cada entidad de dominio puede tener su propia implementación de _Guard_ que será invocada desde los servicios de aplicación para verificar si el usuario autenticado tiene permisos para realizar la operación solicitada.
 En este ejemplo, la implementación de _Guard_ para la entidad _CaseFolder_ verifica a nivel de los roles obtenidos del IAM y en los casos de no ser administrador de que el campo _owner_ coincida con el usuario autenticado. En otros escenarios podremos implementar lógicas más complejas según las necesidades de seguridad de la aplicación.
 
+==== Filtro en consultas RSQL
+
+Dentro de la implementación del repositorio JPA para la entidad _CaseFolder_ se ha añadido un filtro de seguridad en las consultas RSQL para limitar los resultados según los permisos del usuario autenticado:
+
+[source,java]
+----
+    @Override
+    public Page<CaseFolder> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user) {
+        Specification<CaseFolderEntity> authSpec = (root, query, cb) -> {
+            if (!user.hasRole(CaseFolderGuard.ROLE_CASE_FOLDER_MANAGEMENT)) {
+                return cb.equal(root.get("owner"), user.username());
+            }
+            return cb.conjunction();
+        };
+        if (StringUtils.isBlank(rsql)) {
+            var page = jpaRepository.findAll(authSpec, pageable);
+            return page.map(entity -> mapper.toDomain(entity));
+        }
+        try {
+            Node rootNode = rsqlParser.parse(rsql);
+            Specification<CaseFolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseFolderEntity>());
+            Specification<CaseFolderEntity> finalSpec = (spec == null) ? authSpec : spec.and(authSpec);
+            var page = jpaRepository.findAll(finalSpec, pageable);
+            return page.map(entity -> mapper.toDomain(entity));
+        }
+        catch (Exception ex) {
+            throw new BadRequestException("rsql.msg.err.parse", ex, rsql);
+        }
+    }
+----
+
 === RSQL
 
 Se ha utilizado la libreria `rsql-parser` para parsear filtros RSQL en endpoints REST. Esto permite construir queries dinámicas basadas en parámetros de consulta.

@@ -4,8 +4,10 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
+import org.labcabrera.sample.archetype.casefolder.application.services.CaseFolderGuard;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
 import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.entities.CaseFolderEntity;
+import org.labcabrera.sample.archetype.shared.application.SecurityPort.AuthenticatedUser;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.archetype.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
@@ -20,12 +22,10 @@ import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
 @SuppressWarnings("null")
 public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
@@ -36,31 +36,35 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     public Optional<CaseFolder> findById(String caseFolderId) {
-        return jpaRepository.findById(caseFolderId)
-            .map(entity -> mapper.toDomain(entity));
+        return jpaRepository.findById(caseFolderId).map(entity -> mapper.toDomain(entity));
     }
 
     @Override
     public Optional<CaseFolder> findByIdCardNumber(String idCardNumber) {
-        return jpaRepository.findByIdCardNumber(idCardNumber)
-            .map(entity -> mapper.toDomain(entity));
+        return jpaRepository.findByIdCardNumber(idCardNumber).map(entity -> mapper.toDomain(entity));
     }
 
     @Override
-    public Page<CaseFolder> findByRsql(String rsql, Pageable pageable) {
+    public Page<CaseFolder> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user) {
+        Specification<CaseFolderEntity> authSpec = (root, query, cb) -> {
+            if (!user.hasRole(CaseFolderGuard.ROLE_CASE_FOLDER_MANAGEMENT)) {
+                return cb.equal(root.get("owner"), user.username());
+            }
+            return cb.conjunction();
+        };
         if (StringUtils.isBlank(rsql)) {
-            var page = jpaRepository.findAll(pageable);
+            var page = jpaRepository.findAll(authSpec, pageable);
             return page.map(entity -> mapper.toDomain(entity));
         }
         try {
             Node rootNode = rsqlParser.parse(rsql);
             Specification<CaseFolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseFolderEntity>());
-            var page = jpaRepository.findAll(spec, pageable);
+            Specification<CaseFolderEntity> finalSpec = (spec == null) ? authSpec : spec.and(authSpec);
+            var page = jpaRepository.findAll(finalSpec, pageable);
             return page.map(entity -> mapper.toDomain(entity));
         }
         catch (Exception ex) {
-            log.error("Error parsing RSQL query: {}", rsql, ex);
-            throw new BadRequestException("Error parsing RSQL query " + rsql, ex);
+            throw new BadRequestException("rsql.msg.err.parse", ex, rsql);
         }
     }
 
@@ -69,15 +73,14 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
     public CaseFolder save(CaseFolder caseFolder) {
         try {
             if (caseFolder.getId() != null && jpaRepository.existsById(caseFolder.getId())) {
-                throw new BadRequestException("Case folder already exists with id " + caseFolder.getId());
+                throw new BadRequestException("case-folder.msg.err.already-exists", caseFolder.getId());
             }
             var entity = mapper.toEntity(caseFolder);
             var savedEntity = jpaRepository.save(entity);
             return mapper.toDomain(savedEntity);
         }
         catch (DataIntegrityViolationException ex) {
-            log.error("Data integrity violation while saving case folder: {}", caseFolder, ex);
-            throw new BadRequestException("Data integrity error saving case folder", ex);
+            throw new BadRequestException("case-folder.msg.err.data-integrity", ex);
         }
     }
 
@@ -88,7 +91,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
             .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolder.getId()));
         boolean modified = caseFolderMerger.mergeChanges(current, caseFolder);
         if (!modified) {
-            throw new NotModifiedException("No changes detected for case folder with id " + caseFolder.getId());
+            throw new NotModifiedException("case-folder.msg.err.not-modified", caseFolder.getId());
         }
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);

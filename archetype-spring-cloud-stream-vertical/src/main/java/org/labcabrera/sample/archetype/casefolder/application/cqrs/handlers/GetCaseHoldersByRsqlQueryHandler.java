@@ -1,7 +1,5 @@
 package org.labcabrera.sample.archetype.casefolder.application.cqrs.handlers;
 
-import java.security.Security;
-
 import org.labcabrera.sample.archetype.casefolder.application.cqrs.queries.GetCaseFoldersByRsqlQuery;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
@@ -24,6 +22,6 @@ public class GetCaseHoldersByRsqlQueryHandler implements QueryHandler<GetCaseFol
     public Page<CaseFolder> handle(GetCaseFoldersByRsqlQuery query) {
         var user = securityPort.requireCurrentUser();
         log.debug("Getting case folders by RSQL <<< {} (user: {})", query.rsql(), user.username());
-        return caseFolderRepository.findByRsql(query.rsql(), query.pageable());
+        return caseFolderRepository.findByRsql(query.rsql(), query.pageable(), user);
     }
 }
