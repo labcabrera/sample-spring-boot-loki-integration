@@ -132,6 +132,8 @@ TIP: Usando Spring Cloud Stream evitamos que nuestro código tenga dependencias 
 
 === Seguridad
 
+==== OAuth2 Resource Server
+
 Se ha configurado la aplicación como un OAuth2 Resource Server que valida tokens JWT emitidos por un proveedor de identidad (IdP) como Keycloak usando la librería _spring-boot-starter-oauth2-resource-server_.
 
 De este modo la aplicación recibe un token JWT en las peticiones HTTP y lo valida para autorizar el acceso a los endpoints protegidos. Para la validación de la firma del token se utiliza el almacén JWK del IAM a través de la configuración definida en _application-security.yaml_:
@@ -146,6 +148,22 @@ spring:
           jwk-set-uri: ${IAM_JWK_URI:http://localhost:8090/realms/sample/protocol/openid-connect/certs}
           issuer-uri: ${IAM_ISSUER_URI:http://localhost:8090/auth/realms/sample}
 ----
+
+==== Restricciones de acceso
+
+En la capa de aplicación se ha definido la interface _Guard_ encargada de verificar las restricciones de acceso a nivel de entidad de dominio:
+
+[source,java]
+----
+public interface Guard<T> {
+    void checkRead(T domain, AuthenticatedUser user);
+    void checkWrite(T domain, AuthenticatedUser user);
+    void checkCreate(AuthenticatedUser user);
+}
+----
+
+Cada entidad de dominio puede tener su propia implementación de _Guard_ que será invocada desde los servicios de aplicación para verificar si el usuario autenticado tiene permisos para realizar la operación solicitada.
+En este ejemplo, la implementación de _Guard_ para la entidad _CaseFolder_ verifica a nivel de los roles obtenidos del IAM y en los casos de no ser administrador de que el campo _owner_ coincida con el usuario autenticado. En otros escenarios podremos implementar lógicas más complejas según las necesidades de seguridad de la aplicación.
 
 === RSQL
 

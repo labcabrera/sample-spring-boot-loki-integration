@@ -38,6 +38,16 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.valueOf(ex.getStatus())).body(apiError);
     }
 
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ApiError> handleSecurityException(SecurityException ex) {
+        log.error("Caugth security exception: code={}, message={}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError(
+            "FORBIDDEN",
+            ex.getMessage(),
+            LocalDateTime.now(),
+            Collections.emptyList()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error("Validation exception", ex);

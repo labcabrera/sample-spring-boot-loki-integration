@@ -1,11 +1,18 @@
 package org.labcabrera.sample.archetype.casefolder.application.cqrs.handlers;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.labcabrera.sample.archetype.casefolder.application.cqrs.commands.CreateCaseFolderCommand;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderEventBusPort;
-import org.labcabrera.sample.archetype.casefolder.application.services.CreateCaseFolderService;
+import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
+import org.labcabrera.sample.archetype.casefolder.domain.IdCard;
 import org.labcabrera.sample.archetype.casefolder.domain.events.CaseFolderCreatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
+import org.labcabrera.sample.archetype.shared.application.Guard;
+import org.labcabrera.sample.archetype.shared.application.SecurityPort;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.ConstraintViolationException;
 import org.springframework.stereotype.Component;
 
 import jakarta.validation.Validator;
@@ -17,23 +24,49 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CreateCaseFolderCommandHandler implements CommandHandler<CreateCaseFolderCommand, CaseFolder> {
 
-    private final CreateCaseFolderService createCaseFolderService;
+    private final CaseFolderRepository caseFolderRepository;
     private final CaseFolderEventBusPort caseFolderEventBusPort;
+    private final SecurityPort securityPort;
+    private final Guard<CaseFolder> caseFolderGuard;
     private final Validator validator;
 
     public CaseFolder handle(CreateCaseFolderCommand command) {
-        log.info("Create case folder << {}", command.idCardNumber());
+        var user = securityPort.requireCurrentUser();
+        log.info("Create case folder << {} (user: {})", command.idCardNumber(), user.username());
+        caseFolderGuard.checkCreate(user);
+        validateCommand(command);
+        var caseFolder = buildCaseFolderFromCommand(command, user.username());
+        validateCaseFolder(caseFolder);
+        var created = caseFolderRepository.save(caseFolder);
+        sendNotification(created);
+        return created;
+    }
+
+    private void validateCommand(CreateCaseFolderCommand command) {
         var violations = validator.validate(command);
         if (!violations.isEmpty()) {
-            throw new IllegalArgumentException("CreateCaseFolderCommand validation failed: " + violations);
+            throw new ConstraintViolationException("case-folder.msg.err.validation-error", violations);
         }
-        var caseFolder = createCaseFolderService.createCaseFolder(
-            command.name(),
-            command.firstSurname(),
-            command.lastSurname(),
-            command.idCardType(), command.idCardNumber());
-        sendNotification(caseFolder);
-        return caseFolder;
+    }
+
+    private void validateCaseFolder(CaseFolder caseFolder) {
+        var violations = validator.validate(caseFolder);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("case-folder.msg.err.validation-error", violations);
+        }
+    }
+
+    private CaseFolder buildCaseFolderFromCommand(CreateCaseFolderCommand command, String username) {
+        return CaseFolder.builder()
+            .id(UUID.randomUUID().toString())
+            .name(command.name())
+            .firstSurname(command.firstSurname())
+            .lastSurname(command.lastSurname())
+            .idCard(new IdCard(command.idCardNumber(), command.idCardType()))
+            .owner(username)
+            .createdAt(LocalDateTime.now())
+            .build()
+            .normalize();
     }
 
     private void sendNotification(CaseFolder caseFolder) {

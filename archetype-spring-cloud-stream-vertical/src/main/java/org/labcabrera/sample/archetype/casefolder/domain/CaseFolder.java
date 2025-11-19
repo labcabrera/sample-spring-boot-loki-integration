@@ -31,8 +31,20 @@ public class CaseFolder {
     private IdCard idCard;
 
     @NotNull
+    private String owner;
+
+    @NotNull
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public CaseFolder normalize() {
+        name = name.toUpperCase();
+        firstSurname = firstSurname.toUpperCase();
+        if (lastSurname != null) {
+            lastSurname = lastSurname.toUpperCase();
+        }
+        return this;
+    }
 
 }

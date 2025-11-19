@@ -38,6 +38,9 @@ public class CaseFolderEntity {
     @Embedded
     private IdCardEntity idCard;
 
+    @Column(name = "owner", nullable = false, length = 100)
+    private String owner;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

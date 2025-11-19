@@ -6,6 +6,8 @@ import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRe
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
 import org.labcabrera.sample.archetype.casefolder.domain.events.CaseFolderDeletedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
+import org.labcabrera.sample.archetype.shared.application.Guard;
+import org.labcabrera.sample.archetype.shared.application.SecurityPort;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +21,16 @@ public class DeleteCaseFolderCommandHandler implements CommandHandler<DeleteCase
 
     private final CaseFolderRepository caseFolderRepository;
     private final CaseFolderEventBusPort caseFolderEventBusPort;
+    private final Guard<CaseFolder> caseFolderGuard;
+    private final SecurityPort securityPort;
 
     @Override
     public Void handle(DeleteCaseFolderCommand command) {
+        var user = securityPort.requireCurrentUser();
+        log.debug("Deleting case folder {} (user: {})", command.caseFolderId(), user.username());
         var caseFolder = caseFolderRepository.findById(command.caseFolderId())
-            .orElseThrow(() -> new NotFoundException(command.caseFolderId(), CaseFolder.class));
+            .orElseThrow(() -> new NotFoundException("case-folder.msg.not-found", command.caseFolderId(), CaseFolder.class));
+        caseFolderGuard.checkWrite(caseFolder, user);
         caseFolderRepository.deleteById(command.caseFolderId());
         sendNotification(caseFolder);
         return null;

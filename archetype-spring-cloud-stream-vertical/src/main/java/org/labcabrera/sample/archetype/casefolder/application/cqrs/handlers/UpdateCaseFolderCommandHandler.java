@@ -2,10 +2,14 @@ package org.labcabrera.sample.archetype.casefolder.application.cqrs.handlers;
 
 import org.labcabrera.sample.archetype.casefolder.application.cqrs.commands.UpdateCaseFolderCommand;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderEventBusPort;
-import org.labcabrera.sample.archetype.casefolder.application.services.UpdateCaseFolderService;
+import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
 import org.labcabrera.sample.archetype.casefolder.domain.events.CaseFolderUpdatedEvent;
 import org.labcabrera.sample.archetype.shared.application.CommandHandler;
+import org.labcabrera.sample.archetype.shared.application.Guard;
+import org.labcabrera.sample.archetype.shared.application.SecurityPort;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.NotFoundException;
+import org.labcabrera.sample.archetype.shared.domain.exceptions.NotModifiedException;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -16,18 +20,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UpdateCaseFolderCommandHandler implements CommandHandler<UpdateCaseFolderCommand, CaseFolder> {
 
-    private final UpdateCaseFolderService updateCaseFolderService;
+    private final CaseFolderRepository caseFolderRepository;
     private final CaseFolderEventBusPort caseFolderEventBusPort;
+    private final Guard<CaseFolder> caseFolderGuard;
+    private final SecurityPort securityPort;
 
     public CaseFolder handle(UpdateCaseFolderCommand command) {
-        log.info("Update case folder << {}", command.caseFolderId());
-        var caseFolder = updateCaseFolderService.updateCaseFolder(
-            command.caseFolderId(),
-            command.name(),
-            command.firstSurname(),
-            command.lastSurname());
+        var user = securityPort.requireCurrentUser();
+        log.info("Update case folder << {} (user: {})", command.caseFolderId(), user.username());
+        var existing = caseFolderRepository.findById(command.caseFolderId())
+            .orElseThrow(() -> new NotFoundException("case-folder.msg.not-found", command.caseFolderId(), CaseFolder.class));
+        caseFolderGuard.checkWrite(existing, user);
+        merge(existing, command);
+        var caseFolder = caseFolderRepository.update(existing);
         sendNotification(caseFolder);
         return caseFolder;
+    }
+
+    private void merge(CaseFolder existing, UpdateCaseFolderCommand command) {
+        boolean modified = false;
+        if (command.name() != null && !command.name().toUpperCase().equals(existing.getName())) {
+            existing.setName(command.name());
+            modified = true;
+        }
+        if (command.firstSurname() != null && !command.firstSurname().toUpperCase().equals(existing.getFirstSurname())) {
+            existing.setFirstSurname(command.firstSurname());
+            modified = true;
+        }
+        if (command.lastSurname() != null && !command.lastSurname().toUpperCase().equals(existing.getLastSurname())) {
+            existing.setLastSurname(command.lastSurname());
+            modified = true;
+        }
+        if (!modified) {
+            throw new NotModifiedException("case-folder.msg.err.not-modified");
+        }
     }
 
     private void sendNotification(CaseFolder caseFolder) {

@@ -14,7 +14,9 @@ public record CaseFolderDto(
 
     @Schema(description = "Last surname", example = "Smith", requiredMode = RequiredMode.NOT_REQUIRED) String lastSurname,
 
-    @Schema(description = "IdCard", requiredMode = RequiredMode.REQUIRED) IdCardDto idCard
+    @Schema(description = "IdCard", requiredMode = RequiredMode.REQUIRED) IdCardDto idCard,
+
+    @Schema(description = "Entity owner", example = "john.doe", requiredMode = RequiredMode.REQUIRED) String owner
 
 ) {
 }

@@ -36,6 +36,3 @@ management:
     health:
       show-details: always
 
-app:
-  elo:
-    k-factor: 0
