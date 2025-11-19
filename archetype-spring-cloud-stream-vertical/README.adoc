@@ -19,17 +19,17 @@ Se pretende ser un punto de partida para microservicios que publican y consumen 
 
 == Estructura del proyecto
 
-En este proyecto de ejemplo tendremos dos módulos verticales principales: _player_ y _confirmation_, además de un módulo _shared_ para código común.
+En este proyecto de ejemplo tendremos dos módulos verticales principales: _casefolder_ y _casestep_, además de un módulo _shared_ para código común.
 
-El módulo _player_ define la lógica relacionada con la gestión de jugadores (creación, actualización, consulta) y publica eventos cuando se crean nuevos jugadores.
+El módulo _casefolder_ define la lógica de un expediente, en este ejemplo un CRUD básico y la publicación de eventos.
 
-El módulo _confirmation_ consume eventos de creación de jugadores y maneja la lógica relacionada con la confirmación de jugadores (por ejemplo, enviar emails de confirmación).
+El módulo _casestep_ define la lógica de un trámite. Un expediente podrá tener N ttrámites asociados, y este módulo consume eventos de creación de expedientes para iniciar los trámites correspondientes.
 
 ----
 src/
  ├── org/labcabrera/sample/archetype
- │   ├── player
- │   ├── confirmation
+ │   ├── casefolder
+ │   ├── casestep
  │   └── shared
 ----
 
@@ -75,68 +75,6 @@ Y levantaremos la aplicación a través del comando:
 ----
 java -jar build/libs/*.jar
 ----
-
-// == Transaccionalidad y persistencia (recomendaciones)
-
-// Patrones y recomendaciones observadas en este arquetipo:
-
-// - Límite de transacción en la capa de aplicación (services): Anotar los métodos que orquestan persistencia y publicación de eventos con `@Transactional`.
-// - Repositorios / adapters deben exponer operaciones atómicas simples (save, update) y evitar decidir transacciones por sí mismos.
-// - Para evitar inconsistencias DB → Kafka, considerar:
-// 	- Outbox pattern (persistir evento en tabla outbox en la misma transacción y luego publicar desde un proceso separado), o
-// 	- Usar TransactionSynchronizationManager / TransactionSynchronization para publicar eventos después del commit si el binder/producer lo permite.
-// - Evitar crear instancias Entity (nuevas) con IDs que ya están gestionadas por la sesión — para updates, obtener la entidad gestionada (find) y aplicar cambios sobre ella.
-
-// Ejemplo breve:
-
-// ```java
-// @Service
-// public class CreatePlayerService {
-// 	@Transactional
-// 	public Player createPlayer(...) {
-// 		// validar y persistir mediante el puerto repository
-// 		// preparar evento y publicarlo AFTER COMMIT o mediante outbox
-// 	}
-// }
-// ```
-
-// == Spring Cloud Stream y Kafka
-
-// - `src/main/resources/application-cloud-stream.yaml` contiene la definición de la función usada por Spring Cloud Stream:
-// 	- `spring.cloud.stream.function.definition` debe coincidir exactamente con el nombre del bean `@Bean` que devuelve `Consumer/Function/Supplier`.
-// 	- Para cada binding (`<function>-in-0`, `<function>-out-0`) configurar `destination`, `group` y `contentType`.
-// - Variables a ajustar en entornos:
-// 	- `spring.cloud.stream.kafka.binder.brokers` o `KAFKA_BROKERS`.
-// 	- `spring.cloud.stream.bindings.<name>.consumer.startOffset` (ej. earliest) para desarrollo.
-
-// == Manejo de errores en Consumers
-
-// - Implementar validación de payloads antes de procesar.
-// - Configurar DLQ y retry (reintentos) en binder si se requiere garantia de entrega y manejo de errores.
-
-// == Pruebas
-
-// - Unit tests: usar `spring-boot-starter-test` y Mockito para servicios y handlers.
-// - Integration tests:
-// 	- Usar Testcontainers Kafka para levantar un broker y probar el flujo E2E de publicación/consumo.
-// 	- Usar `@DataJpaTest` para repositorios y `@SpringBootTest` con Testcontainers para orquestación completa.
-
-// Ejemplo (esqueleto) con Testcontainers Kafka:
-
-// ```java
-// @Testcontainers
-// @SpringBootTest
-// class KafkaIntegrationTest {
-// 	@Container
-// 	static KafkaContainer kafka = new KafkaContainer("confluentinc/cp-kafka:7.4.1");
-
-// 	@BeforeAll
-// 	static void setup() {
-// 		System.setProperty("KAFKA_BROKERS", kafka.getBootstrapServers());
-// 	}
-// 	// tests...
-// }
-// ```
 
 == Notas sobre la implementación
 
