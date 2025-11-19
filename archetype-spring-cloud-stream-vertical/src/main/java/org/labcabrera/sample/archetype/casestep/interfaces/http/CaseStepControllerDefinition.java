@@ -1,8 +1,9 @@
 package org.labcabrera.sample.archetype.casestep.interfaces.http;
 
+import java.util.List;
+
 import org.apache.kafka.common.requests.ApiError;
 import org.labcabrera.sample.archetype.casestep.interfaces.http.dto.CaseStepDto;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public interface CaseStepControllerDefinition {
         @ApiResponse(responseCode = "200", description = "Case steps found", content = @Content(schema = @Schema(implementation = CaseStepDto.class))),
         @ApiResponse(responseCode = "404", description = "Case steps not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    ResponseEntity<Page<CaseStepDto>> getCaseStepsByCaseFolderId(
+    ResponseEntity<List<CaseStepDto>> getCaseStepsByCaseFolderId(
         @Parameter(description = "Unique case folder identifier", required = true) @PathVariable String caseFolderId);
 
 }

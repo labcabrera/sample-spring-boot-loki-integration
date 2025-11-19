@@ -25,6 +25,9 @@ spring:
         caseFolderDeleted-out-0:
           destination: sample.case-folders.deleted.v1
           contentType: application/json
+        caseStepCreated-out-0:
+          destination: sample.case-steps.created.v1
+          contentType: application/json
       kafka:
         binder:
           brokers: ${KAFKA_BROKERS:localhost:9092}
