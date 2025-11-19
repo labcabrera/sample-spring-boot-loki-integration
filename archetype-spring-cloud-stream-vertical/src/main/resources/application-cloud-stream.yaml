@@ -1,6 +1,8 @@
 spring:
   cloud:
     function:
+      # Explicit default function definition to avoid ambiguity when multiple function beans exist.
+      # Use semicolon-separated list when registering multiple functions.
       definition: processCaseFolderCreation;processCaseStepCreation
     stream:
       bindings:

@@ -14,7 +14,6 @@ public class SimpleCommandBus implements CommandBus {
     private final Map<Class<?>, CommandHandler<?, ?>> handlers = new HashMap<>();
 
     public <C, R> void registerHandler(Class<C> commandClass, CommandHandler<C, R> handler) {
-        log.debug("Registering handler for command: {}", commandClass.getSimpleName());
         handlers.put(commandClass, handler);
     }
 

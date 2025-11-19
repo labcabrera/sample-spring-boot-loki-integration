@@ -14,7 +14,6 @@ public class SimpleQueryBus implements QueryBus {
     private final Map<Class<?>, QueryHandler<?, ?>> handlers = new HashMap<>();
 
     public <Q, R> void registerHandler(Class<Q> queryClass, QueryHandler<Q, R> handler) {
-        log.debug("Registering handler for query: {}", queryClass.getSimpleName());
         handlers.put(queryClass, handler);
     }
 
