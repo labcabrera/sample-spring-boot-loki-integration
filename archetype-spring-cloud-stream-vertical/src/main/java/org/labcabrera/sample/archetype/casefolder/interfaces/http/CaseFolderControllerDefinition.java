@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/v1/case-folders")
-@Tag(name = "Case Folders", description = "API for case folder management using a CQRS architecture")
+@Tag(name = "Case Folders", description = "API for case folder management")
 public interface CaseFolderControllerDefinition {
 
     @GetMapping("/{caseFolderId}")

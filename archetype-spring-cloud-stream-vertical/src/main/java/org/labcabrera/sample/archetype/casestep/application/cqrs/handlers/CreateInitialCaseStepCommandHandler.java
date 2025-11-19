@@ -50,7 +50,7 @@ public class CreateInitialCaseStepCommandHandler implements CommandHandler<Creat
             .owner(caseFolder.getOwner())
             .createdAt(LocalDateTime.now())
             .build();
-        return caseStepRepository.save(caseStep);
+        return caseStep;
     }
 
 }
