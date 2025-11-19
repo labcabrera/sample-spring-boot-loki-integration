@@ -31,9 +31,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Do not create an HTTP session — JWT token authentication is stateless
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // Disable CSRF for stateless APIs using bearer tokens
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
@@ -61,7 +59,6 @@ public class SecurityConfiguration {
             @Override
             public Collection<GrantedAuthority> convert(Jwt jwt) {
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
-
                 // Map realm_access.roles (Keycloak) to ROLE_<role>
                 Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
                 if (realmAccess != null) {
@@ -73,7 +70,6 @@ public class SecurityConfiguration {
                         }
                     }
                 }
-
                 // Map scope or scopes to SCOPE_<scope>
                 List<String> scopes = jwt.getClaimAsStringList("scope");
                 if (scopes == null) {

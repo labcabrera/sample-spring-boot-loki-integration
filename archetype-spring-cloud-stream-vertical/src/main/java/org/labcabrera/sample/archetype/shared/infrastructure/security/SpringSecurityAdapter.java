@@ -24,8 +24,8 @@ public class SpringSecurityAdapter implements SecurityPort {
         Object principal = auth.getPrincipal();
         if (principal instanceof Jwt jwt) {
             String id = jwt.getSubject();
-            String username = jwt.getClaimAsString("preferred_username"); // or "sub"
-            Set<String> roles = extractRoles(jwt); // map realm_access / resource_access etc.
+            String username = jwt.getClaimAsString("preferred_username");
+            Set<String> roles = extractRoles(jwt);
             Set<String> scopes = extractScopes(jwt);
             return Optional.of(new AuthenticatedUser(id, username, roles, scopes));
         }
@@ -40,7 +40,6 @@ public class SpringSecurityAdapter implements SecurityPort {
 
     private Set<String> extractRoles(Jwt jwt) {
         Set<String> roles = new HashSet<>();
-        // realm_access.roles
         Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
         if (realmAccess != null) {
             Object r = realmAccess.get("roles");
@@ -48,7 +47,6 @@ public class SpringSecurityAdapter implements SecurityPort {
                 ((List<?>) r).forEach(x -> roles.add(String.valueOf(x)));
             }
         }
-        // resource_access.{client}.roles
         Map<String, Object> resourceAccess = jwt.getClaimAsMap("resource_access");
         if (resourceAccess != null) {
             resourceAccess.values().forEach(v -> {
@@ -60,7 +58,6 @@ public class SpringSecurityAdapter implements SecurityPort {
                 }
             });
         }
-        // authorities in scopes or custom claims may already include ROLE_ prefix
         return roles;
     }
 
@@ -77,7 +74,6 @@ public class SpringSecurityAdapter implements SecurityPort {
                 scopes.add(s);
             }
         }
-        // some tokens use 'scp'
         List<String> scp = jwt.getClaimAsStringList("scp");
         if (scp != null && !scp.isEmpty()) {
             scp.forEach(s -> scopes.add(s));

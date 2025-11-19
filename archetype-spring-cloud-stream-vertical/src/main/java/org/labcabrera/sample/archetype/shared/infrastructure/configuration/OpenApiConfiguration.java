@@ -30,7 +30,6 @@ public class OpenApiConfiguration {
 			.title(title)
 			.description(description)
 			.version(version);
-
 		if (contactName != null && !contactName.isBlank()) {
 			Contact contact = new Contact();
 			contact.setName(contactName);
@@ -39,9 +38,7 @@ public class OpenApiConfiguration {
 			}
 			info.setContact(contact);
 		}
-
 		OpenAPI openAPI = new OpenAPI().info(info);
-
 		Components components = new Components();
 
 		// Bearer JWT security scheme
