@@ -6,6 +6,8 @@ Este proyecto es un prototipo que muestra una aplicación Java Spring Boot dise�
 
 Se pretende ser un punto de partida para microservicios que publican y consumen eventos, JPA para la persistencia, CQRS para la integración de commands y queries.
 
+También incluye la configuración básica para seguridad con OAuth2 Resource Server (JWT) y Keycloak como proveedor de identidad.
+
 == Tecnologías utilizadas
 
 - Spring Boot 3.x (Java 21)
@@ -127,6 +129,24 @@ public class KafkaCaseFolderController {
 ----
 
 TIP: Usando Spring Cloud Stream evitamos que nuestro código tenga dependencias directas con la API de Kafka de modo que puede ser fácilmente adaptado a otros sistemas de mensajería compatibles con Spring Cloud Stream como por ejemplo RabbitMQ, AWS SQS, etc.
+
+=== Seguridad
+
+Se ha configurado la aplicación como un OAuth2 Resource Server que valida tokens JWT emitidos por un proveedor de identidad (IdP) como Keycloak usando la librería _spring-boot-starter-oauth2-resource-server_.
+
+De este modo la aplicación recibe un token JWT en las peticiones HTTP y lo valida para autorizar el acceso a los endpoints protegidos. Para la validación de la firma del token se utiliza el almacén JWK del IAM a través de la configuración definida en _application-security.yaml_:
+
+[source,yaml]
+----
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${IAM_JWK_URI:http://localhost:8090/realms/sample/protocol/openid-connect/certs}
+          issuer-uri: ${IAM_ISSUER_URI:http://localhost:8090/auth/realms/sample}
+----
+
 
 === RSQL
 
