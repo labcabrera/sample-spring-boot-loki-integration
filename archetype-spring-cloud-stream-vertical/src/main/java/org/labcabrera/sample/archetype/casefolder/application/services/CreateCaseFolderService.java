@@ -1,5 +1,6 @@
 package org.labcabrera.sample.archetype.casefolder.application.services;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ public class CreateCaseFolderService {
             .firstSurname(StringUtils.upperCase(firstSurname))
             .lastSurname(StringUtils.upperCase(lastSurname))
             .idCard(new IdCard(idCardNumber, idCardType))
+            .createdAt(LocalDateTime.now())
             .build();
         Set<ConstraintViolation<CaseFolder>> violations = validator.validate(caseFolder);
         if (!violations.isEmpty()) {

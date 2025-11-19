@@ -14,6 +14,7 @@ ext {
 	swaggerAnnotationsVersion = '2.2.13'
 	springCloudVersion = '2025.0.0'
 	rsqlParserVersion = '2.1.0'
+	mapstructVersion = '1.5.5.Final'
 }
 
 java {
@@ -44,6 +45,7 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 	implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationsVersion}"
 	implementation "cz.jirutka.rsql:rsql-parser:${rsqlParserVersion}"
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -51,14 +53,24 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
   	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Configure annotation-processor generated sources directory and MapStruct defaults
+tasks.withType(JavaCompile).configureEach {
+	// place generated sources where IDEs and Gradle expect them
+	options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotations")
+	// set MapStruct default component model to spring if not specified on mappers
+	options.compilerArgs += ["-Amapstruct.defaultComponentModel=spring"]
 }
 
 jar {

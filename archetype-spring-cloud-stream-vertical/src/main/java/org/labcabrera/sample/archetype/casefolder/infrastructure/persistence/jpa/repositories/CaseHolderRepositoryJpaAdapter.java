@@ -15,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.mappers.CaseFolderMapper;
 
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
@@ -31,32 +30,33 @@ import lombok.extern.slf4j.Slf4j;
 public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     private final CaseHolderJpaRepository jpaRepository;
-    private final ObjectMapper objectMapper;
+    private final CaseFolderMapper mapper;
+    private final CaseHolderMerger caseHolderMerger;
     private final RSQLParser rsqlParser;
 
     @Override
     public Optional<CaseFolder> findById(String caseFolderId) {
         return jpaRepository.findById(caseFolderId)
-            .map(entity -> objectMapper.convertValue(entity, CaseFolder.class));
+            .map(entity -> mapper.toDomain(entity));
     }
 
     @Override
     public Optional<CaseFolder> findByIdCardNumber(String idCardNumber) {
         return jpaRepository.findByIdCardNumber(idCardNumber)
-            .map(entity -> objectMapper.convertValue(entity, CaseFolder.class));
+            .map(entity -> mapper.toDomain(entity));
     }
 
     @Override
     public Page<CaseFolder> findByRsql(String rsql, Pageable pageable) {
         if (StringUtils.isBlank(rsql)) {
             var page = jpaRepository.findAll(pageable);
-            return page.map(entity -> objectMapper.convertValue(entity, CaseFolder.class));
+            return page.map(entity -> mapper.toDomain(entity));
         }
         try {
             Node rootNode = rsqlParser.parse(rsql);
             Specification<CaseHolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseHolderEntity>());
             var page = jpaRepository.findAll(spec, pageable);
-            return page.map(entity -> objectMapper.convertValue(entity, CaseFolder.class));
+            return page.map(entity -> mapper.toDomain(entity));
         }
         catch (Exception ex) {
             log.error("Error parsing RSQL query: {}", rsql, ex);
@@ -71,9 +71,9 @@ public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
             if (caseFolder.getId() != null && jpaRepository.existsById(caseFolder.getId())) {
                 throw new BadRequestException("Case folder already exists with id " + caseFolder.getId());
             }
-            var entity = objectMapper.convertValue(caseFolder, CaseHolderEntity.class);
+            var entity = mapper.toEntity(caseFolder);
             var savedEntity = jpaRepository.save(entity);
-            return objectMapper.convertValue(savedEntity, CaseFolder.class);
+            return mapper.toDomain(savedEntity);
         }
         catch (DataIntegrityViolationException ex) {
             log.error("Data integrity violation while saving case folder: {}", caseFolder, ex);
@@ -86,16 +86,12 @@ public class CaseHolderRepositoryJpaAdapter implements CaseFolderRepository {
     public CaseFolder update(CaseFolder caseFolder) {
         var current = jpaRepository.findById(caseFolder.getId())
             .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolder.getId()));
-        boolean modified = false;
-        if (!current.getName().equals(caseFolder.getName())) {
-            current.setName(caseFolder.getName());
-            modified = true;
-        }
+        boolean modified = caseHolderMerger.mergeChanges(current, caseFolder);
         if (!modified) {
             throw new NotModifiedException("No changes detected for case folder with id " + caseFolder.getId());
         }
         var savedEntity = jpaRepository.save(current);
-        return objectMapper.convertValue(savedEntity, CaseFolder.class);
+        return mapper.toDomain(savedEntity);
     }
 
     @Override

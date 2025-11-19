@@ -36,7 +36,7 @@ public interface CaseFolderControllerDefinition {
         @ApiResponse(responseCode = "404", description = "Case folder not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<CaseFolderDto> getCaseFolderById(
-        @Parameter(description = "Unique case folder ID", required = true) @PathVariable String caseFolderId);
+        @Parameter(description = "Unique case folder identifier", required = true) @PathVariable String caseFolderId);
 
     @GetMapping
     @Operation(summary = "Get case folders by RSQL", description = "Filter case folders using an RSQL expression with optional pagination")
@@ -65,7 +65,7 @@ public interface CaseFolderControllerDefinition {
         @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<CaseFolderDto> update(
-        @Parameter(description = "Unique case folder ID", required = true) @PathVariable String caseFolderId,
+        @Parameter(description = "Unique case folder identifier", required = true) @PathVariable String caseFolderId,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Case folder data to update", required = true) @RequestBody UpdateCaseFolderRequest request);
 
     @DeleteMapping("/{caseFolderId}")
@@ -75,6 +75,6 @@ public interface CaseFolderControllerDefinition {
         @ApiResponse(responseCode = "404", description = "Case folder not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     ResponseEntity<Void> delete(
-        @Parameter(description = "Unique case folder ID", required = true) @PathVariable String caseFolderId);
+        @Parameter(description = "Unique case folder identifier", required = true) @PathVariable String caseFolderId);
 
 }

@@ -1,5 +1,6 @@
 package org.labcabrera.sample.archetype.casefolder.application.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.archetype.casefolder.domain.CaseFolder;
 import org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException;
@@ -20,13 +21,13 @@ public class UpdateCaseFolderService {
         var caseFolder = caseFolderRepository.findById(caseFolderId)
             .orElseThrow(() -> new NotFoundException(caseFolderId, CaseFolder.class));
         if (name != null) {
-            caseFolder.setName(name);
+            caseFolder.setName(StringUtils.upperCase(name));
         }
         if (firstSurname != null) {
-            caseFolder.setFirstSurname(firstSurname);
+            caseFolder.setFirstSurname(StringUtils.upperCase(firstSurname));
         }
         if (lastSurname != null) {
-            caseFolder.setLastSurname(lastSurname);
+            caseFolder.setLastSurname(StringUtils.upperCase(lastSurname));
         }
         var violations = validator.validate(caseFolder);
         if (!violations.isEmpty()) {

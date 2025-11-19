@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.labcabrera.sample.archetype.casefolder.interfaces.http.mappers.CaseFolderDtoMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +33,18 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
 
     private final CommandBus commandBus;
     private final QueryBus queryBus;
-    private final ObjectMapper objectMapper;
+    private final CaseFolderDtoMapper mapper;
 
     @Override
-    public ResponseEntity<CaseFolderDto> create(@RequestBody @Valid @Validated CreateCaseFolderRequest request) {
+    public ResponseEntity<CaseFolderDto> getCaseFolderById(@PathVariable String caseFolderId) {
+        var query = new GetCaseFolderByIdQuery(caseFolderId);
+        CaseFolder player = queryBus.dispatch(query);
+        var playerDto = mapper.toDto(player);
+        return ResponseEntity.ok(playerDto);
+    }
+
+    @Override
+    public ResponseEntity<CaseFolderDto> create(@RequestBody @Validated CreateCaseFolderRequest request) {
         var command = new CreateCaseFolderCommand(
             request.name(),
             request.firstSurname(),
@@ -44,42 +52,34 @@ public class CaseFolderController implements CaseFolderControllerDefinition {
             request.idCard().type(),
             request.idCard().number());
         CaseFolder caseFolder = commandBus.dispatch(command);
-        var playerDto = objectMapper.convertValue(caseFolder, CaseFolderDto.class);
+        var playerDto = mapper.toDto(caseFolder);
         return ResponseEntity.status(201).body(playerDto);
-    }
-
-    @Override
-    public ResponseEntity<CaseFolderDto> getCaseFolderById(@PathVariable String playerId) {
-        var query = new GetCaseFolderByIdQuery(playerId);
-        CaseFolder player = queryBus.dispatch(query);
-        var playerDto = objectMapper.convertValue(player, CaseFolderDto.class);
-        return ResponseEntity.ok(playerDto);
     }
 
     @Override
     public ResponseEntity<PageResponse<CaseFolderDto>> getCaseFoldersByRsql(String rsql, Pageable pageable) {
         var query = new GetCaseFoldersByRsqlQuery(rsql, pageable);
         Page<CaseFolder> page = queryBus.dispatch(query);
-        var pageDto = page.map(player -> objectMapper.convertValue(player, CaseFolderDto.class));
+        var pageDto = page.map(player -> mapper.toDto(player));
         var response = new PageResponse<>(pageDto);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<CaseFolderDto> update(String playerId, UpdateCaseFolderRequest request) {
+    public ResponseEntity<CaseFolderDto> update(String caseFolderId, UpdateCaseFolderRequest request) {
         var command = new UpdateCaseFolderCommand(
-            playerId,
+            caseFolderId,
             request.name(),
             request.firstSurname(),
             request.lastSurname());
         CaseFolder player = commandBus.dispatch(command);
-        var playerDto = objectMapper.convertValue(player, CaseFolderDto.class);
+        var playerDto = mapper.toDto(player);
         return ResponseEntity.ok(playerDto);
     }
 
     @Override
-    public ResponseEntity<Void> delete(String playerId) {
-        var command = new DeleteCaseFolderCommand(playerId);
+    public ResponseEntity<Void> delete(String caseFolderId) {
+        var command = new DeleteCaseFolderCommand(caseFolderId);
         commandBus.dispatch(command);
         return ResponseEntity.noContent().build();
     }
