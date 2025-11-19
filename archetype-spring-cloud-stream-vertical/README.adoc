@@ -17,6 +17,7 @@ También incluye la configuración básica para seguridad con OAuth2 Resource Se
 - MapStruct
 - Springdoc OpenAPI para documentación de la API REST
 - RSQL parser para filtros en endpoints REST
+- Redis para cacheo de datos
 - Micrometer / Actuator
 
 == Estructura del proyecto
@@ -331,6 +332,25 @@ En nuestra capa de exposición REST, podemos utilizar la anotación `@Validated`
 Los errores de la aplicación se manejan extendiendo de _DomainException_.
 
 En la capa de infraestructura REST se ha agregado un _@RestControllerAdvice_ que se encarga de capturar las excepciones lanzadas por los controladores y devolver respuestas HTTP adecuadas con códigos de estado y mensajes de error.
+
+=== Cacheo con Redis
+
+Se ha integrado Redis como sistema de cacheo para mejorar el rendimiento de las consultas frecuentes. La configuración de Redis se encuentra en el archivo `application-cache.yaml`.
+
+La configuración de la caché se realiza a través de la clase `CacheConfiguration`, donde se define un `RedisCacheManager` que utiliza un serializador JSON personalizado para almacenar los objetos en Redis.
+
+Se han activado las anotaciones de caché en la implementación del repositorio de consultas:
+
+[source,java]
+----
+    @Override
+    @Cacheable(value = "caseFolder", key = "#caseFolderId")
+    public Optional<CaseFolder> findById(String caseFolderId) {
+        return jpaRepository.findById(caseFolderId).map(entity -> mapper.toDomain(entity));
+    }
+----
+
+Añadiendo las anotaciones `@Cacheable`, `@CachePut` y `@CacheEvict` en los métodos correspondientes para gestionar el almacenamiento, actualización y eliminación de entradas en la caché.
 
 === I18n
 

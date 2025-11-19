@@ -26,6 +26,17 @@ services:
     volumes:
       - sample-postgres-data:/var/lib/postgresql/data
 
+  sample-redis:
+    image: redis:7.2
+    hostname: sample-redis
+    container_name: sample-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - sample-redis-data:/data
+    networks:
+      - sample-network
+
   sample-keycloak:
     image: quay.io/keycloak/keycloak:26.3
     hostname: sample-keycloak
@@ -107,6 +118,8 @@ volumes:
   sample-postgres-data:
     driver: local
   sample-kafka-data:
+    driver: local
+  sample-redis-data:
     driver: local
 
 networks:

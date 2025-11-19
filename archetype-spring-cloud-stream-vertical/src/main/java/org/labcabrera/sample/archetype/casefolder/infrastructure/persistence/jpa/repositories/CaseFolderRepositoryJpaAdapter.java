@@ -1,6 +1,9 @@
 package org.labcabrera.sample.archetype.casefolder.infrastructure.persistence.jpa.repositories;
 
 import java.util.Optional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.archetype.casefolder.application.ports.CaseFolderRepository;
@@ -35,6 +38,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
     private final RSQLParser rsqlParser;
 
     @Override
+    @Cacheable(value = "caseFolder", key = "#caseFolderId")
     public Optional<CaseFolder> findById(String caseFolderId) {
         return jpaRepository.findById(caseFolderId).map(entity -> mapper.toDomain(entity));
     }
@@ -70,6 +74,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     @Transactional
+    @CachePut(value = "caseFolder", key = "#result.id")
     public CaseFolder save(CaseFolder caseFolder) {
         try {
             if (caseFolder.getId() != null && jpaRepository.existsById(caseFolder.getId())) {
@@ -86,6 +91,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     @Transactional
+    @CachePut(value = "caseFolder", key = "#caseFolder.id")
     public CaseFolder update(CaseFolder caseFolder) {
         var current = jpaRepository.findById(caseFolder.getId())
             .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolder.getId()));
@@ -99,6 +105,7 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     @Transactional
+    @CacheEvict(value = "caseFolder", key = "#caseFolderId")
     public void deleteById(String caseFolderId) {
         jpaRepository.deleteById(caseFolderId);
     }
