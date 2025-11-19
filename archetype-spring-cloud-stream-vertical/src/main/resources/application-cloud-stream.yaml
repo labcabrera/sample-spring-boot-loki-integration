@@ -1,12 +1,16 @@
 spring:
   cloud:
     function:
-      definition: processCaseFolderCreation
+      definition: processCaseFolderCreation;processCaseStepCreation
     stream:
       bindings:
         # input bindings
         processCaseFolderCreation-in-0:
           destination: sample.case-folders.creation.v1
+          group: case-folders-svc
+          contentType: application/json
+        processCaseStepCreation-in-0:
+          destination: sample.case-folders.created.v1
           group: case-folders-svc
           contentType: application/json
         # output bindings
